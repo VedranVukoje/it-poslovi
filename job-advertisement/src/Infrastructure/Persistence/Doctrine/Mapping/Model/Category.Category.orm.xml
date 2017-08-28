@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+    <entity
+        name="JobAd\Domain\Model\Category\Category"
+        table="category">
+    
+        <id name="id" column="id" type="category_id"/>
+        <field
+            name="name" 
+            column="name" 
+            type="category_name" 
+        />
+        
+<!--        <many-to-many target-entity="JobAd\Domain\Model\JobAdvertisement\JobAdvertisement" inversedBy="categoryes" field="jobAdvertisement">
+            
+        </many-to-many>-->
+        
+        
+<!--        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="updateTimestam"/>
+            <lifecycle-callback type="preUpdate" method="updateTimestam"/>
+        </lifecycle-callbacks>-->
+
+    </entity>
+</doctrine-mapping>

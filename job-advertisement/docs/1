@@ -1,0 +1,94 @@
+13 kolovoz 2017
+
+php bin/console doctrine:fixtures:load --fixtures=/home/vedran/Projects/dev/projects/it-poslovi/job-advertisement/src/Infrastructure/Ui/Framework/Symfony/JobAdvertisementBundle/DataFixtures/Orm
+
+12 kolovoz 2017
+
+-- podesavanja za bazu ili profiles
+-- select * from dba_profiles;
+-- Exparation date za PASSWORD_LIFE_TIME po defaultu je 180 sada je UNLIMITED
+-- ALTER PROFILE DEFAULT LIMIT PASSWORD_LIFE_TIME UNLIMITED;
+-- useri u bazi
+-- SELECT * FROM dba_users;
+-- update korisnika za istek lozinke :
+-- ALTER USER ROOT IDENTIFIED BY ROOT;
+-- ALTER USER ROOT ACCOUNT UNLOCK;
+
+
+06 kolovoz 2017
+
+ItPosloviException JobAdvertisementException
+
+\ItPosloviBundle \JobAdvertisementBundle
+
+"ItPoslovi\\": "src/ItPoslovi/"
+            "JobAd\\": "src/"
+
+
+11 srpanj 2017 
+
+CREATE SEQUENCE stored_event_seq START WITH 1 MINVALUE 1 INCREMENT BY 100;
+CREATE TABLE stored_event (event_id NUMBER(10) NOT NULL, type_name VARCHAR2(255) NOT NULL, occurred_on TIMESTAMP(0) NOT NULL, event_body CLOB NOT NULL, PRIMARY KEY(event_id));
+ALTER TABLE CITY MODIFY (idMesta NUMBER(10) DEFAULT NULL);
+ALTER TABLE JOB_ADVERTISEMENT MODIFY (city VARCHAR2(255) NOT NULL, description CLOB DEFAULT NULL, how_to_applay CLOB DEFAULT NULL, poziton_title CLOB DEFAULT NULL, status NUMBER(5) DEFAULT NULL);
+DROP INDEX job_ad_id_uq;
+ALTER TABLE JOB_AD_CATEGORY MODIFY (category_id CHAR(36) DEFAULT NULL, job_ad_id CHAR(36) DEFAULT NULL);
+ALTER TABLE JOB_AD_CATEGORY ADD CONSTRAINT FK_8F380F584E6868E6 FOREIGN KEY (job_ad_id) REFERENCES job_advertisement (id);
+ALTER TABLE JOB_AD_CATEGORY ADD CONSTRAINT FK_8F380F5812469DE2 FOREIGN KEY (category_id) REFERENCES category (id);
+CREATE INDEX IDX_8F380F584E6868E6 ON JOB_AD_CATEGORY (job_ad_id);
+CREATE INDEX IDX_8F380F5812469DE2 ON JOB_AD_CATEGORY (category_id);
+ALTER TABLE JOB_AD_CATEGORY ADD PRIMARY KEY (job_ad_id, category_id);
+ALTER TABLE JOB_AD_TYPE_OF_JOB MODIFY (job_ad_id CHAR(36) DEFAULT NULL, type_of_job_id CHAR(36) DEFAULT NULL);
+ALTER TABLE JOB_AD_TYPE_OF_JOB ADD CONSTRAINT FK_530050E34E6868E6 FOREIGN KEY (job_ad_id) REFERENCES job_advertisement (id);
+ALTER TABLE JOB_AD_TYPE_OF_JOB ADD CONSTRAINT FK_530050E3A82EC4A3 FOREIGN KEY (type_of_job_id) REFERENCES typeofjob (id);
+CREATE INDEX IDX_530050E34E6868E6 ON JOB_AD_TYPE_OF_JOB (job_ad_id);
+CREATE INDEX IDX_530050E3A82EC4A3 ON JOB_AD_TYPE_OF_JOB (type_of_job_id);
+ALTER TABLE JOB_AD_TYPE_OF_JOB ADD PRIMARY KEY (job_ad_id, type_of_job_id);
+ALTER TABLE TYPEOFJOB MODIFY (name VARCHAR2(255) DEFAULT NULL, status NUMBER(5) DEFAULT NULL);
+
+
+09 srpanj 2017
+
+Package operations: 7 installs, 0 updates, 0 removals
+  - Installing react/event-loop (v0.4.3): Downloading (100%)         
+  - Installing phpoption/phpoption (1.5.0): Loading from cache
+  - Installing phpcollection/phpcollection (0.5.0): Loading from cache
+  - Installing jms/parser-lib (1.0.0): Loading from cache
+  - Installing jms/metadata (1.6.0): Loading from cache
+  - Installing jms/serializer (1.7.1): Downloading (100%)         
+  - Installing carlosbuenosvinos/ddd (1.6.0): Downloading (100%)         
+react/event-loop suggests installing ext-libevent (>=0.1.0)
+react/event-loop suggests installing ext-event (~1.0)
+react/event-loop suggests installing ext-libev (*)
+carlosbuenosvinos/ddd suggests installing videlalvaro/php-amqplib (It allows Domain Events notification using RabbitMQ)
+carlosbuenosvinos/ddd suggests installing ext/amqp (It allows the usage of asynchronous messaging producers and message listeners)
+
+
+
+
+08 srpanj 2017
+@todo 
+srediti method signature u repozitorijama da vracaju njihove kolcecije. Npr CateogryRepozitori::query CategoryArrayCollection -> Doctrine ArrayColection
+
+
+<VirtualHost itposlovi.dev:80>
+    DocumentRoot "/home/vedran/Projects/dev/public/symfony/web"
+    ServerName itposlovi.dev
+
+    ErrorLog "/home/vedran/Projects/dev/public/symfony/error_log"
+
+    LogFormat "%h %l %u %t \"%r\" %>s %b" common
+    CustomLog /home/vedran/Projects/dev/public/symfony/access_log common
+
+    # Other directives here
+        <Location /ws-server-status>
+                SetHandler server-status
+                Order Deny,Allow
+                Allow from 127.0.0.1
+        </Location>
+        <Directory "/home/vedran/Projects/dev/public/symfony/web" >
+                #Options Indexes FollowSymLinks
+                AllowOverride All
+                Require all granted
+        </Directory>
+</VirtualHost>

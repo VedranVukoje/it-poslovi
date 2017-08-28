@@ -1,0 +1,22 @@
+<?php
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+namespace JobAd\Domain\Model\TypeOfJob;
+
+/**
+ * Description of FactoryTypeOfJob
+ *
+ * @author vedran
+ */
+class FactoryTypeOfJob
+{
+    public function writeNewTypeOfJob(Name $name)
+    {
+        return TypeOfJob::writeNewTypeOfJob($name);
+    }
+}
