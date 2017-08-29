@@ -152,7 +152,6 @@ class JobAdvertisement extends AggregateRoot
         $this->categoryes = new CategoryCollection();
         $this->tags = new TagCollection();
         $this->updateTimestam();
-        $this->setVersion();
     }
 
     public function id()
@@ -397,11 +396,10 @@ class JobAdvertisement extends AggregateRoot
 
     protected function applyJobAdDescriptionsWasManaged(JobAdDescriptionsWasManaged $event)
     {
-        $this->id = $event->id();
+        $this->id = (string) $event->id();
         $this->pozitonTitle = $event->pozitonTitle();
         $this->howToApplay = $event->howToApplay();
         $this->description = $event->description();
-//        $this->setVersion();
     }
 
     protected function applyJobAdWasDrafted(JobAdWasDrafted $event)
@@ -411,7 +409,6 @@ class JobAdvertisement extends AggregateRoot
         $this->howToApplay = $event->howToApplay();
         $this->description = $event->description();
         $this->setStatus(Status::draft());
-//        $this->setVersion();
     }
 
     protected function applyCategoryWasAddedToJobAdvertisement(CategoryWasAddedToJobAdvertisement $event)
@@ -422,7 +419,6 @@ class JobAdvertisement extends AggregateRoot
         $category = $event->category();
         $category->setJobAdvertisement($this);
         $this->categoryes[] = $category;
-//        $this->setVersion();
     }
 
     protected function applyJobAdCategoresWsaManaged(JobAdCategoresWsaManaged $event)
@@ -440,13 +436,11 @@ class JobAdvertisement extends AggregateRoot
                 $this->categoryes[] = $category;
             }
         }
-//        $this->setVersion();
     }
 
     protected function applyTypeOfJobWasAddedToJobAdvertisement(TypeOfJobWasAddedToJobAdvertisement $event)
     {
         $this->typeOfJobs[] = $event->typeOfJob();
-//        $this->setVersion();
     }
     
     protected function applyJobAdTypeOfJobsWasManaged(JobAdTypeOfJobsWasManaged $event)
@@ -463,7 +457,6 @@ class JobAdvertisement extends AggregateRoot
                 $this->typeOfJobs[] = $typeOfJob;
             }
         }
-//        $this->setVersion();
     }
 
     protected function applyCityWasAddedToJobAdvertisement(CityWasAddedToJobAdvertisement $event)
@@ -471,21 +464,18 @@ class JobAdvertisement extends AggregateRoot
 //        dump($event);
         $this->id = (string) $event->id();
         $this->city = $event->city();
-//        $this->setVersion();
     }
 
     protected function applyDurationWasAddedToAd(DurationWasAddedToAd $event)
     {
         $this->id = (string) $event->id();
         $this->end = $event->duration();
-//        $this->setVersion();
     }
 
     protected function applyTagWasAddedToJobAd(TagWasAddedToJobAd $event)
     {
         $this->id = (string) $event->id();
         $this->tags[] = $event->tag();
-//        $this->setVersion();
     }
 
     protected function applyJobAdTagsWasManaged(JobAdTagsWasManaged $event)
@@ -502,7 +492,6 @@ class JobAdvertisement extends AggregateRoot
                 $this->tags[] = $tag;
             }
         }
-//        $this->setVersion();
     }
 
     private function setStatus(Status $status)
@@ -510,10 +499,7 @@ class JobAdvertisement extends AggregateRoot
         $this->status = $status;
     }
     
-    private function setVersion()
-    {
-        $this->version = $this->version + 1;
-    }
+    
 
     /**
      * 

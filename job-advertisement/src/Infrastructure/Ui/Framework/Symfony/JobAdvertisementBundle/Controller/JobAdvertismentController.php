@@ -21,9 +21,7 @@ use JobAd\Application\Service\JobAdvertisement\AddCityToJobAd;
 use JobAd\Application\Service\JobAdvertisement\AddTypeOfJobToJobAd;
 use JobAd\Application\Service\JobAdvertisement\JobAdManageTypeOfJobs;
 use JobAd\Application\Service\JobAdvertisement\JobAdManageCategores;
-//use JobAd\Application\Service\JobAdvertisement\DraftResponse;
 use JobAd\Application\Service\JobAdvertisement\JobAdvertisementFormResponse;
-//use JobAd\Application\Service\JobAdvertisement\DraftRequst;
 use JobAd\Infrastructure\Persistence\InMemory\InMemoryJobAdvertisementRepo;
 use JobAd\Infrastructure\Persistence\Doctrine\TypeOfJobDoctrineRepository;
 //use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement;
@@ -72,7 +70,7 @@ class JobAdvertismentController extends Controller
     public function draftJobAddAction(Request $request, $id = null, int $version = 0)
     {
 
-
+//        dump($id);
         /**
          * @important @todo 
          * ovo ovde namesti da bude u Kernel::request...
@@ -92,6 +90,7 @@ class JobAdvertismentController extends Controller
             $jobByIdRequest->id = $id;
             $jobByIdRequest->version = $version;
             $jobAd = $this->get('it_poslovi.view_job_advertisement')->execute($jobByIdRequest);
+//            dump($jobAd);
         }
 
 
@@ -105,7 +104,7 @@ class JobAdvertismentController extends Controller
         try {
 
 
-            dump($form->getData());
+//            dump($form->getData());
 
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {

@@ -6,8 +6,10 @@
     <entity
         name="JobAd\Domain\Model\JobAdvertisement\JobAdvertisement"
         table="job_advertisement">
-    
-        <id name="id" column="id" type="job_add_id"/>
+        
+        
+        <!--<id name="id" column="id" type="job_add_id"/>-->
+        <id name="id" column="id" type="string" length="36" />
         <field name="version" type="integer" version="true" />
         <field
             name="pozitonTitle" 

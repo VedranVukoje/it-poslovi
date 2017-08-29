@@ -35,6 +35,9 @@ class JobAdvertisementFormResponse implements Assembler
 
     public function assemble(JobAdvertisement $jobAdvertisement)
     {
+        
+//        dump($jobAdvertisement->id());
+        
         $this->id = (string) $jobAdvertisement->id();
         $this->version = (int) $jobAdvertisement->version();
         $this->pozitonTitle = (string) $jobAdvertisement->pozitonTitle();

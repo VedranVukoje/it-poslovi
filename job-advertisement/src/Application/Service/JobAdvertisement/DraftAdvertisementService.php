@@ -51,7 +51,7 @@ class DraftAdvertisementService implements ApplicationService
     public function execute($request = null)
     {
         
-        
+//        dump($request);
         if ($request->id) {
             dump('edig......');
             $jobAd = $this->repo->ofId(Id::fromNative($request->id), $request->version);
@@ -59,11 +59,12 @@ class DraftAdvertisementService implements ApplicationService
         } else {
             $jobAd = JobAd::draft($request->pozitonTitle, $request->description, $request->howToApllay);
         }
+        dump($jobAd);
         $jobAd->addAdDuration($request->end);
         $this->repo->add($jobAd);
         
 //        $request->id = (string) $jobAd->id();
-        dump($jobAd);
+        
         dump('Draftovan.....');
         return $this->appService->execute($request)
                 ->set('jobAdId', (string) $jobAd->id())
