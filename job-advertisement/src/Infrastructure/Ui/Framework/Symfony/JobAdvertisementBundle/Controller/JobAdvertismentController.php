@@ -121,10 +121,12 @@ class JobAdvertismentController extends Controller
 
                 $baseResponse = new Transaction($baseResponse, new DoctrineSession($this->get('doctrine.orm.default_entity_manager')));
                 $response = $baseResponse->execute($form->getData());
-
+                
+//                dump($form->getData());
+                
                 return $this->redirectToRoute('draft_job_ad', [
-                    'id' => $response->get('jobAdId'),
-                    'version' => $response->get('jobAdVersion')
+                    'id' => $form->getData()->id,
+                    'version' => $form->getData()->version
                         ]);
             }
         } catch (JobAdvertisementException $ex) {

@@ -38,7 +38,7 @@ class ViewJobAdvertisement implements ApplicationService
     {
 //        dump('kao neko prvo ludilo....');
 //        dump($request->id);
-        return $this->assembler->assemble($this->repo->ofId(Id::fromNative($request->id), $request->version));
+        return $this->assembler->assemble($this->repo->ofId(Id::fromNative($request->id)));
     }
     
 }

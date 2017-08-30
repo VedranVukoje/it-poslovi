@@ -14,7 +14,7 @@ namespace JobAd\Domain\Model\JobAdvertisement;
 interface JobAdvertisementRepository
 {
     public function nextIdentity();
-    public function ofId(Id $id, int $version): JobAdvertisement;
+    public function ofId(Id $id): JobAdvertisement;
     public function add(JobAdvertisement $jobAdvertisement);
     public function query($specification);
 }

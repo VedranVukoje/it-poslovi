@@ -35,7 +35,13 @@ class JobAdManageTags implements ApplicationService
     {
         //        dump($request->tags);
         $appService = $this->appService->execute($request);
-        $jobAd = $this->jobAdRepo->ofId(Id::fromNative($appService->get('jobAdId')), $appService->get('jobAdVersion'));
+        $jobAd = $this->jobAdRepo->ofId(Id::fromNative($appService->get('jobAdId')));
+        /**
+         * @todo
+         * ovo ubaciti u try catch exception.. npr za Doctrine ovde ce baciti Optimistic Lock Exception....
+         */
+        $this->jobAdRepo->lock($jobAd, $jobAd->version());
+        
         
         $tags = $this->tagRepo->query(new TagByArrayIds($request->tags));
         $jobAd->manageTags($tags);
@@ -44,9 +50,9 @@ class JobAdManageTags implements ApplicationService
         
         $this->jobAdRepo->add($jobAd);
         
-        dump($jobAd);
-        dump($appService);
-        dump('Tagovi');
+//        dump($jobAd);
+//        dump($appService);
+//        dump('Tagovi');
         
         return $appService;
     }

@@ -28,7 +28,7 @@ use JobAd\Domain\Model\JobAdvertisement\Assembler;
 class DraftAdvertisementService implements ApplicationService
 {
 
-    private $repo;
+    private $jobAdRepo;
     private $appService;
     private $assembler;
 
@@ -41,34 +41,36 @@ class DraftAdvertisementService implements ApplicationService
      * @param Assembler $assembler
      */
     public function __construct(
-    ApplicationService $appService, JobAdvertisementRepository $repo, Assembler $assembler)
+    ApplicationService $appService, JobAdvertisementRepository $jobAdRepo, Assembler $assembler)
     {
         $this->appService = $appService;
-        $this->repo = $repo;
+        $this->jobAdRepo = $jobAdRepo;
         $this->assembler = $assembler;
     }
 
     public function execute($request = null)
     {
-        
+
 //        dump($request);
         if ($request->id) {
-            dump('edig......');
-            $jobAd = $this->repo->ofId(Id::fromNative($request->id), $request->version);
+            $jobAd = $this->jobAdRepo->ofId(Id::fromNative($request->id));
+            /**
+             * @todo
+             * ovo ubaciti u try catch exception.. npr za Doctrine ovde ce baciti Optimistic Lock Exception....
+             */
+            $this->jobAdRepo->lock($jobAd, $jobAd->version());
             $jobAd->manageJobAdDescriptions($request->pozitonTitle, $request->description, $request->howToApllay);
         } else {
             $jobAd = JobAd::draft($request->pozitonTitle, $request->description, $request->howToApllay);
+            $request->id = (string) $jobAd->id();
+            $request->version = (int) $jobAd->version();
         }
-        dump($jobAd);
+
         $jobAd->addAdDuration($request->end);
-        $this->repo->add($jobAd);
-        
+        $this->jobAdRepo->add($jobAd);
+
 //        $request->id = (string) $jobAd->id();
-        
-        dump('Draftovan.....');
-        return $this->appService->execute($request)
-                ->set('jobAdId', (string) $jobAd->id())
-                ->set('jobAdVersion', (int) $jobAd->version());
+        return $this->appService->execute($request)->set('jobAdId', (string) $jobAd->id());
     }
 
 }

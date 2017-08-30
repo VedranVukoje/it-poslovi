@@ -45,14 +45,19 @@ class JobAdManageTypeOfJobs implements ApplicationService
         
         $appService = $this->appService->execute($request);
         
-        $jobAd = $this->jobAdRepo->ofId(Id::fromNative($appService->get('jobAdId')), $appService->get('jobAdVersion'));
+        $jobAd = $this->jobAdRepo->ofId(Id::fromNative($appService->get('jobAdId')));
+        /**
+         * @todo
+         * ovo ubaciti u try catch exception.. npr za Doctrine ovde ce baciti Optimistic Lock Exception....
+         */
+        $this->jobAdRepo->lock($jobAd, $jobAd->version());
         $jobAd->manageTypeOfJobs($typeOfJobs);
         
         $this->jobAdRepo->add($jobAd);
         
-        dump($jobAd);
-        dump($appService);
-        dump('Tipovi posla');
+//        dump($jobAd);
+//        dump($appService);
+//        dump('Tipovi posla');
         
         return $appService;
     }

@@ -34,13 +34,18 @@ class DoctrineJobAdvertisementRepository implements JobAdvertisementRepository
         $this->em = $em;
     }
 
-    public function ofId(Id $id, int $version): JobAdvertisement
+    public function ofId(Id $id): JobAdvertisement
     {
 //        $id = (string)$id;
 //        dump($id);
-        return $this->em->find(JobAdvertisement::class, (string) $id, LockMode::OPTIMISTIC, $version);
+        return $this->em->find(JobAdvertisement::class, (string) $id);
     }
     
+    public function lock(JobAdvertisement $jobAd, int $version)
+    {
+        return $this->em->lock($jobAd, LockMode::OPTIMISTIC, $version);
+    }
+
     public function nextIdentity()
     {
         return Id::generate();

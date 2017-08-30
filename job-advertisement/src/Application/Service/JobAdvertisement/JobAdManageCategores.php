@@ -14,6 +14,7 @@ use JobAd\Domain\Model\Category\CategoryRepository;
 use JobAd\Domain\Model\Category\Exceptions\CategoresNotFoundException;
 use JobAd\Infrastructure\Persistence\Doctrine\Specification\CategoryByArrayOfCategoryIds;
 use JobAd\Domain\Model\JobAdvertisement\Id;
+
 /**
  * Description of JobAdManageCategores
  *
@@ -21,7 +22,7 @@ use JobAd\Domain\Model\JobAdvertisement\Id;
  */
 class JobAdManageCategores implements ApplicationService
 {
-    
+
     private $appService;
     private $jobAdRepo;
     private $categoryRepo;
@@ -32,34 +33,40 @@ class JobAdManageCategores implements ApplicationService
         $this->jobAdRepo = $jobAdRepo;
         $this->categoryRepo = $categoryRepo;
     }
-    
+
     public function execute($request = null)
     {
 //        dump($request);
-        
+
         $spec = new CategoryByArrayOfCategoryIds(array_map(function($category) {
                     return $category['id'];
                 }, $request->categoryes ?? []));
 
         $categoryes = $this->categoryRepo->query($spec);
-        
-        if(0 == count($categoryes)){
+
+        if (0 == count($categoryes)) {
             throw new CategoresNotFoundException("Niste izabrali kategoriju.");
         }
-        
+
         $appService = $this->appService->execute($request);
-        
-        
-        
-        $jobAd = $this->jobAdRepo->ofId(Id::fromNative($appService->get('jobAdId')), $appService->get('jobAdVersion'));
+
+
+
+        $jobAd = $this->jobAdRepo->ofId(Id::fromNative($appService->get('jobAdId')));
+        /**
+         * @todo
+         * ovo ubaciti u try catch exception.. npr za Doctrine ovde ce baciti Optimistic Lock Exception....
+         */
+        $this->jobAdRepo->lock($jobAd, $jobAd->version());
         $jobAd->manageCategores($categoryes);
 //        dump($jobAd);
-        
+
         $this->jobAdRepo->add($jobAd);
-        
-        dump($jobAd);
-        dump($appService);
-        dump('kategorije');
+
+//        dump($jobAd);
+//        dump($appService);
+//        dump('kategorije');
         return $appService;
     }
+
 }

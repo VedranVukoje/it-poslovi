@@ -63,7 +63,7 @@ class JobAdvertisement extends AggregateRoot
      *
      * Optimistic Locking
      */
-    protected $version;
+    protected $version = 1;
     /**
      *
      * @var PozitonTitle 

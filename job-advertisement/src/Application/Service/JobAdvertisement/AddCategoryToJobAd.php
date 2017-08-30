@@ -52,7 +52,13 @@ class AddCategoryToJobAd implements ApplicationService
         
         $appService = $this->appService->execute($request);
         
-        $jobAd = $this->jobAdRepo->ofId(Id::fromNative($appService->get('jobAdId')), $appService->get('jobAdVersion'));
+        $jobAd = $this->jobAdRepo->ofId(Id::fromNative($appService->get('jobAdId')));
+        /**
+         * @todo
+         * ovo ubaciti u try catch exception.. npr za Doctrine ovde ce baciti Optimistic Lock Exception....
+         */
+        $this->jobAdRepo->lock($jobAd, $jobAd->version());
+        
         
         foreach($categoryes as $category){
             $jobAd->addCategory($category);

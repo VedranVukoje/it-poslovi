@@ -53,13 +53,19 @@ class AddCityToJobAd implements ApplicationService
         }
         
         // jobAdId je JobAd\Domain\Model\JobAdvertisement\Id
-        $jobAd = $this->jobAdRepo->ofId(Id::fromNative($appService->get('jobAdId')), $appService->get('jobAdVersion'));
+        $jobAd = $this->jobAdRepo->ofId(Id::fromNative($appService->get('jobAdId')));
+        /**
+         * @todo
+         * ovo ubaciti u try catch exception.. npr za Doctrine ovde ce baciti Optimistic Lock Exception....
+         */
+        $this->jobAdRepo->lock($jobAd, $jobAd->version());
+        
         $jobAd->addCity((string)$cities[0]->postCode(),(string)$cities[0]);
         
         $this->jobAdRepo->add($jobAd);
         
-        dump($jobAd);
-        dump('City.....');
+//        dump($jobAd);
+//        dump('City.....');
         
         return $appService;
     }
