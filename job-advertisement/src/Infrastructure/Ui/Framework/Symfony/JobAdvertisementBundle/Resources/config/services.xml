@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ItPoslovi
+ Vedran Vukoje Ja:
+ vedran.vukoje@gmail.com
+-->
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    
+    
+    <services>
+        
+        <!-- @todo namesti resource= -->
+        <prototype 
+            namespace="JobAd\Application\Service\" 
+            resource="/home/vedran/Projects/dev/projects/it-poslovi/job-advertisement/src/Application/Service/*"/>
+        
+        
+        
+        
+        <service id="JobAd\Application\Service\Transaction" class="JobAd\Application\Service\Transaction" />
+        
+        <service id="it_poslovi.view_city" class="JobAd\Application\Service\Location\ViewCityService" >
+            <argument type="service" id="it_poslovi.job_city_doctrine_repo" />
+            <argument type="service" id="it_poslovi.city_specification_factory" />
+            <tag name="application.service" />
+        </service>
+        
+        <service id="it_poslovi.city_specification_factory" class="JobAd\Infrastructure\Persistence\Doctrine\Specification\CitySpecificationFactory" />
+        
+        <service id="it_poslovi.job_city_doctrine_repo" class="JobAd\Infrastructure\Persistence\Doctrine\CityDoctrineRepository">
+            <argument type="service" id="doctrine.orm.default_entity_manager" />
+            <argument type="service" id="it_poslovi.city_specification_factory" />
+        </service>
+        
+        
+        <!--ovo prebaci u JobAd\Infrastructure\Persistence\Doctrine-->
+         <service id="oracle.session" class="Doctrine\DBAL\Event\Listeners\OracleSessionInit">
+            <tag name="doctrine.event_listener" event="postConnect" />
+        </service>
+        
+        <service id="it_poslovi.job_advertisement_assemble" class="JobAd\Application\Service\JobAdvertisement\JobAdvertisementFormResponse" />
+        
+        <service id="it_poslovi.view_job_advertisement" class="JobAd\Application\Service\JobAdvertisement\ViewJobAdvertisement">
+            <argument type="service" id="it_poslovi.doctrine.job_advertisement_repo" />
+            <argument type="service" id="it_poslovi.job_advertisement_assemble" />
+        </service>
+            
+        
+        <service id="it_poslovi.doctrine.job_advertisement_repo" class="JobAd\Infrastructure\Persistence\Doctrine\DoctrineJobAdvertisementRepository">
+            <argument type="service" id="doctrine.orm.default_entity_manager" />
+        </service>
+        
+        <service 
+            id="JobAd\Infrastructure\Persistence\Doctrine\StoredEventDoctrineRepository" 
+            class="JobAd\Infrastructure\Persistence\Doctrine\StoredEventDoctrineRepository">
+            <argument type="service" id="doctrine.orm.default_entity_manager" />
+            <argument type="service" id="JobAd\Infrastructure\Application\Serialization\JMS\JMSSerializer" />
+        </service>
+        
+        <service id="JobAd\Domain\PersistDomainEventSubscriber" class="JobAd\Domain\PersistDomainEventSubscriber">
+            <argument type="service" id="JobAd\Infrastructure\Persistence\Doctrine\StoredEventDoctrineRepository" />
+            <tag name="app.domain.subscriber"/>
+        </service>
+        
+        
+        <service id="JobAd\Domain\DomainEventPublisher" class="JobAd\Domain\DomainEventPublisher">
+            <factory method="instance"/>
+        </service>
+        
+<!--        <service id="it_poslovi.es_draft_add" class="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\EsDraftJobAdd">
+            <argument type="service" id="it_poslovi.es.jobadd.repository" />
+            <argument type="service" id="it_poslovi.in_memori.job_advertisement_repo"></argument>
+            <tag name="app.domain.subscriber"/>
+        </service>-->
+        
+        
+        
+        
+        
+        <service id="it_poslovi.elasticsearch" class="JobAd\Infrastructure\Persistence\ElasticSearch\ElasticSearchClient"></service>
+        <service id="it_poslovi.es.jobadd.repository" class="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository">
+            <argument type="service" id="it_poslovi.elasticsearch"></argument>
+        </service>
+        <service id="it_poslovi.logger" class="JobAd\Infrastructure\Adapter\Monolog">
+            <argument type="service" id="logger" />
+        </service>
+        <service id="it_poslovi.symfony.form.factory" class="JobAd\Infrastructure\Ui\Lib\Form\FormFactory">
+            
+            <argument type="service" id="form.factory" />
+        </service>
+        
+        
+        <service id="it_poslovi.in_memori.job_advertisement_repo" class="JobAd\Infrastructure\Persistence\InMemory\InMemoryJobAdvertisementRepo"></service>
+        
+        <service id="it_poslovi.job_advertisement_response" class="JobAd\Application\Service\JobAdvertisement\DraftResponse">
+            <tag name="it_poslovi.assembler" />
+        </service>
+        
+        <service id="it_poslovi.draft_job" class="JobAd\Application\Service\JobAdvertisement\DraftAdvertisementService">
+            <argument type="service" id="it_poslovi.typeofjob.view" />
+<!--            <argument type="service" id="it_poslovi.in_memori.job_advertisement_repo" />  Goood forr Dev -->
+            <argument type="service" id="it_poslovi.doctrine.job_advertisement_repo" />
+            <argument type="service" id="it_poslovi.job_city_doctrine_repo" />
+            <argument type="service" id="it_poslovi.category_doectrine_repository" />
+            <argument type="service" id="it_poslovi.job_advertisement_response" />
+            <tag name="application.service" />
+        </service>
+        
+        <service id="it_poslovi.category_doectrine_repository" class="JobAd\Infrastructure\Persistence\Doctrine\CategoryDoectrineRepository">
+            <argument type="service" id="doctrine.orm.default_entity_manager" />
+        </service>
+        <service id="it_poslovi.in_memory_job_advertisment_repository" class="JobAd\Infrastructure\Persistence\InMemory\InMemoryJobAdvertisementRepo"></service>
+        
+        
+        
+        <service id="it_poslovi.type_of_job_dto_response" class="JobAd\Application\Service\TypeOfJob\TypeOfJobDTOResponse" />
+        <service id="it_poslovi.factory_type_of_job" class="JobAd\Domain\Model\TypeOfJob\FactoryTypeOfJob" />
+        <service id="it_poslovi.typeofjob_doctrine_repository" class="JobAd\Infrastructure\Persistence\Doctrine\TypeOfJobDoctrineRepository">
+            <argument type="service" id="doctrine.orm.default_entity_manager" />
+        </service>
+        <service id="it_poslovi.new_type_of_job_service" class="JobAd\Application\Service\TypeOfJob\NewTypeOfJobService">
+            <argument type="service" id="it_poslovi.typeofjob_doctrine_repository" />
+            <argument type="service" id="it_poslovi.factory_type_of_job" />
+            <argument type="service" id="it_poslovi.type_of_job_dto_response" />
+        </service>
+        
+        <service id="it_poslovi.type_of_job_doctrine_specification_factory" class="JobAd\Infrastructure\Persistence\Doctrine\Specification\TypeOfJobSepcificationFactory"></service>
+        <service id="it_poslovi.type_of_job_array_collection_response" class="JobAd\Application\Service\TypeOfJob\ViewTypeOfJobArrayCollectionResponse"/>
+        
+        <service id="it_poslovi.typeofjob.view" 
+                 class="JobAd\Application\Service\TypeOfJob\ViewTypeOfJobService">
+            <argument type="service" id="it_poslovi.typeofjob_doctrine_repository" />
+            <argument type="service" id="it_poslovi.type_of_job_doctrine_specification_factory" />
+            <argument type="service" id="it_poslovi.type_of_job_array_collection_response" />
+            <tag name="application.service" />
+        </service>
+        
+        <service id="it_poslovi.typeofjob.manage" class="JobAd\Application\Service\TypeOfJob\ManageTypeOfJobService">
+            <argument type="service" id="it_poslovi.new_type_of_job_service" />
+            <argument type="service" id="it_poslovi.typeofjob_doctrine_repository" />
+            <argument type="service" id="it_poslovi.type_of_job_dto_response" />
+        </service>
+    </services>
+    
+    
+    
+    
+<!--    <parameters>
+         ... 
+        <parameter key="mailer.transport">sendmail</parameter>
+    </parameters>
+    <services>
+        <service id="mailer" class="Mailer">
+            <argument>%mailer.transport%</argument>
+        </service>
+
+        <service id="newsletter_manager" class="NewsletterManager">
+            <call method="setMailer">
+                <argument type="service" id="mailer" />
+            </call>
+        </service>
+    </services>-->
+</container>
