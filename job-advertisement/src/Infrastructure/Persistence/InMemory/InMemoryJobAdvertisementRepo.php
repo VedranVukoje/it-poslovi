@@ -28,7 +28,7 @@ class InMemoryJobAdvertisementRepo implements JobAdvertisementRepository
         $this->data = new JobAdvertisementCollection();
     }
     
-    public function ofId(Id $id, int $version): JobAdvertisement
+    public function ofId(Id $id): JobAdvertisement
     {
         ;
     }

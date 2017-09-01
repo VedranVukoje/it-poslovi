@@ -31,7 +31,7 @@ class EventDispatcherCompilerPass implements CompilerPassInterface
         
         $definition = $container->findDefinition($id);
 
-        $subscribers = $container->findTaggedServiceIds('app.domain.event');
+        $subscribers = $container->findTaggedServiceIds('app.domain.subscriber');
 
         foreach ($subscribers as $id => $tag) {
             $definition->addMethodCall('subscribe', [new Reference($id)]);

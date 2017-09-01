@@ -13,7 +13,7 @@ use Ramsey\Uuid\Uuid;
  *
  * @author vedran
  */
-interface EventStream
+interface EventStream extends DomainEvent
 {
 
     public function id(): Uuid;

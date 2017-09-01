@@ -10,6 +10,7 @@ namespace JobAd\Domain\Model\JobAdvertisement\Events;
 
 use JobAd\Domain\EventStream;
 use Ramsey\Uuid\Uuid;
+use DateTimeImmutable;
 /**
  * Description of JobAdEventStream
  *
@@ -21,12 +22,14 @@ class JobAdEventStream implements EventStream
     private $id;
     private $type;
     private $stream;
+    private $occurredOn;
     
     public function __construct(Uuid $id, string $type, array $stram)
     {
         $this->id = $id;
         $this->type = $type;
         $this->stream = $stram;
+        $this->occurredOn = new DateTimeImmutable;
     }
 
 
@@ -43,5 +46,10 @@ class JobAdEventStream implements EventStream
     public function stream(): array
     {
         return $this->stream;
+    }
+    
+    public function occurredOn()
+    {
+        return $this->occurredOn;
     }
 }

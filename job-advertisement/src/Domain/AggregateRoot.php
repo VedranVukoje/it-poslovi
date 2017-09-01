@@ -20,7 +20,7 @@ class AggregateRoot
     protected function recordApplayAndPublihThat(DomainEvent $event)
     {
         $this->recordThat($event);
-        $this->applayTaht($event);
+        $this->applyTaht($event);
         $this->publishThat($event);
     }
     
@@ -29,7 +29,7 @@ class AggregateRoot
         $this->recordedEvents[] = $event;
     }
     
-    protected function applayTaht(DomainEvent $event)
+    protected function applyTaht(DomainEvent $event)
     {
         
         $class = explode('\\', get_class($event));

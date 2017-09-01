@@ -4,6 +4,7 @@ namespace JobAd\Domain\Model\JobAdvertisement;
 
 use DateTimeImmutable;
 use JobAd\Domain\AggregateRoot;
+use JobAd\Domain\EventStream;
 use JobAd\Domain\Model\JobAdvertisement\Events\JobAdWasDrafted;
 use JobAd\Domain\Model\JobAdvertisement\Events\CategoryWasAddedToJobAdvertisement;
 use JobAd\Domain\Model\JobAdvertisement\Events\TypeOfJobWasAddedToJobAdvertisement;
@@ -60,7 +61,7 @@ class JobAdvertisement extends AggregateRoot
     protected $id;
     
     /**
-     *
+     * @todo proveri zasto je u dokumentaciji samo $version ?
      * Optimistic Locking
      */
     protected $version = 1;
@@ -215,6 +216,15 @@ class JobAdvertisement extends AggregateRoot
     public function duration()
     {
         return $this->end;
+    }
+    
+    public static function reconstitute(EventStream $history)
+    {
+        $jobAd = new static($history->id());
+        
+        foreach($history->stream() as $event){
+            $this->applyTaht($event);
+        }
     }
     
     /**
