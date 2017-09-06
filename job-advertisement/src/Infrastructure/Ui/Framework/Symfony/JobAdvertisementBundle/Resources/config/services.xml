@@ -69,20 +69,6 @@
             <factory method="instance"/>
         </service>
         
-<!--        <service id="it_poslovi.es_draft_add" class="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\EsDraftJobAdd">
-            <argument type="service" id="it_poslovi.es.jobadd.repository" />
-            <argument type="service" id="it_poslovi.in_memori.job_advertisement_repo"></argument>
-            <tag name="app.domain.subscriber"/>
-        </service>-->
-        
-        
-        
-        
-        
-        <service id="it_poslovi.elasticsearch" class="JobAd\Infrastructure\Persistence\ElasticSearch\ElasticSearchClient"></service>
-        <service id="it_poslovi.es.jobadd.repository" class="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository">
-            <argument type="service" id="it_poslovi.elasticsearch"></argument>
-        </service>
         <service id="it_poslovi.logger" class="JobAd\Infrastructure\Adapter\Monolog">
             <argument type="service" id="logger" />
         </service>

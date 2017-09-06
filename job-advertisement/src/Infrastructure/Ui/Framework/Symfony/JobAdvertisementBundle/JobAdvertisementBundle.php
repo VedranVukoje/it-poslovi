@@ -25,6 +25,5 @@ class JobAdvertisementBundle extends Bundle
     {
         parent::build($container);
         $container->addCompilerPass(new EventDispatcherCompilerPass());
-        $container->addCompilerPass(new ItPosloviTransactionCompailerPass());
     }
 }

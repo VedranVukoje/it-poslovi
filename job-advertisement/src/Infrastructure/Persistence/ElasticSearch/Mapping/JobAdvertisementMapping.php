@@ -5,24 +5,27 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 namespace JobAd\Infrastructure\Persistence\ElasticSearch\Mapping;
+
 /**
  * Description of JobAdvertisementMap
- * 
+ *
  * @todo nije jos gotovo.... comand ... bla ....
- * 
+ * ItPosloviElasticSearchTypeMapping
  * @author vedran
  */
-class JobAdvertisementType
+class JobAdvertisementMapping
 {
+
     public function map()
     {
         return [
-            'index' => 'itposlovi',
-//            'type' => 'jobadvertisment', pazi na ovo vec imas dole pise...
+            'index' => 'it-poslovi',
+//            'type' => 'job-advertisement', // pazi na ovo vec imas dole pise...
             'body' => [
                 'mappings' => [
-                    'jobadvertisment' => [
+                    'job-advertisement' => [
                         '_all' => ["enabled" => false],
                         'properties' => [
                             'id' => ['type' => 'string'],
@@ -32,14 +35,49 @@ class JobAdvertisementType
                             'typeofjobs' => ['properties' => ['id' => ['type' => 'string'], 'name' => ['type' => 'string']]],
                             'categoryes' => ['properties' => ['id' => ['type' => 'string'], 'name' => ['type' => 'string']]],
                             'city' => ['properties' => ['postcode' => ['type' => 'string'], 'name' => ['type' => 'string']]],
-                            'status' => ['type' => 'short']
+                            'tags' => ['properties' => ['id' => ['type' => 'string'], 'name' => ['type' => 'string']]],
+                            'duration' => ['type' => 'date', 'format' => 'dd.MM.yyyy'],
+                            'status' => ['type' => 'short'],
+                            'updatedAt' => ['type' => 'date', 'format' => 'dd.MM.yyyy HH:mm:ss'],
+                            'createdAt' => ['type' => 'date', 'format' => 'dd.MM.yyyy HH:mm:ss']
                         ]
                     ]
                 ]
             ]
         ];
     }
+
+    public function mappings()
+    {
+        return [
+            'job-advertisement' => [
+                '_all' => ["enabled" => false],
+                'properties' => [
+                    'id' => ['type' => 'string'],
+                    'pozitonTitle' => ['type' => 'string'],
+                    'description' => ['type' => 'text'],
+                    'howtoapplay' => ['type' => 'text'],
+                    'typeofjobs' => ['properties' => ['id' => ['type' => 'string'], 'name' => ['type' => 'string']]],
+                    'categoryes' => ['properties' => ['id' => ['type' => 'string'], 'name' => ['type' => 'string']]],
+                    'city' => ['properties' => ['postcode' => ['type' => 'string'], 'name' => ['type' => 'string']]],
+                    'tags' => ['properties' => ['id' => ['type' => 'string'], 'name' => ['type' => 'string']]],
+                    'duration' => ['type' => 'date', 'format' => 'dd.MM.yyyy'],
+                    'status' => ['type' => 'short'],
+                    'updatedAt' => ['type' => 'date', 'format' => 'dd.MM.yyyy HH:mm:ss'],
+                    'createdAt' => ['type' => 'date', 'format' => 'dd.MM.yyyy HH:mm:ss']
+                ]
+            ]
+        ];
+    }
+
 }
+
+// curl -XPUT 'localhost:9200/website/blog/1?version=1&pretty' -H 'Content-Type: application/json' -d'
+//{
+//  "title": "My first blog entry",
+//  "text":  "Starting to get the hang of this..."
+//}
+//'
 
 //        $client = \Elasticsearch\ClientBuilder::create()->build();
 

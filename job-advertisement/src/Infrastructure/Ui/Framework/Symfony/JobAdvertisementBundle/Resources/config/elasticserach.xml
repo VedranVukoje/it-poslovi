@@ -8,8 +8,69 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     
+    <parameters>
+        <parameter key="CategoryWasAddedToJobAdvertisement">
+            JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\CategoryWasAddedToJobAdvertisement
+        </parameter>
+    </parameters>
     
     <services>
+        <service id="JobAd\Infrastructure\Persistence\ElasticSearch\ElasticSearchClient" 
+                 class="JobAd\Infrastructure\Persistence\ElasticSearch\ElasticSearchClient">
+        </service>
+        <service id="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository" 
+                 class="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository">
+            <argument type="service" id="JobAd\Infrastructure\Persistence\ElasticSearch\ElasticSearchClient"></argument>
+        </service>
+        <service 
+            id="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\CategoryWasAddedToJobAdvertisement"
+            class="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\CategoryWasAddedToJobAdvertisement">
+            <argument type="service" id="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository"></argument>
+            <tag name="app.domain.subscriber"/>
+        </service>
+        <service 
+            id="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdWasDrafted"
+            class="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdWasDrafted">
+            <argument type="service" id="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository"></argument>
+            <tag name="app.domain.subscriber"/>
+        </service>
+        <service 
+            id="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdDescriptionsWasManaged"
+            class="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdDescriptionsWasManaged">
+            <argument type="service" id="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository"></argument>
+            <tag name="app.domain.subscriber"/>
+        </service>
+        <service 
+            id="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdTypeOfJobsWasManaged"
+            class="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdTypeOfJobsWasManaged">
+            <argument type="service" id="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository"></argument>
+            <tag name="app.domain.subscriber"/>
+        </service>
+        <service 
+            id="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdCategoresWsaManaged"
+            class="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdCategoresWsaManaged">
+            <argument type="service" id="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository"></argument>
+            <tag name="app.domain.subscriber"/>
+        </service>
+        <service 
+            id="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\CityWasAddedToJobAdvertisement"
+            class="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\CityWasAddedToJobAdvertisement">
+            <argument type="service" id="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository"></argument>
+            <tag name="app.domain.subscriber"/>
+        </service>
+        <service 
+            id="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\DurationWasAddedToAd"
+            class="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\DurationWasAddedToAd">
+            <argument type="service" id="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository"></argument>
+            <tag name="app.domain.subscriber"/>
+        </service>
+        <service 
+            id="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdTagsWasManaged"
+            class="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdTagsWasManaged">
+            <argument type="service" id="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository"></argument>
+            <tag name="app.domain.subscriber"/>
+        </service>
+        
         
     </services>
     

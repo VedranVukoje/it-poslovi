@@ -34,6 +34,8 @@ class JobAdvertisementExtension extends Extension
         $loader->load('services.xml');
         
         $loader->load('serializer.xml');
+        
+        $loader->load('elasticserach.xml');
     }
 
     public function getAlias()

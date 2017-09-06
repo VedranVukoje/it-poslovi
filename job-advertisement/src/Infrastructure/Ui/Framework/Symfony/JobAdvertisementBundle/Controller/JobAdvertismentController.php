@@ -18,11 +18,11 @@ use Symfony\Component\HttpFoundation\Request;
 use JobAd\Application\Service\JobAdvertisement\DraftAdvertisementService;
 use JobAd\Application\Service\JobAdvertisement\AddCityToJobAd;
 //use JobAd\Application\Service\JobAdvertisement\AddCategoryToJobAd;
-use JobAd\Application\Service\JobAdvertisement\AddTypeOfJobToJobAd;
+//use JobAd\Application\Service\JobAdvertisement\AddTypeOfJobToJobAd;
 use JobAd\Application\Service\JobAdvertisement\JobAdManageTypeOfJobs;
 use JobAd\Application\Service\JobAdvertisement\JobAdManageCategores;
 use JobAd\Application\Service\JobAdvertisement\JobAdvertisementFormResponse;
-use JobAd\Infrastructure\Persistence\InMemory\InMemoryJobAdvertisementRepo;
+//use JobAd\Infrastructure\Persistence\InMemory\InMemoryJobAdvertisementRepo;
 use JobAd\Infrastructure\Persistence\Doctrine\TypeOfJobDoctrineRepository;
 //use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement;
 //use JobAd\Domain\Model\JobAdvertisement\Name;
@@ -48,7 +48,7 @@ use JobAd\Application\Service\BaseResponse;
 use JobAd\Domain\DomainEventPublisher;
 //use JobAd\Infrastructure\Application\Serialization\JMS\JMSFactory;
 //use JobAd\Infrastructure\Application\Serialization\JMS\JMSSerializer;
-use JobAd\Application\Service\JobAdvertisement\AddTagToJobAd;
+//use JobAd\Application\Service\JobAdvertisement\AddTagToJobAd;
 use JobAd\Application\Service\JobAdvertisement\JobAdManageTags;
 use JobAd\Infrastructure\Persistence\Doctrine\TagDoctrineRepository;
 
@@ -71,11 +71,7 @@ class JobAdvertismentController extends Controller
     {
 
 //        dump($id);
-        /**
-         * @important @todo 
-         * ovo ovde namesti da bude u Kernel::request...
-         */
-        $this->get(DomainEventPublisher::class);
+
         $em = $this->get('doctrine.orm.default_entity_manager');
 
         $jobAdRepo = $this->get('it_poslovi.doctrine.job_advertisement_repo');
@@ -109,6 +105,15 @@ class JobAdvertismentController extends Controller
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
 
+                /**
+                 * @important @todo 
+                 * ovo ovde namesti da bude u Kernel::request...
+                 * 02 rujan 2017
+                 * Ovo cu izbaciti iz servica i samog framework - a i ubaciti
+                 * u neki AMQ . Sada samo pravim sinhrono.
+                 */
+                $this->get(DomainEventPublisher::class);
+
                 $baseResponse = new BaseResponse();
                 $baseResponse = new DraftAdvertisementService($baseResponse, $jobAdRepo, new JobAdvertisementFormResponse);
 //                $baseResponse = new AddCategoryToJobAd($baseResponse, $jobAdRepo, new CategoryDoectrineRepository($em));
@@ -121,13 +126,13 @@ class JobAdvertismentController extends Controller
 
                 $baseResponse = new Transaction($baseResponse, new DoctrineSession($this->get('doctrine.orm.default_entity_manager')));
                 $response = $baseResponse->execute($form->getData());
-                
+
 //                dump($form->getData());
-                
+
                 return $this->redirectToRoute('draft_job_ad', [
-                    'id' => $form->getData()->id,
-                    'version' => $form->getData()->version
-                        ]);
+                            'id' => $form->getData()->id,
+                            'version' => $form->getData()->version
+                ]);
             }
         } catch (JobAdvertisementException $ex) {
             dump($ex);

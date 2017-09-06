@@ -9,7 +9,9 @@
         }
     ],
     "require": {
-        "php": ">=5.5.9"
+        "php": ">=5.5.9",
+        "elasticsearch/elasticsearch": "~5.0",
+        "ocramius/generated-hydrator": "^1.2"
     },
     "autoload": {
         "psr-4": {

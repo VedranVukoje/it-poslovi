@@ -43,7 +43,7 @@ class JobAdCategoresWsaManaged implements DomainEvent
 
     public function fresh()
     {
-        return $this->new;
+        return $this->fresh;
     }
     
     public function add()
