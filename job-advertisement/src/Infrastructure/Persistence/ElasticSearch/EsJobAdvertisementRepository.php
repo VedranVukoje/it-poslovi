@@ -36,7 +36,7 @@ class EsJobAdvertisementRepository implements JobAdvertisementRepository
     {
         $this->es = $es->build();
         $this->jobAdvertisment = new JobAdvertisementCollection();
-        $this->params = ['index' => 'itposlovi', 'type' => 'jobadvertisment'];
+        $this->params = ['index' => 'it-poslovi', 'type' => 'job-advertisement'];
     }
 
     public function nextIdentity()
@@ -53,11 +53,17 @@ class EsJobAdvertisementRepository implements JobAdvertisementRepository
     public function add(JobAdvertisement $jobAdvertisement)
     {
         $this->params['id'] = (string) $jobAdvertisement->id();
-        $this->params['body'] = $jobAdvertisement->toArray();
+        $body = $jobAdvertisement->extract();
+        dump($body);
+        $this->params['body'] = $body;
         
-        if ($jobAdvertisement->status()->equals(Status::draft())) {
-//            $this->es->index($this->params);
-        }
+//        $this->es->index($this->params);
+//        $this->es->update($this->params);
+//        switch ($jobAdvertisement->isNew()){
+//            case true: $this->es->index($this->params); break;
+//            default : $this->es->update($this->params); break;
+//        }
+ 
     }
 
     public function query($specification)

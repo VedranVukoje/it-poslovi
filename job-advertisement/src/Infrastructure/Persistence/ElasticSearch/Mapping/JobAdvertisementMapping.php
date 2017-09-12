@@ -34,9 +34,9 @@ class JobAdvertisementMapping
                             'howtoapplay' => ['type' => 'text'],
                             'typeofjobs' => ['properties' => ['id' => ['type' => 'string'], 'name' => ['type' => 'string']]],
                             'categoryes' => ['properties' => ['id' => ['type' => 'string'], 'name' => ['type' => 'string']]],
-                            'city' => ['properties' => ['postcode' => ['type' => 'string'], 'name' => ['type' => 'string']]],
+                            'city' => ['properties' => ['postCode' => ['type' => 'string'], 'name' => ['type' => 'string']]],
                             'tags' => ['properties' => ['id' => ['type' => 'string'], 'name' => ['type' => 'string']]],
-                            'duration' => ['type' => 'date', 'format' => 'dd.MM.yyyy'],
+                            'end' => ['type' => 'date', 'format' => 'dd.MM.yyyy'],
                             'status' => ['type' => 'short'],
                             'updatedAt' => ['type' => 'date', 'format' => 'dd.MM.yyyy HH:mm:ss'],
                             'createdAt' => ['type' => 'date', 'format' => 'dd.MM.yyyy HH:mm:ss']
@@ -50,24 +50,27 @@ class JobAdvertisementMapping
     public function mappings()
     {
         return [
-            'job-advertisement' => [
-                '_all' => ["enabled" => false],
-                'properties' => [
-                    'id' => ['type' => 'string'],
-                    'pozitonTitle' => ['type' => 'string'],
-                    'description' => ['type' => 'text'],
-                    'howtoapplay' => ['type' => 'text'],
-                    'typeofjobs' => ['properties' => ['id' => ['type' => 'string'], 'name' => ['type' => 'string']]],
-                    'categoryes' => ['properties' => ['id' => ['type' => 'string'], 'name' => ['type' => 'string']]],
-                    'city' => ['properties' => ['postcode' => ['type' => 'string'], 'name' => ['type' => 'string']]],
-                    'tags' => ['properties' => ['id' => ['type' => 'string'], 'name' => ['type' => 'string']]],
-                    'duration' => ['type' => 'date', 'format' => 'dd.MM.yyyy'],
-                    'status' => ['type' => 'short'],
-                    'updatedAt' => ['type' => 'date', 'format' => 'dd.MM.yyyy HH:mm:ss'],
-                    'createdAt' => ['type' => 'date', 'format' => 'dd.MM.yyyy HH:mm:ss']
+            'index' => 'it-poslovi',
+            'type' => 'job-advertisement',
+            'body' => [
+                'job-advertisement' => [
+                    '_all' => ["enabled" => false],
+                    'properties' => [
+                        'id' => ['type' => 'string'],
+                        'pozitonTitle' => ['type' => 'string'],
+                        'description' => ['type' => 'text'],
+                        'howtoapplay' => ['type' => 'text'],
+                        'typeofjobs' => ['properties' => ['id' => ['type' => 'string'], 'name' => ['type' => 'string']]],
+                        'categoryes' => ['properties' => ['id' => ['type' => 'string'], 'name' => ['type' => 'string']]],
+                        'city' => ['properties' => ['postcode' => ['type' => 'string'], 'name' => ['type' => 'string']]],
+                        'tags' => ['properties' => ['id' => ['type' => 'string'], 'name' => ['type' => 'string']]],
+                        'end' => ['type' => 'date', 'format' => 'dd.MM.yyyy'],
+                        'status' => ['type' => 'short'],
+                        'updatedAt' => ['type' => 'date', 'format' => 'dd.MM.yyyy HH:mm:ss'],
+                        'createdAt' => ['type' => 'date', 'format' => 'dd.MM.yyyy HH:mm:ss']
+                    ]
                 ]
-            ]
-        ];
+        ]];
     }
 
 }

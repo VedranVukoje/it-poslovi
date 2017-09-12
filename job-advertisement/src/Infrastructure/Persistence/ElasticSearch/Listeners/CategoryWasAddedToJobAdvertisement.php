@@ -11,6 +11,7 @@ namespace JobAd\Infrastructure\Persistence\ElasticSearch\Listeners;
 use JobAd\Domain\EventSubscriber;
 use JobAd\Domain\DomainEvent;
 use JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository;
+use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement;
 
 /**
  * Description of CategoryWasAddedToJobAdvertisement
@@ -34,10 +35,7 @@ class CategoryWasAddedToJobAdvertisement implements EventSubscriber
 
     public function handle(DomainEvent $event)
     {
-        $id = (string) $event->id();
-        $category = $event->category();
-        $occurredOn = $event->occurredOn();
-        
+//        $this->es->add(JobAdvertisement::reconstituteFromDomainEvent($event));
     }
 
 }

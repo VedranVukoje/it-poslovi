@@ -11,6 +11,7 @@ namespace JobAd\Infrastructure\Persistence\ElasticSearch\Listeners;
 use JobAd\Domain\EventSubscriber;
 use JobAd\Domain\DomainEvent;
 use JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository;
+use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement;
 /**
  * Description of JobAdDescriptionsWasManaged
  *
@@ -33,10 +34,6 @@ class JobAdDescriptionsWasManaged implements EventSubscriber
     
     public function handle(DomainEvent $event)
     {
-        $id = $event->id();
-        $occurredOn = $event->occurredOn();
-        $pozitonTitle = $event->pozitonTitle();
-        $description = $event->description();
-        $howToApplay = $event->howToApplay();
+        $this->es->add(JobAdvertisement::reconstituteFromDomainEvent($event));
     }
 }
