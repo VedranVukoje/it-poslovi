@@ -9,6 +9,7 @@
 namespace JobAd\Infrastructure\Ui\Framework\Symfony\JobAdvertisementBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use JobAd\Domain\JobAdvertisementException;
 //use Symfony\Component\Form\Forms;
@@ -68,7 +69,7 @@ class JobAdvertismentController extends Controller
      * @param Request $request
      * @return type
      */
-    public function draftJobAddAction(Request $request, $id = null, int $version = 0)
+    public function draftJobAddAction(LoggerInterface $logger,  Request $request, $id = null, int $version = 0)
     {
 
 //        dump($id);
@@ -86,7 +87,7 @@ class JobAdvertismentController extends Controller
 //            dump($jobAd);
         }
 
-
+        $em = $this->get('doctrine.orm.default_entity_manager');
         $form = $this->get('it_poslovi.symfony.form.factory')->create(JobAdvertisementType::class, $jobAd ?? null, [
             'attr' => [
                 'class' => 'form-horizontal',
@@ -111,7 +112,7 @@ class JobAdvertismentController extends Controller
                  */
                 $this->get(DomainEventPublisher::class);
                 
-                $em = $this->get('doctrine.orm.default_entity_manager');
+                
                 $repoRactory = new JobAdDoctrineRepositoryFactory($em);
                 
                 $draft = new BaseResponse();
