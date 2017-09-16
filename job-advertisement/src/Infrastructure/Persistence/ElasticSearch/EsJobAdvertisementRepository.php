@@ -10,7 +10,7 @@ namespace JobAd\Infrastructure\Persistence\ElasticSearch;
 
 use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementRepository;
 use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement;
-use JobAd\Domain\Model\JobAdvertisement\Status;
+//use JobAd\Domain\Model\JobAdvertisement\Status;
 use JobAd\Domain\Model\JobAdvertisement\Id;
 use JobAd\Domain\Model\JobAdvertisement\Adapter\JobAdvertisementCollection;
 use JobAd\Infrastructure\Persistence\ElasticSearch\ElasticSearchClient;
@@ -54,16 +54,13 @@ class EsJobAdvertisementRepository implements JobAdvertisementRepository
     {
         $this->params['id'] = (string) $jobAdvertisement->id();
         $body = $jobAdvertisement->extract();
-        dump($body);
         $this->params['body'] = $body;
         
-//        $this->es->index($this->params);
-//        $this->es->update($this->params);
-//        switch ($jobAdvertisement->isNew()){
-//            case true: $this->es->index($this->params); break;
-//            default : $this->es->update($this->params); break;
-//        }
- 
+        $this->params['version'] = $jobAdvertisement->version();
+        switch($jobAdvertisement->isFirstVersion()){
+            case true:$this->es->index($this->params);break;
+            case false:$this->es->update($this->params);break;
+        }
     }
 
     public function query($specification)

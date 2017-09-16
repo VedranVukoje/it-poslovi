@@ -52,6 +52,7 @@ use JobAd\Domain\DomainEventPublisher;
 use JobAd\Application\Service\JobAdvertisement\JobAdManageTags;
 use JobAd\Infrastructure\Persistence\Doctrine\TagDoctrineRepository;
 
+use JobAd\Infrastructure\Persistence\Doctrine\JobAdDoctrineRepositoryFactory;
 /**
  * Description of JobAdvertismentController
  *
@@ -72,11 +73,7 @@ class JobAdvertismentController extends Controller
 
 //        dump($id);
 
-        $em = $this->get('doctrine.orm.default_entity_manager');
-
-        $jobAdRepo = $this->get('it_poslovi.doctrine.job_advertisement_repo');
-        $cityRepo = new CityDoctrineRepository($em);
-        $tagRepo = new TagDoctrineRepository($em);
+        
 
         if ($id) {
             /**
@@ -113,19 +110,15 @@ class JobAdvertismentController extends Controller
                  * u neki AMQ . Sada samo pravim sinhrono.
                  */
                 $this->get(DomainEventPublisher::class);
-
-                $baseResponse = new BaseResponse();
-                $baseResponse = new DraftAdvertisementService($baseResponse, $jobAdRepo, new JobAdvertisementFormResponse);
-//                $baseResponse = new AddCategoryToJobAd($baseResponse, $jobAdRepo, new CategoryDoectrineRepository($em));
-                $baseResponse = new JobAdManageCategores($baseResponse, $jobAdRepo, new CategoryDoectrineRepository($em));
-//                $baseResponse = new AddTypeOfJobToJobAd($baseResponse, $jobAdRepo, new TypeOfJobDoctrineRepository($em));
-                $baseResponse = new JobAdManageTypeOfJobs($baseResponse, $jobAdRepo, new TypeOfJobDoctrineRepository($em));
-//                $baseResponse = new AddTagToJobAd($baseResponse, $jobAdRepo, $tagRepo);
-                $baseResponse = new JobAdManageTags($baseResponse, $jobAdRepo, $tagRepo);
-                $baseResponse = new AddCityToJobAd($baseResponse, $jobAdRepo, $cityRepo);
-
-                $baseResponse = new Transaction($baseResponse, new DoctrineSession($this->get('doctrine.orm.default_entity_manager')));
-                $response = $baseResponse->execute($form->getData());
+                
+                $em = $this->get('doctrine.orm.default_entity_manager');
+                $repoRactory = new JobAdDoctrineRepositoryFactory($em);
+                
+                $draft = new BaseResponse();
+                $draft = new DraftAdvertisementService($draft, $repoRactory);
+                $draft = new AddCityToJobAd($draft, $repoRactory);
+                $draft = new Transaction($draft, new DoctrineSession($this->get('doctrine.orm.default_entity_manager')));
+                $response = $draft->execute($form->getData());
 
 //                dump($form->getData());
 

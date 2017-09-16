@@ -17,7 +17,11 @@
             resource="/home/vedran/Projects/dev/projects/it-poslovi/job-advertisement/src/Application/Service/*"/>
         
         
-        
+        <service 
+            id="JobAd\Infrastructure\Persistence\Doctrine\JobAdDoctrineRepositoryFactory"
+            class="JobAd\Infrastructure\Persistence\Doctrine\JobAdDoctrineRepositoryFactory" >
+            <argument type="service" id="doctrine.orm.default_entity_manager" />
+        </service>
         
         <service id="JobAd\Application\Service\Transaction" class="JobAd\Application\Service\Transaction" />
         
@@ -82,16 +86,6 @@
         
         <service id="it_poslovi.job_advertisement_response" class="JobAd\Application\Service\JobAdvertisement\DraftResponse">
             <tag name="it_poslovi.assembler" />
-        </service>
-        
-        <service id="it_poslovi.draft_job" class="JobAd\Application\Service\JobAdvertisement\DraftAdvertisementService">
-            <argument type="service" id="it_poslovi.typeofjob.view" />
-<!--            <argument type="service" id="it_poslovi.in_memori.job_advertisement_repo" />  Goood forr Dev -->
-            <argument type="service" id="it_poslovi.doctrine.job_advertisement_repo" />
-            <argument type="service" id="it_poslovi.job_city_doctrine_repo" />
-            <argument type="service" id="it_poslovi.category_doectrine_repository" />
-            <argument type="service" id="it_poslovi.job_advertisement_response" />
-            <tag name="application.service" />
         </service>
         
         <service id="it_poslovi.category_doectrine_repository" class="JobAd\Infrastructure\Persistence\Doctrine\CategoryDoectrineRepository">

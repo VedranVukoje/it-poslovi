@@ -65,7 +65,7 @@ class JobAdvertisement extends AggregateRoot
      * @todo proveri zasto je u dokumentaciji samo $version ?
      * Optimistic Locking
      */
-    protected $version = 1;
+    protected $version;
     /**
      *
      * @var PozitonTitle 
@@ -165,6 +165,11 @@ class JobAdvertisement extends AggregateRoot
     {
         return $this->version;
     }
+    
+    public function isFirstVersion(): bool
+    {
+        return 0 == (int) $this->version;
+    }
 
     public function pozitonTitle()
     {
@@ -219,12 +224,6 @@ class JobAdvertisement extends AggregateRoot
         return $this->end;
     }
     
-    public function isNew()
-    {
-        return 1 == $this->version;
-    }
-
-
     public static function reconstitute(EventStream $history)
     {
         $jobAd = new static($history->id());
@@ -424,28 +423,6 @@ class JobAdvertisement extends AggregateRoot
         ];
     }
     
-//    public function toArray()
-//    {
-//
-//        $categoryes = array_map(function($category) {
-//            return ['id' => (string) $category->id(), 'name' => $category->name()];
-//        }, $this->categoryes->toArray());
-//
-//        $typeOfJobs = array_map(function($typeOfJob) {
-//            return ['id' => (string) $typeOfJob->id(), 'name' => (string) $typeOfJob->name()];
-//        }, $this->typeOfJobs->toArray());
-//
-//        return [
-//            'id' => (string) $this->id,
-//            'pozitonTitle' => (string) $this->pozitonTitle,
-//            'description' => (string) $this->description,
-//            'howtoapplay' => (string) $this->howToApplay,
-//            'categoryes' => $categoryes,
-//            'typeofjobs' => $typeOfJobs,
-//            'city' => ['name' => (string) $this->city, 'postCode' => (string) $this->city->postCode()]
-//        ];
-//    }
-
     public function status()
     {
         return $this->status;

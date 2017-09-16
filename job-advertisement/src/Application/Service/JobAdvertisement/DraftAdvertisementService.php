@@ -4,10 +4,15 @@ namespace JobAd\Application\Service\JobAdvertisement;
 
 //use JobAd\Application\Event\EventDispatcher;
 use JobAd\Application\Service\ApplicationService;
-use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement as JobAd;
+use JobAd\Domain\Model\Category\Exceptions\CategoresNotFoundException;
+use JobAd\Domain\Model\Location\Exception\CityNotFoundException;
+use JobAd\Domain\Model\JobAdvertisement\Exceptions\OnlyOneCityPerJobAd;
+use JobAd\Domain\Model\Category\Exceptions\TypeOfJobNotFoundException;
+use JobAd\Domain\Model\JobAdvertisement\RepositoryFactory;
+use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement as DomainJobAd;
 use JobAd\Domain\Model\JobAdvertisement\Id;
-use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementRepository;
-use JobAd\Domain\Model\JobAdvertisement\Assembler;
+//use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementRepository;
+//use JobAd\Domain\Model\JobAdvertisement\Assembler;
 
 //use JobAd\Domain\Model\Tag\Tag;
 //use JobAd\Domain\Model\JobAdvertisement\JobAddIsDrafted;
@@ -25,52 +30,72 @@ use JobAd\Domain\Model\JobAdvertisement\Assembler;
  * JobAd\Application\Service\JobAdvertisement\DraftAdvertisementService
  * @author vedran
  */
-class DraftAdvertisementService implements ApplicationService
+class DraftAdvertisementService extends JobAd implements ApplicationService
 {
-
-    private $jobAdRepo;
+    
     private $appService;
-    private $assembler;
-
+    
     /**
+     *  
      * 
-     * @todo Repository u Dekorator || ?Lanac Odgovornosti 
-     * i prilagoditi metodu execute .... 
-     * 
-     * @param JobAdvertisementRepository $repo
-     * @param Assembler $assembler
+     * @param RepositoryFactory $repoFactory
      */
-    public function __construct(
-    ApplicationService $appService, JobAdvertisementRepository $jobAdRepo, Assembler $assembler)
+    public function __construct(ApplicationService $appService, RepositoryFactory $repoFactory)
     {
         $this->appService = $appService;
-        $this->jobAdRepo = $jobAdRepo;
-        $this->assembler = $assembler;
+        parent::__construct($repoFactory);
     }
 
     public function execute($request = null)
     {
-
-//        dump($request);
+        
         if ($request->id) {
-            $jobAd = $this->jobAdRepo->ofId(Id::fromNative($request->id));
+            $jobAd = $this->ofId(Id::fromNative($request->id));
             /**
              * @todo
              * ovo ubaciti u try catch exception.. npr za Doctrine ovde ce baciti Optimistic Lock Exception....
              */
-            $this->jobAdRepo->lock($jobAd, $jobAd->version());
+            $this->lock($jobAd, (int) $jobAd->version());
             $jobAd->manageJobAdDescriptions($request->pozitonTitle, $request->description, $request->howToApllay);
         } else {
-            $jobAd = JobAd::draft($request->pozitonTitle, $request->description, $request->howToApllay);
+            $jobAd = DomainJobAd::draft($request->pozitonTitle, $request->description, $request->howToApllay);
             $request->id = (string) $jobAd->id();
             $request->version = (int) $jobAd->version();
         }
 
         $jobAd->addAdDuration($request->end);
-        $this->jobAdRepo->add($jobAd);
+        
+        $cities = $this->cityesByPostCodes($request->city['postCode']);
+        
+        if (0 == count($cities)) {
+            throw new CityNotFoundException(sprintf('Post Code "%s" ne postoji.', $request->city['postCode']));
+        }
+        if (1 !== count($cities)) {
+            throw new OnlyOneCityPerJobAd("Samo jedan lokacija po oglasu.");
+        }
+        
+        $jobAd->addCity((string)$cities[0]->postCode(),(string)$cities[0]);
+        
+        
+        $categoryes = $this->categoryByArrayOfCategoryIds($request->categoryes);
+        if (0 == count($categoryes)) {
+            throw new CategoresNotFoundException("Niste izabrali kategoriju.");
+        }
+        $jobAd->manageCategores($categoryes);
+        
+        $jobAd->manageTags($this->tagByArrayIds($request->tags));
+        
+        $typeOfJobs = $this->typeOfJobByArrayIds($request->typeOfJobs);
+        if(0 == count($typeOfJobs)){
+            throw new TypeOfJobNotFoundException("Morate izabrati makar jedan tip posla");
+        }
+        
+        $jobAd->manageTypeOfJobs($typeOfJobs);
+        
+        $this->repoFactory->jobAdRepo()->add($jobAd);
 
 //        $request->id = (string) $jobAd->id();
-        return $this->appService->execute($request)->set('jobAdId', (string) $jobAd->id());
+        return $this->appService->execute($request);
     }
 
 }

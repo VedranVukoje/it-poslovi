@@ -10,8 +10,10 @@ namespace JobAd\Infrastructure\Persistence\ElasticSearch\Listeners;
 
 use JobAd\Domain\EventSubscriber;
 use JobAd\Domain\DomainEvent;
-use JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository;
+//use JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository;
 use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement;
+use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementRepository;
+use JobAd\Domain\Model\JobAdvertisement\RepositoryFactory;
 /**
  * Description of JobAdWasDrafted
  *
@@ -20,10 +22,12 @@ use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement;
 class JobAdWasDrafted implements EventSubscriber
 {
     private $es;
+    private $repoFactory;
 
-    public function __construct(EsJobAdvertisementRepository $es)
+    public function __construct(JobAdvertisementRepository $es, RepositoryFactory $repoFactory)
     {
         $this->es = $es;
+        $this->repoFactory = $repoFactory;
     }
     
     public function isSubscribedTo(DomainEvent $event)
@@ -33,6 +37,8 @@ class JobAdWasDrafted implements EventSubscriber
 
     public function handle(DomainEvent $event)
     {
-        $this->es->add(JobAdvertisement::reconstituteFromDomainEvent($event));
+//        $jobAd = $this->repoFactory->jobAdRepo()->ofId($event->id());
+//        $this->es->add($jobAd);
+//        $this->es->add(JobAdvertisement::reconstituteFromDomainEvent($event));
     }
 }

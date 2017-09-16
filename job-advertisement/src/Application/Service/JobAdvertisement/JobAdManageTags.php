@@ -40,7 +40,7 @@ class JobAdManageTags implements ApplicationService
          * @todo
          * ovo ubaciti u try catch exception.. npr za Doctrine ovde ce baciti Optimistic Lock Exception....
          */
-        $this->jobAdRepo->lock($jobAd, $jobAd->version());
+        $this->jobAdRepo->lock($jobAd, (int) $jobAd->version());
         
         
         $tags = $this->tagRepo->query(new TagByArrayIds($request->tags));

@@ -15,6 +15,7 @@ use JobAd\Domain\Model\Location\CityRepository;
 use JobAd\Infrastructure\Persistence\Doctrine\Specification\CityByPostCodes;
 use JobAd\Domain\Model\Location\Exception\CityNotFoundException;
 use JobAd\Domain\Model\JobAdvertisement\Exceptions\OnlyOneCityPerJobAd;
+use JobAd\Domain\Model\JobAdvertisement\RepositoryFactory;
 
 
 /**
@@ -22,20 +23,18 @@ use JobAd\Domain\Model\JobAdvertisement\Exceptions\OnlyOneCityPerJobAd;
  *
  * @author vedran
  */
-class AddCityToJobAd implements ApplicationService
+class AddCityToJobAd extends JobAd implements ApplicationService
 {
     
     protected $appService;
-    private $jobAdRepo;
-    private $cityRepo;
 
 
-    public function __construct(ApplicationService $appService, JobAdvertisementRepository $jobAdRepo, CityRepository $cityRepo)
+    public function __construct(ApplicationService $appService, RepositoryFactory $repoFactory, CityRepository $cityRepo)
     {
         $this->appService = $appService;
-        $this->jobAdRepo = $jobAdRepo;
-        $this->cityRepo = $cityRepo;
         
+        parent::__construct($repoFactory);
+            
     }
 
     public function execute($request = null)
@@ -58,7 +57,7 @@ class AddCityToJobAd implements ApplicationService
          * @todo
          * ovo ubaciti u try catch exception.. npr za Doctrine ovde ce baciti Optimistic Lock Exception....
          */
-        $this->jobAdRepo->lock($jobAd, $jobAd->version());
+        $this->jobAdRepo->lock($jobAd, (int) $jobAd->version());
         
         $jobAd->addCity((string)$cities[0]->postCode(),(string)$cities[0]);
         
