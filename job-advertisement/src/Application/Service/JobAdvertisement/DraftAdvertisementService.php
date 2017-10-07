@@ -4,6 +4,7 @@ namespace JobAd\Application\Service\JobAdvertisement;
 
 //use JobAd\Application\Event\EventDispatcher;
 use JobAd\Application\Service\ApplicationService;
+use Psr\Log\LoggerInterface;
 use JobAd\Domain\Model\Category\Exceptions\CategoresNotFoundException;
 use JobAd\Domain\Model\Location\Exception\CityNotFoundException;
 use JobAd\Domain\Model\JobAdvertisement\Exceptions\OnlyOneCityPerJobAd;
@@ -34,15 +35,16 @@ class DraftAdvertisementService extends JobAd implements ApplicationService
 {
     
     private $appService;
-    
+    private $logger;
     /**
      *  
      * 
      * @param RepositoryFactory $repoFactory
      */
-    public function __construct(ApplicationService $appService, RepositoryFactory $repoFactory)
+    public function __construct(ApplicationService $appService, RepositoryFactory $repoFactory, LoggerInterface $logger)
     {
         $this->appService = $appService;
+        $this->logger = $logger;
         parent::__construct($repoFactory);
     }
 
@@ -59,43 +61,44 @@ class DraftAdvertisementService extends JobAd implements ApplicationService
             $jobAd->manageJobAdDescriptions($request->pozitonTitle, $request->description, $request->howToApllay);
         } else {
             $jobAd = DomainJobAd::draft($request->pozitonTitle, $request->description, $request->howToApllay);
-            $request->id = (string) $jobAd->id();
-            $request->version = (int) $jobAd->version();
         }
 
         $jobAd->addAdDuration($request->end);
         
-        $cities = $this->cityesByPostCodes($request->city['postCode']);
+//        $cities = $this->cityesByPostCodes($request->city['postCode']);
+//        
+//        if (0 == count($cities)) {
+//            throw new CityNotFoundException(sprintf('Post Code "%s" ne postoji.', $request->city['postCode']));
+//        }
+//        if (1 !== count($cities)) {
+//            throw new OnlyOneCityPerJobAd("Samo jedna lokacija po oglasu.");
+//        }
+//        
+//        $jobAd->addCity((string)$cities[0]->postCode(),(string)$cities[0]);
         
-        if (0 == count($cities)) {
-            throw new CityNotFoundException(sprintf('Post Code "%s" ne postoji.', $request->city['postCode']));
-        }
-        if (1 !== count($cities)) {
-            throw new OnlyOneCityPerJobAd("Samo jedan lokacija po oglasu.");
-        }
         
-        $jobAd->addCity((string)$cities[0]->postCode(),(string)$cities[0]);
+//        $categoryes = $this->categoryByArrayOfCategoryIds($request->categoryes);
+//        if (0 == count($categoryes)) {
+//            throw new CategoresNotFoundException("Niste izabrali kategoriju.");
+//        }
+//        $jobAd->manageCategores($categoryes);
         
-        
-        $categoryes = $this->categoryByArrayOfCategoryIds($request->categoryes);
-        if (0 == count($categoryes)) {
-            throw new CategoresNotFoundException("Niste izabrali kategoriju.");
-        }
-        $jobAd->manageCategores($categoryes);
-        
-        $jobAd->manageTags($this->tagByArrayIds($request->tags));
-        
-        $typeOfJobs = $this->typeOfJobByArrayIds($request->typeOfJobs);
-        if(0 == count($typeOfJobs)){
-            throw new TypeOfJobNotFoundException("Morate izabrati makar jedan tip posla");
-        }
-        
-        $jobAd->manageTypeOfJobs($typeOfJobs);
+//        $jobAd->manageTags($this->tagByArrayIds($request->tags));
+//        
+//        $typeOfJobs = $this->typeOfJobByArrayIds($request->typeOfJobs);
+//        if(0 == count($typeOfJobs)){
+//            throw new TypeOfJobNotFoundException("Morate izabrati makar jedan tip posla");
+//        }
+//        
+//        $jobAd->manageTypeOfJobs($typeOfJobs);
         
         $this->repoFactory->jobAdRepo()->add($jobAd);
 
-//        $request->id = (string) $jobAd->id();
-        return $this->appService->execute($request);
+        $request->id = (string) $jobAd->id();
+        $request->version = (int) $jobAd->version();
+        $this->logger->debug('Job Ad was drafted ', ['jobAd' => $this->extract($jobAd)]);
+        return $this->appService->execute($request)
+                ->set('id', $jobAd->id());
     }
 
 }

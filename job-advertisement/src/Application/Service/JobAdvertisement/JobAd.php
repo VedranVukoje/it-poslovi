@@ -9,6 +9,8 @@
 namespace JobAd\Application\Service\JobAdvertisement;
 
 //use JobAd\Application\Service\ApplicationService;
+use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement;
+use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementHydrator;
 use JobAd\Domain\Model\JobAdvertisement\RepositoryFactory;
 use JobAd\Domain\Model\JobAdvertisement\Id;
 use JobAd\Infrastructure\Persistence\Doctrine\Specification\CategoryByArrayOfCategoryIds;
@@ -39,9 +41,9 @@ abstract class JobAd
         return $this->repoFactory->jobAdRepo()->ofId($id);
     }
 
-    protected function lock(Id $id, int $version)
+    protected function lock(JobAdvertisement $jobAd, int $version)
     {
-        return $this->repoFactory->jobAdRepo()->lock($id, $version);
+        return $this->repoFactory->jobAdRepo()->lock($jobAd, $version);
     }
 
     protected function categoryByArrayOfCategoryIds(array $categoryes): CategoryCollection
@@ -75,6 +77,11 @@ abstract class JobAd
                         ->query(new TypeOfJobByArrayIds(array_map(function ($ypeOfJob) {
                                     return $ypeOfJob['id'];
                                 }, $typeOfJobs)));
+    }
+    
+    protected function extract(JobAdvertisement $jobAd): array
+    {
+        return (new JobAdvertisementHydrator)->extract($jobAd);
     }
 
 }

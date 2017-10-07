@@ -1,0 +1,6 @@
+JobAd\Domain\Model\JobAdvertisement\PozitonTitle:
+    exclusion_policy: all
+    
+    properties:
+        value:
+            type: string

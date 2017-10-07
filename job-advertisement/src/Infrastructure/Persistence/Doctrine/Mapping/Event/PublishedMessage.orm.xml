@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+    <entity
+        name="JobAd\Domain\Event\PublishedMessage"
+        repository-class="JobAd\Infrastructure\Persistence\Doctrine\DoctrinePublishedMessageTracker"
+        table="eventpublishedmessagetracker">
+    
+        <id name="trackerId" column="tracker_id" type="integer">
+           <generator strategy="AUTO" /> 
+<!--            <generator strategy="SEQUENCE" />
+            <sequence-generator sequence-name="event_published_message_tracker_seq" allocation-size="100" initial-value="1" />-->
+        </id>
+        <field
+            name="mostRecentPublishedMessageId" 
+            column="message_id" 
+            type="integer" 
+        />
+        <field
+            name="exchangeName" 
+            column="exchange_name" 
+            type="string" 
+        />
+    
+        
+        
+<!--        <lifecycle-callbacks> 
+            <lifecycle-callback type="prePersist" method="updateTimestam"/>
+            <lifecycle-callback type="preUpdate" method="updateTimestam"/>
+        </lifecycle-callbacks>-->
+
+    </entity>
+</doctrine-mapping>

@@ -9,10 +9,11 @@
 namespace JobAd\Application\Service\JobAdvertisement;
 
 use JobAd\Application\Service\ApplicationService;
-use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementRepository;
+use Psr\Log\LoggerInterface;
+//use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementRepository;
 use JobAd\Domain\Model\JobAdvertisement\Id;
-use JobAd\Domain\Model\Location\CityRepository;
-use JobAd\Infrastructure\Persistence\Doctrine\Specification\CityByPostCodes;
+//use JobAd\Domain\Model\Location\CityRepository;
+//use JobAd\Infrastructure\Persistence\Doctrine\Specification\CityByPostCodes;
 use JobAd\Domain\Model\Location\Exception\CityNotFoundException;
 use JobAd\Domain\Model\JobAdvertisement\Exceptions\OnlyOneCityPerJobAd;
 use JobAd\Domain\Model\JobAdvertisement\RepositoryFactory;
@@ -27,12 +28,12 @@ class AddCityToJobAd extends JobAd implements ApplicationService
 {
     
     protected $appService;
+    private $logger;
 
-
-    public function __construct(ApplicationService $appService, RepositoryFactory $repoFactory, CityRepository $cityRepo)
+    public function __construct(ApplicationService $appService, RepositoryFactory $repoFactory, LoggerInterface $logger)
     {
         $this->appService = $appService;
-        
+        $this->logger = $logger;
         parent::__construct($repoFactory);
             
     }
@@ -40,8 +41,9 @@ class AddCityToJobAd extends JobAd implements ApplicationService
     public function execute($request = null)
     {
         $appService = $this->appService->execute($request);
+        $id = $appService->get('id');
         
-        $cities = $this->cityRepo->query(new CityByPostCodes($request->city['postCode']));
+        $cities = $this->cityesByPostCodes($request->city['postCode']);
         
         if (0 == count($cities)) {
             throw new CityNotFoundException(sprintf('Post Code "%s" ne postoji.', $request->city['postCode']));
@@ -52,20 +54,23 @@ class AddCityToJobAd extends JobAd implements ApplicationService
         }
         
         // jobAdId je JobAd\Domain\Model\JobAdvertisement\Id
-        $jobAd = $this->jobAdRepo->ofId(Id::fromNative($appService->get('jobAdId')));
+        $jobAd = $this->ofId($id);
+        
+        
+        
         /**
          * @todo
          * ovo ubaciti u try catch exception.. npr za Doctrine ovde ce baciti Optimistic Lock Exception....
          */
-        $this->jobAdRepo->lock($jobAd, (int) $jobAd->version());
+        $this->lock($jobAd, (int) $jobAd->version());
         
         $jobAd->addCity((string)$cities[0]->postCode(),(string)$cities[0]);
         
-        $this->jobAdRepo->add($jobAd);
+        $this->repoFactory->jobAdRepo()->add($jobAd);
         
-//        dump($jobAd);
-//        dump('City.....');
-        
+
+        $request->version = (int) $jobAd->version();
+        $this->logger->debug('City added to Job Ad', ['jobAd' => $this->extract($jobAd)]);
         return $appService;
     }
 }

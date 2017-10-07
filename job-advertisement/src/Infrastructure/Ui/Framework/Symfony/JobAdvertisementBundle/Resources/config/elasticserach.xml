@@ -26,7 +26,7 @@
             id="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\CategoryWasAddedToJobAdvertisement"
             class="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\CategoryWasAddedToJobAdvertisement">
             <argument type="service" id="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository"></argument>
-            <!--<tag name="app.domain.subscriber"/>-->
+            <tag name="app.domain.subscriber"/>
         </service>
         <service 
             id="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdWasDrafted"
@@ -46,31 +46,31 @@
             id="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdTypeOfJobsWasManaged"
             class="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdTypeOfJobsWasManaged">
             <argument type="service" id="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository"></argument>
-            <!--<tag name="app.domain.subscriber"/>-->
+            <tag name="app.domain.subscriber"/>
         </service>
         <service 
             id="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdCategoresWsaManaged"
             class="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdCategoresWsaManaged">
             <argument type="service" id="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository"></argument>
-            <!--<tag name="app.domain.subscriber"/>-->
+            <tag name="app.domain.subscriber"/>
         </service>
         <service 
             id="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\CityWasAddedToJobAdvertisement"
             class="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\CityWasAddedToJobAdvertisement">
             <argument type="service" id="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository"></argument>
-            <!--<tag name="app.domain.subscriber"/>-->
+            <tag name="app.domain.subscriber"/>
         </service>
         <service 
             id="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\DurationWasAddedToAd"
             class="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\DurationWasAddedToAd">
             <argument type="service" id="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository"></argument>
-            <!--<tag name="app.domain.subscriber"/>-->
+            <tag name="app.domain.subscriber"/>
         </service>
         <service 
             id="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdTagsWasManaged"
             class="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdTagsWasManaged">
             <argument type="service" id="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository"></argument>
-            <!--<tag name="app.domain.subscriber"/>-->
+            <tag name="app.domain.subscriber"/>
         </service>
         
         

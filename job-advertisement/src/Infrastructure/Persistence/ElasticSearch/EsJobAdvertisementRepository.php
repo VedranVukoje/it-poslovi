@@ -10,6 +10,7 @@ namespace JobAd\Infrastructure\Persistence\ElasticSearch;
 
 use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementRepository;
 use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement;
+use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementHydrator;
 //use JobAd\Domain\Model\JobAdvertisement\Status;
 use JobAd\Domain\Model\JobAdvertisement\Id;
 use JobAd\Domain\Model\JobAdvertisement\Adapter\JobAdvertisementCollection;
@@ -22,7 +23,7 @@ use JobAd\Infrastructure\Persistence\ElasticSearch\ElasticSearchClient;
  */
 class EsJobAdvertisementRepository implements JobAdvertisementRepository
 {
-    
+
     /**
      *
      * @todo umesto ovoga koristi curl neki lib...
@@ -30,47 +31,59 @@ class EsJobAdvertisementRepository implements JobAdvertisementRepository
      */
     private $es;
     private $jobAdvertisment;
-    private $params = [];
+    private $document = [
+        'index' => 'it-poslovi',
+        'type' => 'job-advertisement',
+//        'version_type' => 'external'
+    ];
 
     public function __construct(ElasticSearchClient $es)
     {
         $this->es = $es->build();
         $this->jobAdvertisment = new JobAdvertisementCollection();
-        $this->params = ['index' => 'it-poslovi', 'type' => 'job-advertisement'];
     }
 
     public function nextIdentity()
     {
         return Id::generate();
     }
-    
+
     public function ofId(Id $id): JobAdvertisement
     {
-        ;
-    }
+        /**
+         * @todo NotFoundException.....
+         */
+        $es = $this->es->get(array_merge($this->document, ['id' => (string) $id]));
 
+        return (new JobAdvertisementHydrator)
+                        ->hydrate($es['_source'], new JobAdvertisement($id));
+    }
 
     public function add(JobAdvertisement $jobAdvertisement)
     {
-        $this->params['id'] = (string) $jobAdvertisement->id();
-        $body = $jobAdvertisement->extract();
-        $this->params['body'] = $body;
+        $body = (new JobAdvertisementHydrator)->extract($jobAdvertisement);
         
-        $this->params['version'] = $jobAdvertisement->version();
-        switch($jobAdvertisement->isFirstVersion()){
-            case true:$this->es->index($this->params);break;
-            case false:$this->es->update($this->params);break;
+        switch ($jobAdvertisement->isNew()) {
+            case true:
+                $document = array_merge($this->document, [
+                    'body' => $body,
+                    'id' => (string) $jobAdvertisement->id()
+                ]);
+                $this->es->index($document);
+                break;
+            case false:
+                $document = array_merge($this->document, [
+                    'body' => ['doc' => $body],
+                    'id' => (string) $jobAdvertisement->id()
+                ]);
+                $this->es->update($document);
+                break;
         }
     }
 
     public function query($specification)
     {
         
-    }
-
-    public function byId(Id $id)
-    {
-        return $this->jobAdvertisment[(string) $id] ?? false;
     }
 
 }

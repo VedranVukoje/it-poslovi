@@ -7,14 +7,14 @@
  */
 namespace JobAd\Infrastructure\Hydrator;
 use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement;
-use JobAd\Domain\Model\JobAdvertisement\JobAdHydrator as Hydrator;
+use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementHydratorInterface;
 use GeneratedHydrator\Configuration;
 /**
  * Description of JobAdHydrator
  *
  * @author vedran
  */
-class JobAdHydrator implements Hydrator
+class JobAdHydrator implements JobAdvertisementHydratorInterface
 {
     
     private $hidrator;

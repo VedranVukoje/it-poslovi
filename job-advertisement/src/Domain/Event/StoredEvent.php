@@ -49,6 +49,11 @@ class StoredEvent
     {
         return $this->eventId;
     }
+    
+    public function typeName()
+    {
+        return $this->typeName;
+    }
 
     public function occurredOn()
     {

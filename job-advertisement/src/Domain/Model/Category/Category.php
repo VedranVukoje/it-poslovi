@@ -68,6 +68,20 @@ class Category
         
         return $category;
     }
+    /**
+     * @todo u proxy hidrator ..... 
+     * @param array $data
+     * @return \self
+     */
+    public static function hydrate(array $data): self
+    {
+        $category = new static(Id::fromNative($data['id']));
+        $category->name = new Name($data['name']);
+        
+        
+        return $category;
+    }
+
     public static function fromNative($id, $name)
     {
         $category = new static(Id::fromNative($id));
@@ -81,6 +95,12 @@ class Category
         $this->jobAdvertisement[] = $jobAdvertisement;
     }
     
-    
+    public function extract(): array
+    {
+        return [
+            'id' => (string) $this->id,
+            'name' => (string) $this->name
+        ];
+    }
     
 }

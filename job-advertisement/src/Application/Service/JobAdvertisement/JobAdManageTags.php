@@ -9,51 +9,55 @@
 namespace JobAd\Application\Service\JobAdvertisement;
 
 use JobAd\Application\Service\ApplicationService;
-use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementRepository;
-use JobAd\Domain\Model\JobAdvertisement\Id;
-use JobAd\Domain\Model\Tag\TagRepository;
-use JobAd\Infrastructure\Persistence\Doctrine\Specification\TagByArrayIds;
+use Psr\Log\LoggerInterface;
+//use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementRepository;
+//use JobAd\Domain\Model\JobAdvertisement\Id;
+//use JobAd\Domain\Model\Tag\TagRepository;
+//use JobAd\Infrastructure\Persistence\Doctrine\Specification\TagByArrayIds;
+use JobAd\Domain\Model\JobAdvertisement\RepositoryFactory;
+
 /**
  * Description of JobAdManageTags
  *
  * @author vedran
  */
-class JobAdManageTags implements ApplicationService
+class JobAdManageTags extends JobAd implements ApplicationService
 {
+
     private $appService;
-    private $jobAdRepo;
-    private $tagRepo;
-    
-    public function __construct(ApplicationService $appService, JobAdvertisementRepository $jobAdRepo, TagRepository $tagRepo)
+    private $logger;
+
+    public function __construct(ApplicationService $appService, RepositoryFactory $repoFactory, LoggerInterface $logger)
     {
         $this->appService = $appService;
-        $this->jobAdRepo = $jobAdRepo;
-        $this->tagRepo = $tagRepo;
+        $this->logger = $logger;
+        parent::__construct($repoFactory);
     }
-    
+
     public function execute($request = null)
     {
-        //        dump($request->tags);
+        
         $appService = $this->appService->execute($request);
-        $jobAd = $this->jobAdRepo->ofId(Id::fromNative($appService->get('jobAdId')));
+        $id = $appService->get('id');
+        
+        $tags = $this->tagByArrayIds($request->tags);
+        
+        
+        $jobAd = $this->ofId($id);
         /**
          * @todo
          * ovo ubaciti u try catch exception.. npr za Doctrine ovde ce baciti Optimistic Lock Exception....
          */
-        $this->jobAdRepo->lock($jobAd, (int) $jobAd->version());
-        
-        
-        $tags = $this->tagRepo->query(new TagByArrayIds($request->tags));
+        $this->lock($jobAd, (int) $jobAd->version());
+
         $jobAd->manageTags($tags);
+
+        $this->repoFactory->jobAdRepo()->add($jobAd);
         
-//        dump($jobAd);
-        
-        $this->jobAdRepo->add($jobAd);
-        
-//        dump($jobAd);
-//        dump($appService);
-//        dump('Tagovi');
+        $request->version = (int) $jobAd->version();
+        $this->logger->debug('Tags are added to Job Ad', ['jobAd' => $this->extract($jobAd)]);
         
         return $appService;
     }
+
 }

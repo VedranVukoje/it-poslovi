@@ -12,7 +12,7 @@ namespace JobAd\Domain\Model\JobAdvertisement;
  *
  * @author vedran
  */
-interface JobAdHydrator
+interface JobAdvertisementHydratorInterface
 {
     public function extract(JobAdvertisement $jobAd): array;
     public function hydrate(array $data, JobAdvertisement $jobAd): JobAdvertisement;

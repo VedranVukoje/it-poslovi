@@ -1,0 +1,6 @@
+JobAd\Domain\Model\JobAdvertisement\Id:
+    exclusion_policy: all
+    
+    properties:
+        value:
+            type: uuid

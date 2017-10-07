@@ -14,7 +14,7 @@ use JobAd\Domain\Model\JobAdvertisement\Id;
 
 /**
  * Description of DurationWasAddedToAd
- *
+ * 
  * @author vedran
  */
 class DurationWasAddedToAd implements DomainEvent

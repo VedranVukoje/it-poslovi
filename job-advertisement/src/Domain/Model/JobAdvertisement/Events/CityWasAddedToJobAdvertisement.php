@@ -23,13 +23,13 @@ class CityWasAddedToJobAdvertisement implements DomainEvent
 
     private $id;
     private $city;
-    private $occurr;
+    private $occurredOn;
 
     public function __construct(Id $id, City $city)
     {
         $this->id = $id;
         $this->city = $city;
-        $this->occurr = new DateTimeImmutable();
+        $this->occurredOn = new DateTimeImmutable();
     }
 
     public function id()
@@ -44,7 +44,7 @@ class CityWasAddedToJobAdvertisement implements DomainEvent
 
     public function occurredOn()
     {
-        return $this->occurr;
+        return $this->occurredOn;
     }
 
 }

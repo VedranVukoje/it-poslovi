@@ -24,7 +24,7 @@ class JobAdWasDrafted implements DomainEvent
 {
     
     private $id;
-    private $date;
+    private $occurredOn;
     private $pozitonTitle;
     private $description;
     private $howToApplay;
@@ -35,7 +35,7 @@ class JobAdWasDrafted implements DomainEvent
         $this->pozitonTitle = $pozitonTitle;
         $this->description = $description;
         $this->howToApplay = $howToApplay;
-        $this->date = new DateTimeImmutable();
+        $this->occurredOn = new DateTimeImmutable();
     }
     
     public function pozitonTitle()
@@ -55,7 +55,7 @@ class JobAdWasDrafted implements DomainEvent
 
     public function occurredOn()
     {
-        return $this->date;
+        return $this->occurredOn;
     }
     
     /**

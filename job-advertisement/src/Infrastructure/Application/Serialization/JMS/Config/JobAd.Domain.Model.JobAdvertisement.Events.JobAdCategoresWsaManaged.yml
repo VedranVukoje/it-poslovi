@@ -1,0 +1,16 @@
+JobAd\Domain\Model\JobAdvertisement\Events\JobAdCategoresWsaManaged:
+    exclusion_policy: all
+    
+    properties:
+        id:
+            type: JobAd\Domain\Model\JobAdvertisement\Id
+        occurredOn:
+            type: CustomDateTimeImmutable
+        fresh:
+            type: CategoryCollection
+        add:
+            type: CategoryCollection
+        remove:
+            type: CategoryCollection
+            
+

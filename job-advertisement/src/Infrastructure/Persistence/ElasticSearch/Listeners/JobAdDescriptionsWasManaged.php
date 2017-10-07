@@ -38,8 +38,9 @@ class JobAdDescriptionsWasManaged implements EventSubscriber
     
     public function handle(DomainEvent $event)
     {
-        $jobAd = $this->repoFactory->jobAdRepo()->ofId($event->id());
+        $jobAd = $this->es->ofId($event->id());
+        $jobAd->doApplayByDomainEvent($event);
+        
         $this->es->add($jobAd);
-//        $this->es->add(JobAdvertisement::reconstituteFromDomainEvent($event));
     }
 }

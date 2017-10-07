@@ -34,9 +34,10 @@ class StoredEventDoctrineRepository implements EventStore
 
     public function append(DomainEvent $event)
     {
+        $eventBody = $this->serialize->serialize($event, 'json');
         $typeName = get_class($event);
         $occurredOn = $event->occurredOn();
-        $eventBody = $this->serialize->serialize($event, 'json');
+        
         $storedEvent = new StoredEvent($typeName, $event->occurredOn(), $eventBody);
         
         $this->em->persist($storedEvent);
@@ -44,6 +45,17 @@ class StoredEventDoctrineRepository implements EventStore
     
     public function allStoredEventsSince($eventId)
     {
-        ;
+        return $this->em->createQueryBuilder('e')
+                ->select('e')
+                ->from(StoredEvent::class, 'e')
+                ->where('e.eventId > :eventId')
+                ->setParameter('eventId', $eventId)
+                ->getQuery()
+                ->getResult();
+    }
+    
+    public function ofEventId($eventId)
+    {
+        return $this->em->find(StoredEvent::class, $eventId);
     }
 }

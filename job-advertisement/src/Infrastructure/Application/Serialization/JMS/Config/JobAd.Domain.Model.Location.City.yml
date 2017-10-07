@@ -1,0 +1,8 @@
+JobAd\Domain\Model\Location\City:
+    exclusion_policy: all
+    
+    properties:
+        name:
+            type: string
+        postCode:
+            type: JobAd\Domain\Model\Location\PostCode

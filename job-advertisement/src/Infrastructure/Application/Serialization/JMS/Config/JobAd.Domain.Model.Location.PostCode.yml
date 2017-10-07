@@ -1,0 +1,6 @@
+JobAd\Domain\Model\Location\PostCode:
+    exclusion_policy: all
+    
+    properties:
+        value:
+            type: int

@@ -39,6 +39,7 @@ class JobAdvertisement extends AggregateRoot
      */
     const ADMIN_APPROVAL_TIME = '+24 hours';
     
+    private $isNew = false;
     /**
      *
      * @important obavezno kastovati ValueObject JobAd\Domain\Model\JobAdvertisement\Id u string. 
@@ -65,7 +66,7 @@ class JobAdvertisement extends AggregateRoot
      * @todo proveri zasto je u dokumentaciji samo $version ?
      * Optimistic Locking
      */
-    protected $version;
+    protected $version = 1;
     /**
      *
      * @var PozitonTitle 
@@ -153,7 +154,6 @@ class JobAdvertisement extends AggregateRoot
         $this->typeOfJobs = new TypeOfJobCollection();
         $this->categoryes = new CategoryCollection();
         $this->tags = new TagCollection();
-        $this->updateTimestam();
     }
 
     public function id()
@@ -166,9 +166,9 @@ class JobAdvertisement extends AggregateRoot
         return $this->version;
     }
     
-    public function isFirstVersion(): bool
+    public function isNew(): bool
     {
-        return 0 == (int) $this->version;
+        return $this->isNew;
     }
 
     public function pozitonTitle()
@@ -241,7 +241,18 @@ class JobAdvertisement extends AggregateRoot
         $jobAd->applyTaht($event);
         return $jobAd;
     }
-
+    
+    public function doApplayByDomainEvent(DomainEvent $event)
+    {
+        $this->applyTaht($event);
+    }
+    
+//    public static function hydrate(array $data): self
+//    {
+//        $jobAdd = new static($data['id']);
+//        
+//        return $jobAdd;
+//    }
 
     /**
      * 
@@ -258,6 +269,8 @@ class JobAdvertisement extends AggregateRoot
                 new JobAdWasDrafted(
                 $draft->id(), new PozitonTitle($pozitonTitle), new Description($description), new HowToApplay($howToApplay)
         ));
+        
+        $draft->updateTimestam();
 
         return $draft;
     }
@@ -268,12 +281,14 @@ class JobAdvertisement extends AggregateRoot
                 new JobAdDescriptionsWasManaged(
                 $this->id(), new PozitonTitle($pozitonTitle), new Description($description), new HowToApplay($howToApplay)
         ));
+        $this->updateTimestam();
     }
 
     public function addTypeOfJob(TypeOfJob $typeOfJob)
     {
         $event = new TypeOfJobWasAddedToJobAdvertisement($this->id, $typeOfJob);
         $this->recordApplayAndPublihThat($event);
+        $this->updateTimestam();
     }
     
     public function manageTypeOfJobs(TypeOfJobCollection $new)
@@ -294,6 +309,7 @@ class JobAdvertisement extends AggregateRoot
         }
         
         $this->recordApplayAndPublihThat(new JobAdTypeOfJobsWasManaged($this->id(), $new, $add, $remove));
+        $this->updateTimestam();
     }
 
 
@@ -309,6 +325,7 @@ class JobAdvertisement extends AggregateRoot
 
         $event = new CategoryWasAddedToJobAdvertisement($this->id(), $category);
         $this->recordApplayAndPublihThat($event);
+        $this->updateTimestam();
     }
 
     public function manageCategores(CategoryCollection $new)
@@ -330,6 +347,7 @@ class JobAdvertisement extends AggregateRoot
         }
         
         $this->recordApplayAndPublihThat(new JobAdCategoresWsaManaged($this->id(), $new, $add, $remove));
+        $this->updateTimestam();
     }
 
 //    public function addCategory($id, $name)
@@ -343,6 +361,7 @@ class JobAdvertisement extends AggregateRoot
     {
         $event = new CityWasAddedToJobAdvertisement($this->id(), new City(new PostCode($postCode), $city));
         $this->recordApplayAndPublihThat($event);
+        $this->updateTimestam();
     }
 
     public function addAdDuration(string $duration)
@@ -351,11 +370,13 @@ class JobAdvertisement extends AggregateRoot
         $duration = new DateTimeImmutable($duration);
         $this->assertDuration($duration);
         $this->recordApplayAndPublihThat(new DurationWasAddedToAd($this->id(), $duration));
+        $this->updateTimestam();
     }
 
     public function addTag(Tag $tag)
     {
         $this->recordApplayAndPublihThat(new TagWasAddedToJobAd($this->id(), $tag));
+        $this->updateTimestam();
     }
 
     public function manageTags(TagCollection $new)
@@ -377,6 +398,7 @@ class JobAdvertisement extends AggregateRoot
         }
 
         $this->recordApplayAndPublihThat(new JobAdTagsWasManaged($this->id(), $new, $add, $remove));
+        $this->updateTimestam();
     }
 
     public function updateTimestam()
@@ -388,40 +410,40 @@ class JobAdvertisement extends AggregateRoot
         }
     }
     
-    public function extract(): array
-    {
-        
-        $categoryes = iterator_to_array($this->categoryes->map(function($category){
-            return ['id' => (string) $category->id(), 'name' => (string) $category->name()];
-        }));
-        
-        $typeOfJobs = iterator_to_array($this->typeOfJobs->map(function($typeOfJob){
-            return ['id' => (string) $typeOfJob->id(), 'name' => (string) $typeOfJob->name()];
-        }));
-        
-        $tags = iterator_to_array($this->tags->map(function($tag){
-            return ['id' => (string) $tag->id(), 'name' => (string) $tag->name()];
-        }));
-        
-        return [
-            'id' => $this->id,
-            'version' => $this->version,
-            'pozitonTitle' => (string) $this->pozitonTitle,
-            'description' => (string) $this->description,
-            'howToApplay' => (string) $this->howToApplay,
-            'categoryes' => $categoryes,
-            'city' => [
-                'postCode' => is_null($this->city)? '': (string) $this->city->postCode(), 
-                'name' => (string) $this->city
-                ],
-            'typeOfJobs' => $typeOfJobs,
-            'status' => (string) $this->status,
-            'end' => is_null($this->end)? null:$this->end->format('d.m.Y'),
-            'tags' => $tags,
-            'createdAt' => $this->createdAt->format('d.m.Y H:i:s'),
-            'updatedAt' => $this->updatedAt->format('d.m.Y H:i:s')
-        ];
-    }
+//    public function extract(): array
+//    {
+//        
+//        $categoryes = iterator_to_array($this->categoryes->map(function($category){
+//            return ['id' => (string) $category->id(), 'name' => (string) $category->name()];
+//        }));
+//        
+//        $typeOfJobs = iterator_to_array($this->typeOfJobs->map(function($typeOfJob){
+//            return ['id' => (string) $typeOfJob->id(), 'name' => (string) $typeOfJob->name()];
+//        }));
+//        
+//        $tags = iterator_to_array($this->tags->map(function($tag){
+//            return ['id' => (string) $tag->id(), 'name' => (string) $tag->name()];
+//        }));
+//        
+//        return [
+//            'id' => $this->id,
+//            'version' => $this->version,
+//            'pozitonTitle' => (string) $this->pozitonTitle,
+//            'description' => (string) $this->description,
+//            'howToApplay' => (string) $this->howToApplay,
+//            'categoryes' => $categoryes,
+//            'city' => [
+//                'postCode' => is_null($this->city)? '': (string) $this->city->postCode(), 
+//                'name' => (string) $this->city
+//                ],
+//            'typeOfJobs' => $typeOfJobs,
+//            'status' => (string) $this->status,
+//            'end' => is_null($this->end)? null:$this->end->format('d.m.Y'),
+//            'tags' => $tags,
+//            'createdAt' => $this->createdAt->format('d.m.Y H:i:s'),
+//            'updatedAt' => $this->updatedAt->format('d.m.Y H:i:s')
+//        ];
+//    }
     
     public function status()
     {
@@ -439,6 +461,7 @@ class JobAdvertisement extends AggregateRoot
         $this->pozitonTitle = $event->pozitonTitle();
         $this->howToApplay = $event->howToApplay();
         $this->description = $event->description();
+//        $this->updateTimestam();
     }
 
     protected function applyJobAdWasDrafted(JobAdWasDrafted $event)
@@ -448,6 +471,8 @@ class JobAdvertisement extends AggregateRoot
         $this->howToApplay = $event->howToApplay();
         $this->description = $event->description();
         $this->setStatus(Status::draft());
+//        $this->updateTimestam();
+        $this->isNew = true;
     }
 
     protected function applyCategoryWasAddedToJobAdvertisement(CategoryWasAddedToJobAdvertisement $event)
@@ -458,6 +483,7 @@ class JobAdvertisement extends AggregateRoot
         $category = $event->category();
         $category->setJobAdvertisement($this);
         $this->categoryes[] = $category;
+//        $this->updateTimestam();
     }
 
     protected function applyJobAdCategoresWsaManaged(JobAdCategoresWsaManaged $event)
@@ -475,11 +501,13 @@ class JobAdvertisement extends AggregateRoot
                 $this->categoryes[] = $category;
             }
         }
+//        $this->updateTimestam();
     }
 
     protected function applyTypeOfJobWasAddedToJobAdvertisement(TypeOfJobWasAddedToJobAdvertisement $event)
     {
         $this->typeOfJobs[] = $event->typeOfJob();
+//        $this->updateTimestam();
     }
     
     protected function applyJobAdTypeOfJobsWasManaged(JobAdTypeOfJobsWasManaged $event)
@@ -496,6 +524,7 @@ class JobAdvertisement extends AggregateRoot
                 $this->typeOfJobs[] = $typeOfJob;
             }
         }
+//        $this->updateTimestam();
     }
 
     protected function applyCityWasAddedToJobAdvertisement(CityWasAddedToJobAdvertisement $event)
@@ -503,18 +532,21 @@ class JobAdvertisement extends AggregateRoot
 //        dump($event);
         $this->id = (string) $event->id();
         $this->city = $event->city();
+//        $this->updateTimestam();
     }
 
     protected function applyDurationWasAddedToAd(DurationWasAddedToAd $event)
     {
         $this->id = (string) $event->id();
         $this->end = $event->duration();
+        $this->updateTimestam();
     }
 
     protected function applyTagWasAddedToJobAd(TagWasAddedToJobAd $event)
     {
         $this->id = (string) $event->id();
         $this->tags[] = $event->tag();
+//        $this->updateTimestam();
     }
 
     protected function applyJobAdTagsWasManaged(JobAdTagsWasManaged $event)
@@ -531,6 +563,7 @@ class JobAdvertisement extends AggregateRoot
                 $this->tags[] = $tag;
             }
         }
+//        $this->updateTimestam();
     }
 
     private function setStatus(Status $status)

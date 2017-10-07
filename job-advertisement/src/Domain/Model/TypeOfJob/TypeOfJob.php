@@ -91,6 +91,17 @@ class TypeOfJob extends AggregateRoot
 
         return $typeOfJob;
     }
+    
+    public static function hydrate(array $data): self
+    {
+        $typeOfJob = new static(Id::fromNative($data['id']));
+        $typeOfJob->name = new Name($data['name']);
+//        $typeOfJob->status = Status::fromNative($data['status']);
+//        $typeOfJob->createdAt = new \DateTimeImmutable($data['createdAt']);
+//        $typeOfJob->updatedAt = new \DateTimeImmutable($data['updatedAt']);
+        
+        return $typeOfJob;
+    }
 
     public function id()
     {
@@ -159,6 +170,17 @@ class TypeOfJob extends AggregateRoot
     public function isDeleted()
     {
         return $this->status->equals(Status::delete());
+    }
+    
+    public function extract(): array
+    {
+        return [
+            'id' => (string) $this->id,
+            'name' => (string) $this->name, 
+            'status' => (string) $this->status,
+            'createdAt' => $this->createdAt->format('d.m.Y H:i:s'),
+            'updatedAt' => $this->updatedAt->format('d.m.Y H:i:s')
+        ];
     }
 
     protected function newTypeOfJob(Name $name)

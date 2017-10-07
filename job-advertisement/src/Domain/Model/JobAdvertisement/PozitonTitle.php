@@ -11,7 +11,7 @@ namespace JobAd\Domain\Model\JobAdvertisement;
 use JobAd\Domain\ValueObjects\ValueObject;
 /**
  * Description of PozitonTitle
- *
+ * 
  * @author vedran
  */
 class PozitonTitle implements ValueObject

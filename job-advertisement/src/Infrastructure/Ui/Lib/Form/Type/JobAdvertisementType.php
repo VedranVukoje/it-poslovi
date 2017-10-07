@@ -191,6 +191,7 @@ class JobAdvertisementType extends AbstractType
                             ->setParameter('postCode', $cityArray['postCode'])
                             ->getQuery()
                             ->getResult();
+            
         }, function($city) {
             return [
                 'name' => (string) $city['city'],

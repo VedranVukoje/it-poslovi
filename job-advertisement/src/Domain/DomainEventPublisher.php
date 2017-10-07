@@ -62,5 +62,5 @@ class DomainEventPublisher
                 $aSubscriber->handle($aDomainEvent);
             }
         }
-    }
+    } 
 }

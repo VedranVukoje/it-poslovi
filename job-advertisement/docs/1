@@ -1,3 +1,12 @@
+17 rujan 2017
+
+JobAdEventStore
+    id int
+    jobId uuid
+    type fqcn
+    bodu text
+    occuredon dattime
+
 13 kolovoz 2017
 
 php bin/console doctrine:fixtures:load --fixtures=/home/vedran/Projects/dev/projects/it-poslovi/job-advertisement/src/Infrastructure/Ui/Framework/Symfony/JobAdvertisementBundle/DataFixtures/Orm

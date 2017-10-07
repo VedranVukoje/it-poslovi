@@ -54,6 +54,17 @@ use JobAd\Application\Service\JobAdvertisement\JobAdManageTags;
 use JobAd\Infrastructure\Persistence\Doctrine\TagDoctrineRepository;
 
 use JobAd\Infrastructure\Persistence\Doctrine\JobAdDoctrineRepositoryFactory;
+
+use JobAd\Application\Notification\NotificationService;
+use JobAd\Infrastructure\Persistence\Doctrine\StoredEventDoctrineRepository;
+use JobAd\Infrastructure\Persistence\Doctrine\DoctrinePublishedMessageTracker;
+use JobAd\Infrastructure\Application\Serialization\JMS\JMSFactory;
+use JobAd\Infrastructure\Application\Serialization\JMS\JMSSerializer;
+
+use JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdWasDrafted;
+//use JobAd\Domain\Model\JobAdvertisement\Events\CityWasAddedToJobAdvertisement;
+use JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\CityWasAddedToJobAdvertisement;
+use JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository;
 /**
  * Description of JobAdvertismentController
  *
@@ -84,7 +95,7 @@ class JobAdvertismentController extends Controller
             $jobByIdRequest->id = $id;
             $jobByIdRequest->version = $version;
             $jobAd = $this->get('it_poslovi.view_job_advertisement')->execute($jobByIdRequest);
-//            dump($jobAd);
+            dump($jobAd);
         }
 
         $em = $this->get('doctrine.orm.default_entity_manager');
@@ -96,13 +107,27 @@ class JobAdvertismentController extends Controller
             'em' => $em
         ]);
         try {
-
-
+            
+            $serializer = new JMSSerializer(JMSFactory::instance());
+            
+            $repoRactory = new JobAdDoctrineRepositoryFactory($em);
+            
+            
+            $storedEventRepo = new StoredEventDoctrineRepository($em,$serializer);
+            $notification = new NotificationService(
+                    $storedEventRepo,
+                    new DoctrinePublishedMessageTracker($em),
+                    $serializer
+                    );
+            
+//            $notification->publishNotifications('job-ad');
 //            dump($form->getData());
 
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-
+                
+                
+                
                 /**
                  * @important @todo 
                  * ovo ovde namesti da bude u Kernel::request...
@@ -113,14 +138,18 @@ class JobAdvertismentController extends Controller
                 $this->get(DomainEventPublisher::class);
                 
                 
-                $repoRactory = new JobAdDoctrineRepositoryFactory($em);
+                
                 
                 $draft = new BaseResponse();
-                $draft = new DraftAdvertisementService($draft, $repoRactory);
-                $draft = new AddCityToJobAd($draft, $repoRactory);
+                $draft = new DraftAdvertisementService($draft, $repoRactory, $logger);
+                $draft = new AddCityToJobAd($draft, $repoRactory, $logger);
+                $draft = new JobAdManageCategores($draft, $repoRactory, $logger);
+                $draft = new JobAdManageTags($draft, $repoRactory, $logger);
+                $draft = new JobAdManageTypeOfJobs($draft, $repoRactory, $logger);
                 $draft = new Transaction($draft, new DoctrineSession($this->get('doctrine.orm.default_entity_manager')));
                 $response = $draft->execute($form->getData());
-
+                
+                
 //                dump($form->getData());
 
                 return $this->redirectToRoute('draft_job_ad', [

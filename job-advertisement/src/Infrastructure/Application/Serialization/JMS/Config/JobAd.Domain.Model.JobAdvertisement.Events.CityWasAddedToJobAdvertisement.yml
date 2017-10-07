@@ -1,0 +1,11 @@
+JobAd\Domain\Model\JobAdvertisement\Events\CityWasAddedToJobAdvertisement:
+    exclusion_policy: all
+    
+    properties:
+        id:
+            type: JobAd\Domain\Model\JobAdvertisement\Id
+        city:
+            type: JobAd\Domain\Model\Location\City
+        occurredOn:
+            expose: true
+            type: CustomDateTimeImmutable

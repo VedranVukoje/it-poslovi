@@ -8,64 +8,60 @@
 
 namespace JobAd\Application\Service\JobAdvertisement;
 
+use Psr\Log\LoggerInterface;
 use JobAd\Application\Service\ApplicationService;
-use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementRepository;
-use JobAd\Domain\Model\Category\CategoryRepository;
+//use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementRepository;
+//use JobAd\Domain\Model\Category\CategoryRepository;
 use JobAd\Domain\Model\Category\Exceptions\CategoresNotFoundException;
-use JobAd\Infrastructure\Persistence\Doctrine\Specification\CategoryByArrayOfCategoryIds;
+//use JobAd\Infrastructure\Persistence\Doctrine\Specification\CategoryByArrayOfCategoryIds;
 use JobAd\Domain\Model\JobAdvertisement\Id;
+use JobAd\Domain\Model\JobAdvertisement\RepositoryFactory;
 
 /**
  * Description of JobAdManageCategores
  *
  * @author vedran
  */
-class JobAdManageCategores implements ApplicationService
+class JobAdManageCategores extends JobAd implements ApplicationService
 {
 
     private $appService;
-    private $jobAdRepo;
-    private $categoryRepo;
+    private $logger;
 
-    public function __construct(ApplicationService $appService, JobAdvertisementRepository $jobAdRepo, CategoryRepository $categoryRepo)
+    public function __construct(ApplicationService $appService, RepositoryFactory $repoFactory, LoggerInterface $logger)
     {
         $this->appService = $appService;
-        $this->jobAdRepo = $jobAdRepo;
-        $this->categoryRepo = $categoryRepo;
-    }
+        $this->logger = $logger;
+
+        parent::__construct($repoFactory);
+        }
 
     public function execute($request = null)
     {
-//        dump($request);
 
-        $spec = new CategoryByArrayOfCategoryIds(array_map(function($category) {
-                    return $category['id'];
-                }, $request->categoryes ?? []));
 
-        $categoryes = $this->categoryRepo->query($spec);
+        $appService = $this->appService->execute($request);
+        $id = $appService->get('id');
+        
+        $categoryes = $this->categoryByArrayOfCategoryIds($request->categoryes);
 
         if (0 == count($categoryes)) {
             throw new CategoresNotFoundException("Niste izabrali kategoriju.");
         }
 
-        $appService = $this->appService->execute($request);
-
-
-
-        $jobAd = $this->jobAdRepo->ofId(Id::fromNative($appService->get('jobAdId')));
+        $jobAd = $this->ofId($id);
         /**
          * @todo
          * ovo ubaciti u try catch exception.. npr za Doctrine ovde ce baciti Optimistic Lock Exception....
          */
-        $this->jobAdRepo->lock($jobAd, (int) $jobAd->version());
+        $this->lock($jobAd, (int) $jobAd->version());
+        
         $jobAd->manageCategores($categoryes);
-//        dump($jobAd);
 
-        $this->jobAdRepo->add($jobAd);
+        $this->repoFactory->jobAdRepo()->add($jobAd);
 
-//        dump($jobAd);
-//        dump($appService);
-//        dump('kategorije');
+        $request->version = (int) $jobAd->version();
+        $this->logger->debug('Categoryes are managed ', ['jobAd' => $this->extract($jobAd)]);
         return $appService;
     }
 

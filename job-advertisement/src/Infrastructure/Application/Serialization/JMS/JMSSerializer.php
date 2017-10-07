@@ -33,7 +33,7 @@ class JMSSerializer implements Serializer
 
     public function deserialize($serializeData, $fqcn, $format)
     {
-        return deserialize($serializeData, $fqcn, $format);
+        return $this->serializer->deserialize($serializeData, $fqcn, $format);
     }
 
 }
