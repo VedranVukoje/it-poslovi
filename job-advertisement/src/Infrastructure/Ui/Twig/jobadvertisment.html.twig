@@ -10,7 +10,7 @@
                         <i class="ace-icon fa fa-home home-icon"></i>
                         <a href="#">Home</a>
                     </li>
-
+            
                     <li>
                         <a href="#">Arhiva poslova</a>
                     </li>
@@ -33,7 +33,7 @@
 
             <div class="page-header">
                 <h1>
-                    Postavi posao
+                    {{ block('title') }}
                 </h1>
             </div>
 
@@ -73,7 +73,7 @@
                             {{ form_row(form._token) }}
                             {{ form_row(form.id) }}
                             {{ form_row(form.version) }}
-                            
+
                             <div class="form-group">
                                 {{ form_label(form.pozitonTitle) }}
                                 <div class="col-sm-9">
@@ -146,6 +146,34 @@
     </div><!-- /.main-content -->
 {% endblock %}
 
+{% block navigation %}
+    <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="ace-icon fa fa-home home-icon"></i>
+                <a href="#">Home</a>
+            </li>
+
+            <li>
+                <a href="#">Arhiva poslova</a>
+            </li>
+            <li class="active">
+                <a href="{{ path('draft_job_ad') }}">
+                    Postavi Posao
+                </a>
+            </li>
+        </ul><!-- /.breadcrumb -->
+
+        <div class="nav-search" id="nav-search">
+            <form class="form-search">
+                <span class="input-icon">
+                    <input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+                    <i class="ace-icon fa fa-search nav-search-icon"></i>
+                </span>
+            </form>
+        </div><!-- /.nav-search -->
+    </div>
+{% endblock %}
 
 {% block assets %}
     <link rel="stylesheet" href="{{ asset('assets/css/daterangepicker.min.css') }}" />
@@ -167,15 +195,15 @@
                 var duration = $('.duration');
                 datePickerConfig = {
                     format: 'dd.mm.yyyy'
-{#                    startDate: '+1d'#}
-                }, 
-                durationDatePickerConfig = $.extend({}, datePickerConfig, {});
-                
-                
-                duration.datepicker($.extend({}, datePickerConfig, {}));
+        {#                    startDate: '+1d'#}
+                    },
+                            durationDatePickerConfig = $.extend({}, datePickerConfig, {});
 
-            });
 
-        }(jQuery));
+                    duration.datepicker($.extend({}, datePickerConfig, {}));
+
+                });
+
+            }(jQuery));
     </script>
 {% endblock %}

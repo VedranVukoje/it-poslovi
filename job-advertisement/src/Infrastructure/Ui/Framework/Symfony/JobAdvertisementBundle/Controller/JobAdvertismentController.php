@@ -72,6 +72,12 @@ use JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository;
  */
 class JobAdvertismentController extends Controller
 {
+    
+    public function jobAdArchiveAction(LoggerInterface $logger,  Request $request)
+    {
+        
+    }
+
 
     /**
      * 
@@ -93,7 +99,7 @@ class JobAdvertismentController extends Controller
              */
             $jobByIdRequest = new \stdClass;
             $jobByIdRequest->id = $id;
-            $jobByIdRequest->version = $version;
+//            $jobByIdRequest->version = $version;
             $jobAd = $this->get('it_poslovi.view_job_advertisement')->execute($jobByIdRequest);
             dump($jobAd);
         }
