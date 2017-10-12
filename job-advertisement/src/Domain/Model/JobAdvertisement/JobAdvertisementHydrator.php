@@ -54,7 +54,7 @@ class JobAdvertisementHydrator extends JobAdvertisement implements JobAdvertisem
                 ],
             'typeOfJobs' => $typeOfJobs,
             'status' => (string) $jobAd->status(),
-            'end' => is_null($this->end)? null:$jobAd->end->format('d.m.Y'),
+            'end' => is_null($jobAd->end)? null:$jobAd->end->format('d.m.Y'),
             'tags' => $tags,
             'createdAt' => $jobAd->createdAt ? $jobAd->createdAt->format('d.m.Y H:i:s') : null,
             'updatedAt' => $jobAd->updatedAt ? $jobAd->updatedAt->format('d.m.Y H:i:s') : null
