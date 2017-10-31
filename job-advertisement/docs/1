@@ -1,3 +1,10 @@
+22 listopad 2017
+
+Package videlalvaro/php-amqplib is abandoned, you should avoid using it. Use php-amqplib/php-amqplib instead.
+Package oldsound/rabbitmq-bundle is abandoned, you should avoid using it. Use php-amqplib/rabbitmq-bundle instead.
+
+
+
 17 rujan 2017
 
 JobAdEventStore

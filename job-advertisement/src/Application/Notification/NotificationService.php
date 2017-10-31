@@ -8,7 +8,9 @@
 
 namespace JobAd\Application\Notification;
 
-use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement as JobAd;
+//use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement as JobAd;
+use JobAd\Application\Contract\Messaging;
+use JobAd\Domain\Event\StoredEvent;
 use JobAd\Domain\EventStore;
 use JobAd\Application\Contract\Serializer;
 use JobAd\Application\Notification\PublishedMessageTracker;
@@ -24,13 +26,15 @@ class NotificationService
     private $eventStore;
     private $publishedMessageTracker;
     private $serializer;
+    private $messaging;
 
     public function __construct(
-    EventStore $eventStore, PublishedMessageTracker $publishedMessageTracker, Serializer $serializer)
+    EventStore $eventStore, PublishedMessageTracker $publishedMessageTracker, Serializer $serializer, Messaging $messaging)
     {
         $this->eventStore = $eventStore;
         $this->publishedMessageTracker = $publishedMessageTracker;
         $this->serializer = $serializer;
+        $this->messaging = $messaging;
     }
 
     public function publishNotifications(string $exchangeName)
@@ -38,22 +42,26 @@ class NotificationService
 
         $publishedMessageTracker = $this->publishedMessageTracker();
         $trackId = $publishedMessageTracker->mostRecentPublishedMessageId($exchangeName);
-        
-        $notifications = $this->listUnpublishedNotifications((int)$trackId);
-        
-        dump($notifications);
-        
-        $history = [];
-        foreach ($notifications as $notifications){
-            $history[] = $this->serializer->deserialize($notifications->eventBody(), $notifications->typeName(), 'json');
+
+        $notifications = $this->listUnpublishedNotifications((int) $trackId);
+
+        try {
+            
+            $publishedMassage = 0;
+            
+            if (0 < count($notifications)) {
+                foreach ($notifications as $storedEvent) {
+                    $lastPublishedNotification = $this->publish($storedEvent);
+                    $publishedMassage++;
+                }
+
+                $publishedMessageTracker->trackMostRecentPublishedMessage($exchangeName, $lastPublishedNotification);
+            }
+        } catch (Exception $ex) {
+            dump($ex);
         }
-        
-        dump($history);
-        
-//        foreach ($history as $h){
-//            dump((string)$h->id());
-//        }
-        
+
+        return $publishedMassage;
     }
 
     private function publishedMessageTracker()
@@ -64,6 +72,17 @@ class NotificationService
     private function listUnpublishedNotifications($mostRecentPublishedMessageId)
     {
         return $this->eventStore->allStoredEventsSince($mostRecentPublishedMessageId);
+    }
+
+    private function publish(StoredEvent $storedEvent)
+    {
+        $this->messaging->publish($storedEvent->eventBody(), "", [
+            'type' => $storedEvent->typeName(),
+            'id' => $storedEvent->eventId(),
+            'occurredOn' => $storedEvent->occurredOn()
+        ]);
+
+        return $storedEvent;
     }
 
 }

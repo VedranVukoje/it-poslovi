@@ -36,6 +36,8 @@ class JobAdvertisementExtension extends Extension
         $loader->load('serializer.xml');
         
         $loader->load('elasticserach.xml');
+        
+        $loader->load('rabbitmq.xml');
     }
 
     public function getAlias()

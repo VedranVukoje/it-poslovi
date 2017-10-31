@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ItPoslovi
+ Vedran Vukoje Ja:
+ vedran.vukoje@gmail.com
+-->
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    
+    
+    <services>
+        
+        <service 
+            id="JobAd\Infrastructure\Messaging\PhpAmqpLib\Consumer\EsJobAdConsumer"
+            class="JobAd\Infrastructure\Messaging\PhpAmqpLib\Consumer\EsJobAdConsumer">
+            <argument 
+                id="JobAd\Infrastructure\Application\Serialization\JMS\JMSSerializer" 
+                type="service" />
+            <argument id="logger" type="service" />
+        </service>
+        
+        
+<!--        <service 
+            id="JobAd\Infrastructure\Application\Serialization\JMS\JMSFactory" 
+            class="JobAd\Infrastructure\Application\Serialization\JMS\JMSFactory"
+        >
+            <factory method="instance" />
+        </service>
+        <service 
+            id="JobAd\Infrastructure\Application\Serialization\JMS\JMSSerializer" 
+            class="JobAd\Infrastructure\Application\Serialization\JMS\JMSSerializer"
+        >
+            <argument id="JobAd\Infrastructure\Application\Serialization\JMS\JMSFactory" type="service" />
+        </service>-->
+    </services>
+    
+    
+    
+    
+    
+    
+<!--    <parameters>
+         ... 
+        <parameter key="mailer.transport">sendmail</parameter>
+    </parameters>
+    <services>
+        <service id="mailer" class="Mailer">
+            <argument>%mailer.transport%</argument>
+        </service>
+
+        <service id="newsletter_manager" class="NewsletterManager">
+            <call method="setMailer">
+                <argument type="service" id="mailer" />
+            </call>
+        </service>
+    </services>-->
+</container>

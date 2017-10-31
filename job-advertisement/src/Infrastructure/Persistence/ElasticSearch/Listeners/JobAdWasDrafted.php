@@ -14,7 +14,6 @@ use JobAd\Domain\DomainEvent;
 use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement;
 //use JobAd\Domain\Model\JobAdvertisement\Id;
 use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementRepository;
-use JobAd\Domain\Model\JobAdvertisement\RepositoryFactory;
 /**
  * Description of JobAdWasDrafted
  *
@@ -23,12 +22,10 @@ use JobAd\Domain\Model\JobAdvertisement\RepositoryFactory;
 class JobAdWasDrafted implements EventSubscriber
 {
     private $es;
-    private $repoFactory;
 
-    public function __construct(JobAdvertisementRepository $es, RepositoryFactory $repoFactory)
+    public function __construct(JobAdvertisementRepository $es)
     {
         $this->es = $es;
-        $this->repoFactory = $repoFactory;
     }
     
     public function isSubscribedTo(DomainEvent $event)

@@ -92,7 +92,9 @@ class JobAdvertismentController extends Controller
 //        dump($id);
 
         
-
+        
+        
+        
         if ($id) {
             /**
              * @todo prebaic u poseban Appliation \ Service \ Requst...
@@ -118,15 +120,17 @@ class JobAdvertismentController extends Controller
             
             $repoRactory = new JobAdDoctrineRepositoryFactory($em);
             
+            $jobAdProducer = $this->get('old_sound_rabbit_mq.job_ad_producer');
             
             $storedEventRepo = new StoredEventDoctrineRepository($em,$serializer);
             $notification = new NotificationService(
                     $storedEventRepo,
                     new DoctrinePublishedMessageTracker($em),
-                    $serializer
+                    $serializer,
+                    $jobAdProducer
                     );
             
-//            $notification->publishNotifications('job-ad');
+            $notification->publishNotifications('job-ad');
 //            dump($form->getData());
 
             $form->handleRequest($request);

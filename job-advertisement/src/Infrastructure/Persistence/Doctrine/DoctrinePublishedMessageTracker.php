@@ -52,8 +52,8 @@ class DoctrinePublishedMessageTracker implements PublishedMessageTracker
         
         $messageTracked->updateMostRecentPublishedMessageId($maxId);
         
-        $this->em->persist($publishedMessage);
-        $this->em->flush($publishedMessage);
+        $this->em->persist($messageTracked);
+        $this->em->flush($messageTracked);
     }
     
     private function findOneByExchangeName(string $exchangeName)

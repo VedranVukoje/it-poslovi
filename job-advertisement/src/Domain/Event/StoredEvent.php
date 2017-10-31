@@ -57,7 +57,7 @@ class StoredEvent
 
     public function occurredOn()
     {
-        return $this->occurredOn();
+        return $this->occurredOn;
     }
     
     public function eventBody()
