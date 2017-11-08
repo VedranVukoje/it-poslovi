@@ -22,9 +22,9 @@ use JobAd\Application\Service\JobAdvertisement\AddCityToJobAd;
 //use JobAd\Application\Service\JobAdvertisement\AddTypeOfJobToJobAd;
 use JobAd\Application\Service\JobAdvertisement\JobAdManageTypeOfJobs;
 use JobAd\Application\Service\JobAdvertisement\JobAdManageCategores;
-use JobAd\Application\Service\JobAdvertisement\JobAdvertisementFormResponse;
+//use JobAd\Application\Service\JobAdvertisement\JobAdvertisementFormResponse;
 //use JobAd\Infrastructure\Persistence\InMemory\InMemoryJobAdvertisementRepo;
-use JobAd\Infrastructure\Persistence\Doctrine\TypeOfJobDoctrineRepository;
+//use JobAd\Infrastructure\Persistence\Doctrine\TypeOfJobDoctrineRepository;
 //use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement;
 //use JobAd\Domain\Model\JobAdvertisement\Name;
 //use JobAd\Domain\Model\JobAdvertisement\Description;
@@ -40,10 +40,10 @@ use JobAd\Infrastructure\Application\Service\DoctrineSession;
 //use JobAd\Application\Service\TypeOfJob\ViewTypeOfJobArrayCollectionResponse;
 //use JobAd\Infrastructure\Persistence\Doctrine\Specification\TypeOfJobSepcificationFactory;
 //use JobAd\Application\Service\Location\ViewCitiesService;
-use JobAd\Infrastructure\Persistence\Doctrine\CityDoctrineRepository;
+//use JobAd\Infrastructure\Persistence\Doctrine\CityDoctrineRepository;
 //use JobAd\Infrastructure\Persistence\Doctrine\Specification\CitySpecificationFactory;
 //use JobAd\Application\Service\Category\ViewCategoryService;
-use JobAd\Infrastructure\Persistence\Doctrine\CategoryDoectrineRepository;
+//use JobAd\Infrastructure\Persistence\Doctrine\CategoryDoectrineRepository;
 //use JobAd\Infrastructure\Persistence\Doctrine\Specification\CategorySepecificationFactory;
 use JobAd\Application\Service\BaseResponse;
 use JobAd\Domain\DomainEventPublisher;
@@ -51,7 +51,7 @@ use JobAd\Domain\DomainEventPublisher;
 //use JobAd\Infrastructure\Application\Serialization\JMS\JMSSerializer;
 //use JobAd\Application\Service\JobAdvertisement\AddTagToJobAd;
 use JobAd\Application\Service\JobAdvertisement\JobAdManageTags;
-use JobAd\Infrastructure\Persistence\Doctrine\TagDoctrineRepository;
+//use JobAd\Infrastructure\Persistence\Doctrine\TagDoctrineRepository;
 
 use JobAd\Infrastructure\Persistence\Doctrine\JobAdDoctrineRepositoryFactory;
 
@@ -61,10 +61,12 @@ use JobAd\Infrastructure\Persistence\Doctrine\DoctrinePublishedMessageTracker;
 use JobAd\Infrastructure\Application\Serialization\JMS\JMSFactory;
 use JobAd\Infrastructure\Application\Serialization\JMS\JMSSerializer;
 
-use JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdWasDrafted;
+//use JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdWasDrafted;
 //use JobAd\Domain\Model\JobAdvertisement\Events\CityWasAddedToJobAdvertisement;
-use JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\CityWasAddedToJobAdvertisement;
-use JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository;
+//use JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\CityWasAddedToJobAdvertisement;
+//use JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository;
+
+use JobAd\Infrastructure\Persistence\ElasticSearch\MessageDomainEventProcessing;
 /**
  * Description of JobAdvertismentController
  *
@@ -91,10 +93,6 @@ class JobAdvertismentController extends Controller
 
 //        dump($id);
 
-        
-        
-        
-        
         if ($id) {
             /**
              * @todo prebaic u poseban Appliation \ Service \ Requst...

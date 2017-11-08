@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 use JobAd\Infrastructure\Ui\Framework\Symfony\JobAdvertisementBundle\DependencyInjection\Compiler\EventDispatcherCompilerPass;
-use JobAd\Infrastructure\Ui\Framework\Symfony\JobAdvertisementBundle\DependencyInjection\Compiler\ItPosloviTransactionCompailerPass;
+use JobAd\Infrastructure\Ui\Framework\Symfony\JobAdvertisementBundle\DependencyInjection\Compiler\MessageDomainEventProcessingPass;
 /**
  * Description of JobAdvertisementBundle
  * JobAd\Infrastructure\Ui\Framework\Symfony\JobAdvertisementBundle\JobAdvertisementBundle
@@ -25,5 +25,6 @@ class JobAdvertisementBundle extends Bundle
     {
         parent::build($container);
         $container->addCompilerPass(new EventDispatcherCompilerPass());
+        $container->addCompilerPass(new MessageDomainEventProcessingPass());
     }
 }

@@ -22,7 +22,7 @@
             type="job_add_description"
         />
         <field
-            name="howToApplay" 
+            name="howToApply" 
             column="how_to_applay" 
             type="job_add_how_to_applay"
         />

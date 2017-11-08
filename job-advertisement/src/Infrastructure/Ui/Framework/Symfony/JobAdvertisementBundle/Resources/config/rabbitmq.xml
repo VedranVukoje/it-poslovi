@@ -17,6 +17,7 @@
             <argument 
                 id="JobAd\Infrastructure\Application\Serialization\JMS\JMSSerializer" 
                 type="service" />
+            <argument id="JobAd\Infrastructure\Persistence\ElasticSearch\MessageDomainEventProcessing" type="service" />
             <argument id="logger" type="service" />
         </service>
         

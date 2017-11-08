@@ -37,8 +37,6 @@ class CityWasAddedToJobAdvertisement implements EventSubscriber
         $jobAd = $this->es->ofId($event->id());
         $jobAd->doApplayByDomainEvent($event);
         
-        dump($jobAd);
-        
         $this->es->add($jobAd);
     }
 }

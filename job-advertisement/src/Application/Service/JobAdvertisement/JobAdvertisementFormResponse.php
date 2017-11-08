@@ -42,7 +42,7 @@ class JobAdvertisementFormResponse implements Assembler
         $this->version = $jobAdvertisement->version();
         $this->pozitonTitle = (string) $jobAdvertisement->pozitonTitle();
         $this->description = (string) $jobAdvertisement->description();
-        $this->howToApllay = (string) $jobAdvertisement->howToApllay();
+        $this->howToApply = (string) $jobAdvertisement->howToApply();
 //        dump($this->categoryes);
         $this->categoryes = iterator_to_array($jobAdvertisement->categoryes()->map(function($category){
             return ['id' => (string) $category->id(), 'name' => (string) $category->name()];

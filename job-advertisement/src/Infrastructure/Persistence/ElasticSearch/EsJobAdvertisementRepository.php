@@ -8,6 +8,7 @@
 
 namespace JobAd\Infrastructure\Persistence\ElasticSearch;
 
+use Psr\Log\LoggerInterface;
 use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementRepository;
 use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement;
 use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementHydrator;
@@ -36,10 +37,12 @@ class EsJobAdvertisementRepository implements JobAdvertisementRepository
         'type' => 'job-advertisement',
 //        'version_type' => 'external'
     ];
+    private $log;
 
-    public function __construct(ElasticSearchClient $es)
+    public function __construct(ElasticSearchClient $es, LoggerInterface $log)
     {
         $this->es = $es->build();
+        $this->log = $log;
         $this->jobAdvertisment = new JobAdvertisementCollection();
     }
 
@@ -62,13 +65,22 @@ class EsJobAdvertisementRepository implements JobAdvertisementRepository
     public function add(JobAdvertisement $jobAdvertisement)
     {
         $body = (new JobAdvertisementHydrator)->extract($jobAdvertisement);
-        
+
+        $this->log->debug('EsJobAdvertisementRepository::add pre', [
+            'jobAd' => $body
+        ]);
+
         switch ($jobAdvertisement->isNew()) {
             case true:
                 $document = array_merge($this->document, [
                     'body' => $body,
                     'id' => (string) $jobAdvertisement->id()
                 ]);
+
+                $this->log->debug('EsJobAdvertisementRepository::add insert', [
+                    'document' => $document
+                ]);
+
                 $this->es->index($document);
                 break;
             case false:
@@ -76,6 +88,11 @@ class EsJobAdvertisementRepository implements JobAdvertisementRepository
                     'body' => ['doc' => $body],
                     'id' => (string) $jobAdvertisement->id()
                 ]);
+                
+                $this->log->debug('EsJobAdvertisementRepository::add update', [
+                    'document' => $document
+                ]);
+                
                 $this->es->update($document);
                 break;
         }

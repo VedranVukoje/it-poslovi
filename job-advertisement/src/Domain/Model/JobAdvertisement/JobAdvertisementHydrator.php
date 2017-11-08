@@ -29,35 +29,35 @@ class JobAdvertisementHydrator extends JobAdvertisement implements JobAdvertisem
 
     public function extract(JobAdvertisement $jobAd): array
     {
-        $categoryes = iterator_to_array($jobAd->categoryes->map(function($category){
+        $categoryes = iterator_to_array($jobAd->categoryes()->map(function($category){
             return ['id' => (string) $category->id(), 'name' => (string) $category->name()];
         }));
         
-        $typeOfJobs = iterator_to_array($jobAd->typeOfJobs->map(function($typeOfJob){
+        $typeOfJobs = iterator_to_array($jobAd->typeOfJobs()->map(function($typeOfJob){
             return ['id' => (string) $typeOfJob->id(), 'name' => (string) $typeOfJob->name()];
         }));
         
-        $tags = iterator_to_array($jobAd->tags->map(function($tag){
+        $tags = iterator_to_array($jobAd->tags()->map(function($tag){
             return ['id' => (string) $tag->id(), 'name' => (string) $tag->name()];
         }));
         
         return [
             'id' => (string) $jobAd->id(),
-            'version' => $this->version,
-            'pozitonTitle' => (string) $jobAd->pozitonTitle,
-            'description' => (string) $jobAd->description,
-            'howToApplay' => (string) $jobAd->howToApplay,
+            'version' => $this->version(),
+            'pozitonTitle' => (string) $jobAd->pozitonTitle(),
+            'description' => (string) $jobAd->description(),
+            'howToApllay' => (string) $jobAd->howToApllay(),
             'categoryes' => $categoryes,
             'city' => [
-                'postCode' => is_null($jobAd->city)? '': (string) $jobAd->city->postCode(), 
-                'name' => (string) $jobAd->city
+                'postCode' => is_null($jobAd->city())? '': (string) $jobAd->city()->postCode(), 
+                'name' => (string) $jobAd->city()
                 ],
             'typeOfJobs' => $typeOfJobs,
             'status' => (string) $jobAd->status(),
-            'end' => is_null($jobAd->end)? null:$jobAd->end->format('d.m.Y'),
+            'end' => is_null($jobAd->duration())? null:$jobAd->duration()->format('d.m.Y'),
             'tags' => $tags,
-            'createdAt' => $jobAd->createdAt ? $jobAd->createdAt->format('d.m.Y H:i:s') : null,
-            'updatedAt' => $jobAd->updatedAt ? $jobAd->updatedAt->format('d.m.Y H:i:s') : null
+            'createdAt' => $jobAd->createdAt() ? $jobAd->createdAt()->format('d.m.Y H:i:s') : null,
+            'updatedAt' => $jobAd->updatedAt() ? $jobAd->updatedAt()->format('d.m.Y H:i:s') : null
         ];
     }
     
@@ -85,7 +85,7 @@ class JobAdvertisementHydrator extends JobAdvertisement implements JobAdvertisem
 
         $jobAd->pozitonTitle = new PozitonTitle($data['pozitonTitle']);
         $jobAd->description = new Description($data['description']);
-        $jobAd->howToApplay = new HowToApplay($data['howToApplay']);
+        $jobAd->howToApllay = new HowToApplay($data['howToApplay']);
         $jobAd->typeOfJobs = new TypeOfJobCollection(array_map(function($data) {
                     return TypeOfJob::hydrate($data);
                 }, $data['typeOfJobs']));

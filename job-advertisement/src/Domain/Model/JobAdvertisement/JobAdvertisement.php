@@ -83,7 +83,7 @@ class JobAdvertisement extends AggregateRoot
      *
      * @var HowToApplay
      */
-    protected $howToApplay;
+    protected $howToApply;
 
     /**
      *
@@ -209,9 +209,9 @@ class JobAdvertisement extends AggregateRoot
         return $this->description;
     }
 
-    public function howToApllay()
+    public function howToApply()
     {
-        return $this->howToApplay;
+        return $this->howToApply;
     }
 
     public function tags()
@@ -224,6 +224,16 @@ class JobAdvertisement extends AggregateRoot
         return $this->end;
     }
     
+    public function createdAt()
+    {
+        return $this->createdAt;
+    }
+    
+    public function updatedAt()
+    {
+        return $this->updatedAt;
+    }
+
     public static function reconstitute(EventStream $history)
     {
         $jobAd = new static($history->id());

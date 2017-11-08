@@ -50,6 +50,7 @@ class StoredEventDoctrineRepository implements EventStore
                 ->from(StoredEvent::class, 'e')
                 ->where('e.eventId > :eventId')
                 ->setParameter('eventId', $eventId)
+                ->orderBy('e.eventId', 'ASC')
                 ->getQuery()
                 ->getResult();
     }

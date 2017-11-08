@@ -12,6 +12,7 @@ use Psr\Log\LoggerInterface;
 use JobAd\Application\Contract\Serializer;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
+use JobAd\Infrastructure\Persistence\ElasticSearch\MessageDomainEventProcessing;
 
 /**
  * Description of JobAdConsumer
@@ -23,21 +24,26 @@ class EsJobAdConsumer implements ConsumerInterface
 
     private $serialize;
     private $log;
+    private $process;
 
-    public function __construct(Serializer $serialize, LoggerInterface $log)
+    public function __construct(Serializer $serialize, MessageDomainEventProcessing $process, LoggerInterface $log)
     {
         $this->serialize = $serialize;
+        $this->process = $process;
         $this->log = $log;
     }
 
     public function execute(AMQPMessage $msg)
     {
-        
+
         $event = $this->serialize->deserialize($msg->body, $msg->get('type'), 'json');
-        
-        $this->log->debug('EsJobAdConsumer::execute ', ['eventId' => $event->id(),'type' => $msg->get('type')]);
-        
-//        echo $type = $msg->get('type');
+        $this->log->debug('EsJobAdConsumer::execute ', [
+            'type' => $msg->get('type'),
+            'eventId' => (string) $event->id()
+        ]);
+
+
+        $this->process->notify($event);
     }
 
 }
