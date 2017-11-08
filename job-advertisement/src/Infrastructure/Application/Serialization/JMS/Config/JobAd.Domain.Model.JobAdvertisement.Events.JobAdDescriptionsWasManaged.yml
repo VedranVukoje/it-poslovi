@@ -8,7 +8,7 @@ JobAd\Domain\Model\JobAdvertisement\Events\JobAdDescriptionsWasManaged:
             type: JobAd\Domain\Model\JobAdvertisement\PozitonTitle
         description:
             type: JobAd\Domain\Model\JobAdvertisement\Description
-        howToApplay:
-            type: JobAd\Domain\Model\JobAdvertisement\HowToApplay
+        howToApply:
+            type: JobAd\Domain\Model\JobAdvertisement\HowToApply
         occurredOn:
             type: CustomDateTimeImmutable

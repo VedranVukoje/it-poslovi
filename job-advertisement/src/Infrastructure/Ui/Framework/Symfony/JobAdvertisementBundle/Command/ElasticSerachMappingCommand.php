@@ -41,7 +41,7 @@ class ElasticSerachMappingCommand extends ContainerAwareCommand
 //            curl -XGET 'localhost:9200/itposlovi/_settings,_mappings?pretty'
 //            curl –i -XHEAD 'localhost:9200/itposlovi/'
 //            $es->indices()->create((new JobAdvertisementMapping)->map());
-            $es->indices()->putMapping((new JobAdvertisementMapping)->mappings());
+//            $es->indices()->putMapping((new JobAdvertisementMapping)->mappings());
             
         }
 //        var_dump($x);

@@ -1,4 +1,4 @@
-JobAd\Domain\Model\JobAdvertisement\HowToApplay:
+JobAd\Domain\Model\JobAdvertisement\HowToApply:
     exclusion_policy: all
     
     properties:

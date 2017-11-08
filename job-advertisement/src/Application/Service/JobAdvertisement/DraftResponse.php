@@ -24,7 +24,7 @@ class DraftResponse implements Assembler
     public $categoryes = [];
     public $typeOfJobs;
     public $description;
-    public $howToApplay;
+    public $howToApply;
     public $city;
     
     
@@ -38,7 +38,7 @@ class DraftResponse implements Assembler
         $this->id = (string) $jobAdvertisement->id();
         $this->pozitonTitle = ($jobAdvertisement->pozitonTitle());
         $this->description = (string) $jobAdvertisement->description();
-        $this->howToApplay = (string) $jobAdvertisement->howToApllay();
+        $this->howToApply = (string) $jobAdvertisement->howToApply();
         $this->city[] =  (string)$jobAdvertisement->city()->postCode();
         
         $this->typeOfJobs = $jobAdvertisement->typeOfJobs()->toArray();

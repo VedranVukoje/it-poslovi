@@ -77,7 +77,7 @@ class JobAdvertisementType extends AbstractType
                         'class' => 'col-sm-3 control-label no-padding-right'
                     ]
                 ])
-                ->add('howToApllay', TextareaType::class, [
+                ->add('howToApply', TextareaType::class, [
                     'label' => 'Kako aplicirati :',
                     'label_attr' => [
                         'class' => 'col-sm-3 control-label no-padding-right'

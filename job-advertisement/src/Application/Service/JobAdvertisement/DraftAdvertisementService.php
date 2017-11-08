@@ -58,9 +58,9 @@ class DraftAdvertisementService extends JobAd implements ApplicationService
              * ovo ubaciti u try catch exception.. npr za Doctrine ovde ce baciti Optimistic Lock Exception....
              */
             $this->lock($jobAd, (int) $jobAd->version());
-            $jobAd->manageJobAdDescriptions($request->pozitonTitle, $request->description, $request->howToApllay);
+            $jobAd->manageJobAdDescriptions($request->pozitonTitle, $request->description, $request->howToApply);
         } else {
-            $jobAd = DomainJobAd::draft($request->pozitonTitle, $request->description, $request->howToApllay);
+            $jobAd = DomainJobAd::draft($request->pozitonTitle, $request->description, $request->howToApply);
         }
 
         $jobAd->addAdDuration($request->end);

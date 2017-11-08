@@ -11,7 +11,7 @@ namespace JobAd\Infrastructure\Persistence\Doctrine\Types\JobAdvertisement;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\TextType;
 
-use JobAd\Domain\Model\JobAdvertisement\HowToApplay;
+use JobAd\Domain\Model\JobAdvertisement\HowToApply;
 
 /**
  * Description of HowToApplayType
@@ -24,7 +24,7 @@ class HowToApplayType extends TextType
     
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return new HowToApplay($value);
+        return new HowToApply($value);
     }
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform)

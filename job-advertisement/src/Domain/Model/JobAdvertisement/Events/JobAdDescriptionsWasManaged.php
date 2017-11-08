@@ -13,7 +13,7 @@ use JobAd\Domain\DomainEvent;
 use JobAd\Domain\Model\JobAdvertisement\Id;
 use JobAd\Domain\Model\JobAdvertisement\PozitonTitle;
 use JobAd\Domain\Model\JobAdvertisement\Description;
-use JobAd\Domain\Model\JobAdvertisement\HowToApplay;
+use JobAd\Domain\Model\JobAdvertisement\HowToApply;
 /**
  * Description of JobAdDescriptionsWasManaged
  *
@@ -25,14 +25,14 @@ class JobAdDescriptionsWasManaged implements DomainEvent
     private $occurredOn;
     private $pozitonTitle;
     private $description;
-    private $howToApplay;
+    private $howToApply;
     
-    public function __construct(Id $id, PozitonTitle $pozitonTitle, Description $description, HowToApplay $howToApplay)
+    public function __construct(Id $id, PozitonTitle $pozitonTitle, Description $description, HowToApply $howToApply)
     {
         $this->id = $id;
         $this->pozitonTitle = $pozitonTitle;
         $this->description = $description;
-        $this->howToApplay = $howToApplay;
+        $this->howToApply = $howToApply;
         $this->occurredOn = new DateTimeImmutable();
     }
     
@@ -46,9 +46,9 @@ class JobAdDescriptionsWasManaged implements DomainEvent
         return $this->description;
     }
     
-    public function howToApplay()
+    public function howToApply()
     {
-        return $this->howToApplay;
+        return $this->howToApply;
     }
 
     public function occurredOn()

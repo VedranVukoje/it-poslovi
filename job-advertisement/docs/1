@@ -1,3 +1,8 @@
+curl -XDELETE 'localhost:9200/it-poslovi?pretty&pretty'
+curl -XGET 'localhost:9200/_cat/indices?v&pretty'
+
+
+
 22 listopad 2017
 
 Package videlalvaro/php-amqplib is abandoned, you should avoid using it. Use php-amqplib/php-amqplib instead.

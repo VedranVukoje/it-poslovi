@@ -8,8 +8,8 @@ JobAd\Domain\Model\JobAdvertisement\Events\JobAdWasDrafted:
             type: JobAd\Domain\Model\JobAdvertisement\PozitonTitle
         description:
             type: JobAd\Domain\Model\JobAdvertisement\Description
-        howToApplay:
-            type: JobAd\Domain\Model\JobAdvertisement\HowToApplay
+        howToApply:
+            type: JobAd\Domain\Model\JobAdvertisement\HowToApply
         occurredOn:
             expose: true
             type: CustomDateTimeImmutable

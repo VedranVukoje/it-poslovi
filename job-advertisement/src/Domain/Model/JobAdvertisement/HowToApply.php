@@ -14,7 +14,7 @@ use JobAd\Domain\ValueObjects\ValueObject;
  *
  * @author vedran
  */
-class HowToApplay implements ValueObject
+class HowToApply implements ValueObject
 {
     protected $value;
     

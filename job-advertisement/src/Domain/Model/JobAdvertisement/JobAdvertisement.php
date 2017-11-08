@@ -277,7 +277,7 @@ class JobAdvertisement extends AggregateRoot
 
         $draft->recordApplayAndPublihThat(
                 new JobAdWasDrafted(
-                $draft->id(), new PozitonTitle($pozitonTitle), new Description($description), new HowToApplay($howToApplay)
+                $draft->id(), new PozitonTitle($pozitonTitle), new Description($description), new HowToApply($howToApplay)
         ));
         
         $draft->updateTimestam();
@@ -289,7 +289,7 @@ class JobAdvertisement extends AggregateRoot
     {
         $this->recordApplayAndPublihThat(
                 new JobAdDescriptionsWasManaged(
-                $this->id(), new PozitonTitle($pozitonTitle), new Description($description), new HowToApplay($howToApplay)
+                $this->id(), new PozitonTitle($pozitonTitle), new Description($description), new HowToApply($howToApplay)
         ));
         $this->updateTimestam();
     }
@@ -469,7 +469,7 @@ class JobAdvertisement extends AggregateRoot
     {
         $this->id = (string) $event->id();
         $this->pozitonTitle = $event->pozitonTitle();
-        $this->howToApplay = $event->howToApplay();
+        $this->howToApply = $event->howToApply();
         $this->description = $event->description();
 //        $this->updateTimestam();
     }
@@ -478,7 +478,7 @@ class JobAdvertisement extends AggregateRoot
     {
         $this->id = (string) $event->id();
         $this->pozitonTitle = $event->pozitonTitle();
-        $this->howToApplay = $event->howToApplay();
+        $this->howToApply = $event->howToApply();
         $this->description = $event->description();
         $this->setStatus(Status::draft());
 //        $this->updateTimestam();

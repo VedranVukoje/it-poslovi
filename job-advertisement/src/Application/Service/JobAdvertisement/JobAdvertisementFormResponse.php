@@ -25,7 +25,7 @@ class JobAdvertisementFormResponse implements Assembler
     public $version;
     public $pozitonTitle;
     public $description;
-    public $howToApllay;
+    public $howToApply;
     public $categoryes;
     public $typeOfJobs;
     public $city;
