@@ -16,6 +16,7 @@ use JobAd\Domain\Model\JobAdvertisement\Events\JobAdDescriptionsWasManaged;
 use JobAd\Domain\Model\JobAdvertisement\Events\JobAdCategoresWsaManaged;
 use JobAd\Domain\Model\JobAdvertisement\Events\JobAdTagsWasManaged;
 use JobAd\Domain\Model\JobAdvertisement\Events\JobAdTypeOfJobsWasManaged;
+use JobAd\Domain\Model\JobAdvertisement\Events\StatusWasChangedToDrafted;
 use JobAd\Domain\Model\TypeOfJob\TypeOfJob;
 use JobAd\Domain\Model\Category\Adapter\CategoryCollection;
 use JobAd\Domain\Model\TypeOfJob\Adapter\TypeOfJobCollection;
@@ -410,6 +411,12 @@ class JobAdvertisement extends AggregateRoot
         $this->recordApplayAndPublihThat(new JobAdTagsWasManaged($this->id(), $new, $add, $remove));
         $this->updateTimestam();
     }
+    
+    public function changeStatusToDraft()
+    {
+        $this->recordApplayAndPublihThat(new StatusWasChangedToDrafted($this->id, (string) Status::draft()));
+    }
+
 
     public function updateTimestam()
     {
@@ -574,6 +581,11 @@ class JobAdvertisement extends AggregateRoot
             }
         }
 //        $this->updateTimestam();
+    }
+    
+    protected function applyStatusWasChangedToDrafted(StatusWasChangedToDrafted $event)
+    {
+        $this->setStatus(Status::fromNative($event->status()));
     }
 
     private function setStatus(Status $status)

@@ -66,7 +66,7 @@ use JobAd\Infrastructure\Application\Serialization\JMS\JMSSerializer;
 //use JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\CityWasAddedToJobAdvertisement;
 //use JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository;
 
-use JobAd\Infrastructure\Persistence\ElasticSearch\MessageDomainEventProcessing;
+//use JobAd\Infrastructure\Persistence\ElasticSearch\MessageDomainEventProcessing;
 /**
  * Description of JobAdvertismentController
  *
@@ -90,7 +90,7 @@ class JobAdvertismentController extends Controller
      */
     public function draftJobAddAction(LoggerInterface $logger,  Request $request, $id = null, int $version = 0)
     {
-
+        
 //        dump($id);
 
         if ($id) {

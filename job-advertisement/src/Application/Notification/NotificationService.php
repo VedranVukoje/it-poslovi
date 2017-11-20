@@ -76,6 +76,11 @@ class NotificationService
 
     private function publish(StoredEvent $storedEvent)
     {
+        
+        $stored = $this->serializer->deserialize($storedEvent->eventBody(), $storedEvent->typeName(), 'json');
+        
+        dump($stored);
+        
         $this->messaging->publish($storedEvent->eventBody(), "", [
             'type' => $storedEvent->typeName(),
             'id' => $storedEvent->eventId(),

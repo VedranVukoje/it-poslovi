@@ -8,6 +8,7 @@
 
 namespace JobAd\Infrastructure\Persistence\ElasticSearch\Listeners;
 
+use Psr\Log\LoggerInterface;
 use JobAd\Domain\EventSubscriber;
 use JobAd\Domain\DomainEvent;
 use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementRepository;
@@ -20,10 +21,12 @@ use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementRepository;
 class CityWasAddedToJobAdvertisement implements EventSubscriber
 {
     private $es;
+    private $log;
 
-    public function __construct(JobAdvertisementRepository $es)
+    public function __construct(JobAdvertisementRepository $es, LoggerInterface $log)
     {
         $this->es = $es;
+        $this->log = $log;
     }
     
     public function isSubscribedTo(DomainEvent $event)
@@ -33,6 +36,10 @@ class CityWasAddedToJobAdvertisement implements EventSubscriber
     
     public function handle(DomainEvent $event)
     {
+        
+        $this->log->debug('City Event', ['event' => $event]);
+        
+        $this->log->debug('PostCode', ['postCode' => $event->city()->postCode()]);
         
         $jobAd = $this->es->ofId($event->id());
         $jobAd->doApplayByDomainEvent($event);
