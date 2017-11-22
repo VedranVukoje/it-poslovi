@@ -3,13 +3,13 @@ JobAd\Domain\Model\JobAdvertisement\Events\JobAdWasDrafted:
     
     properties:
         id:
-            type: JobAd\Domain\Model\JobAdvertisement\Id
+            type: string
         pozitonTitle:
-            type: JobAd\Domain\Model\JobAdvertisement\PozitonTitle
+            type: string
         description:
-            type: JobAd\Domain\Model\JobAdvertisement\Description
+            type: string
         howToApply:
-            type: JobAd\Domain\Model\JobAdvertisement\HowToApply
+            type: stirng
         occurredOn:
             expose: true
             type: CustomDateTimeImmutable

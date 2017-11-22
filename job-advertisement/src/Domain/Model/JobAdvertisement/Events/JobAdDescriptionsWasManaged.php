@@ -10,10 +10,10 @@ namespace JobAd\Domain\Model\JobAdvertisement\Events;
 
 use DateTimeImmutable;
 use JobAd\Domain\DomainEvent;
-use JobAd\Domain\Model\JobAdvertisement\Id;
-use JobAd\Domain\Model\JobAdvertisement\PozitonTitle;
-use JobAd\Domain\Model\JobAdvertisement\Description;
-use JobAd\Domain\Model\JobAdvertisement\HowToApply;
+//use JobAd\Domain\Model\JobAdvertisement\Id;
+//use JobAd\Domain\Model\JobAdvertisement\PozitonTitle;
+//use JobAd\Domain\Model\JobAdvertisement\Description;
+//use JobAd\Domain\Model\JobAdvertisement\HowToApply;
 /**
  * Description of JobAdDescriptionsWasManaged
  *
@@ -27,7 +27,7 @@ class JobAdDescriptionsWasManaged implements DomainEvent
     private $description;
     private $howToApply;
     
-    public function __construct(Id $id, PozitonTitle $pozitonTitle, Description $description, HowToApply $howToApply)
+    public function __construct(string $id, string $pozitonTitle, string $description, string $howToApply)
     {
         $this->id = $id;
         $this->pozitonTitle = $pozitonTitle;
@@ -56,10 +56,6 @@ class JobAdDescriptionsWasManaged implements DomainEvent
         return $this->occurredOn;
     }
     
-    /**
-     * 
-     * @return Id
-     */
     public function id()
     {
         return $this->id;

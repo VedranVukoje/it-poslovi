@@ -10,8 +10,8 @@ namespace JobAd\Domain\Model\JobAdvertisement\Events;
 
 use DateTimeImmutable;
 use JobAd\Domain\DomainEvent;
-use JobAd\Domain\Model\JobAdvertisement\Id;
-use JobAd\Domain\Model\Location\City;
+//use JobAd\Domain\Model\JobAdvertisement\Id;
+//use JobAd\Domain\Model\Location\City;
 
 /**
  * Description of CityWasAddedToJobAdvertisement
@@ -23,12 +23,14 @@ class CityWasAddedToJobAdvertisement implements DomainEvent
 
     private $id;
     private $city;
+    private $postCode;
     private $occurredOn;
 
-    public function __construct(Id $id, City $city)
+    public function __construct(string $id, string $postCode, string $city)
     {
         $this->id = $id;
         $this->city = $city;
+        $this->postCode = $postCode;
         $this->occurredOn = new DateTimeImmutable();
     }
 
@@ -40,6 +42,11 @@ class CityWasAddedToJobAdvertisement implements DomainEvent
     public function city()
     {
         return $this->city;
+    }
+    
+    public function postCode()
+    {
+        return $this->postCode;
     }
 
     public function occurredOn()

@@ -3,7 +3,7 @@ JobAd\Domain\Model\JobAdvertisement\Events\DurationWasAddedToAd:
     
     properties:
         id:
-            type: JobAd\Domain\Model\JobAdvertisement\Id
+            type: string
         duration:
             type: CustomDateTimeImmutable
         occurredOn:

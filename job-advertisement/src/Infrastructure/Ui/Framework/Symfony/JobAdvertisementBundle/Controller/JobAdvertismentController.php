@@ -128,7 +128,7 @@ class JobAdvertismentController extends Controller
                     $jobAdProducer
                     );
             
-            $notification->publishNotifications('job-ad');
+//            $notification->publishNotifications('job-ad');
 //            dump($form->getData());
 
             $form->handleRequest($request);
@@ -152,8 +152,8 @@ class JobAdvertismentController extends Controller
                 $draft = new DraftAdvertisementService($draft, $repoRactory, $logger);
                 $draft = new AddCityToJobAd($draft, $repoRactory, $logger);
                 $draft = new JobAdManageCategores($draft, $repoRactory, $logger);
-                $draft = new JobAdManageTags($draft, $repoRactory, $logger);
-                $draft = new JobAdManageTypeOfJobs($draft, $repoRactory, $logger);
+//                $draft = new JobAdManageTags($draft, $repoRactory, $logger);
+//                $draft = new JobAdManageTypeOfJobs($draft, $repoRactory, $logger);
                 $draft = new Transaction($draft, new DoctrineSession($this->get('doctrine.orm.default_entity_manager')));
                 $response = $draft->execute($form->getData());
                 

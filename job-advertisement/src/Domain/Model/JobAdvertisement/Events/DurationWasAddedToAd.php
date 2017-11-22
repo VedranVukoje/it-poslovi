@@ -10,7 +10,7 @@ namespace JobAd\Domain\Model\JobAdvertisement\Events;
 
 use DateTimeImmutable;
 use JobAd\Domain\DomainEvent;
-use JobAd\Domain\Model\JobAdvertisement\Id;
+//use JobAd\Domain\Model\JobAdvertisement\Id;
 
 /**
  * Description of DurationWasAddedToAd
@@ -24,7 +24,7 @@ class DurationWasAddedToAd implements DomainEvent
     private $duration;
     private $occurredOn;
 
-    public function __construct(Id $id, DateTimeImmutable $duration)
+    public function __construct(string $id, DateTimeImmutable $duration)
     {
         $this->id = $id;
         $this->duration = $duration;

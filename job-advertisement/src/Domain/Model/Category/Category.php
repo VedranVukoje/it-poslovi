@@ -73,14 +73,14 @@ class Category
      * @param array $data
      * @return \self
      */
-    public static function hydrate(array $data): self
-    {
-        $category = new static(Id::fromNative($data['id']));
-        $category->name = new Name($data['name']);
-        
-        
-        return $category;
-    }
+//    public static function hydrate(array $data): self
+//    {
+//        $category = new static(Id::fromNative($data['id']));
+//        $category->name = new Name($data['name']);
+//        
+//        
+//        return $category;
+//    }
 
     public static function fromNative($id, $name)
     {
@@ -95,12 +95,12 @@ class Category
         $this->jobAdvertisement[] = $jobAdvertisement;
     }
     
-    public function extract(): array
-    {
-        return [
-            'id' => (string) $this->id,
-            'name' => (string) $this->name
-        ];
-    }
+//    public function extract(): array
+//    {
+//        return [
+//            'id' => (string) $this->id,
+//            'name' => (string) $this->name
+//        ];
+//    }
     
 }

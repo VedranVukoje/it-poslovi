@@ -277,8 +277,7 @@ class JobAdvertisement extends AggregateRoot
         $draft = new static(Id::generate());
 
         $draft->recordApplayAndPublihThat(
-                new JobAdWasDrafted(
-                $draft->id(), new PozitonTitle($pozitonTitle), new Description($description), new HowToApply($howToApplay)
+                new JobAdWasDrafted($draft->id, $pozitonTitle, $description, $howToApplay
         ));
         
         $draft->updateTimestam();
@@ -288,10 +287,7 @@ class JobAdvertisement extends AggregateRoot
 
     public function manageJobAdDescriptions(string $pozitonTitle, string $description, string $howToApplay)
     {
-        $this->recordApplayAndPublihThat(
-                new JobAdDescriptionsWasManaged(
-                $this->id(), new PozitonTitle($pozitonTitle), new Description($description), new HowToApply($howToApplay)
-        ));
+        $this->recordApplayAndPublihThat(new JobAdDescriptionsWasManaged($this->id, $pozitonTitle, $description,$howToApplay));
         $this->updateTimestam();
     }
 
@@ -370,7 +366,7 @@ class JobAdvertisement extends AggregateRoot
 
     public function addCity(int $postCode, string $city)
     {
-        $event = new CityWasAddedToJobAdvertisement($this->id(), new City(new PostCode($postCode), $city));
+        $event = new CityWasAddedToJobAdvertisement($this->id, $postCode, $city);
         $this->recordApplayAndPublihThat($event);
         $this->updateTimestam();
     }
@@ -380,7 +376,7 @@ class JobAdvertisement extends AggregateRoot
 
         $duration = new DateTimeImmutable($duration);
         $this->assertDuration($duration);
-        $this->recordApplayAndPublihThat(new DurationWasAddedToAd($this->id(), $duration));
+        $this->recordApplayAndPublihThat(new DurationWasAddedToAd($this->id, $duration));
         $this->updateTimestam();
     }
 
@@ -474,19 +470,20 @@ class JobAdvertisement extends AggregateRoot
 
     protected function applyJobAdDescriptionsWasManaged(JobAdDescriptionsWasManaged $event)
     {
-        $this->id = (string) $event->id();
-        $this->pozitonTitle = $event->pozitonTitle();
-        $this->howToApply = $event->howToApply();
-        $this->description = $event->description();
+
+        $this->id = $event->id();
+        $this->pozitonTitle = new PozitonTitle($event->pozitonTitle());
+        $this->howToApply = new Description($event->howToApply());
+        $this->description = new HowToApply($event->description());
 //        $this->updateTimestam();
     }
 
     protected function applyJobAdWasDrafted(JobAdWasDrafted $event)
     {
-        $this->id = (string) $event->id();
-        $this->pozitonTitle = $event->pozitonTitle();
-        $this->howToApply = $event->howToApply();
-        $this->description = $event->description();
+        $this->id = $event->id();
+        $this->pozitonTitle = new PozitonTitle($event->pozitonTitle());
+        $this->howToApply = new HowToApply($event->howToApply());
+        $this->description = new Description($event->description());
         $this->setStatus(Status::draft());
 //        $this->updateTimestam();
         $this->isNew = true;
@@ -546,15 +543,13 @@ class JobAdvertisement extends AggregateRoot
 
     protected function applyCityWasAddedToJobAdvertisement(CityWasAddedToJobAdvertisement $event)
     {
-//        dump($event);
         $this->id = (string) $event->id();
-        $this->city = $event->city();
-//        $this->updateTimestam();
+        $this->city = new City(new PostCode($event->postCode()), $event->city());
     }
 
     protected function applyDurationWasAddedToAd(DurationWasAddedToAd $event)
     {
-        $this->id = (string) $event->id();
+        $this->id = $event->id();
         $this->end = $event->duration();
         $this->updateTimestam();
     }

@@ -3,9 +3,9 @@ JobAd\Domain\Model\JobAdvertisement\Events\CityWasAddedToJobAdvertisement:
     
     properties:
         id:
-            type: JobAd\Domain\Model\JobAdvertisement\Id
+            type: string
         city:
-            type: JobAd\Domain\Model\Location\City
+            type: string
         occurredOn:
             expose: true
             type: CustomDateTimeImmutable
