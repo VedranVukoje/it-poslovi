@@ -5,20 +5,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 namespace JobAd\Infrastructure\Persistence\Doctrine\Entity\Location;
 
-use JobAd\Domain\Model\Location\City as Domain;
+use JobAd\Domain\Model\Location\City;
 use JobAd\Domain\Model\Location\PostCode;
 /**
- * Description of City
- *
+ * Description of DoctrineCity
+ * JobAd\Infrastructure\Persistence\Doctrine\Entity\Location\DoctrineCity
+ * Location.DoctrineCity.orm
  * @author vedran
  */
-class City extends Domain
+class DoctrineCity extends City
 {
-    public function __construct(PostCode $postCode, string $city)
+    public function __construct(PostCode $postCode, string $name)
     {
-        parent::__construct($postCode, $city);
+        parent::__construct($postCode, $name);
     }
 }

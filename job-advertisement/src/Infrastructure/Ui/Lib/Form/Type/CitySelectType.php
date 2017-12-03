@@ -14,7 +14,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use JobAd\Domain\Model\Location\City;
+use JobAd\Infrastructure\Persistence\Doctrine\Entity\Location\DoctrineCity;
+//use JobAd\Domain\Model\Location\City;
 use Doctrine\Common\Cache\ApcuCache;
 /**
  * Description of CitySelectType
@@ -27,7 +28,7 @@ class CitySelectType extends AbstractType
     {
         $builder->add('city', EntityType::class, [
             'label' => false,
-            'class' => City::class,
+            'class' => DoctrineCity::class,
             'choice_label' => function ($city) {
                 return (string) $city;
             },

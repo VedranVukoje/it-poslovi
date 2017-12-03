@@ -24,10 +24,13 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 //use Doctrine\Common\Collections\ArrayCollection;
 use JobAd\Application\Service\JobAdvertisement\JobAdvertisementFormResponse;
-use JobAd\Domain\Model\Tag\Tag;
-use JobAd\Domain\Model\Category\Category;
-use JobAd\Domain\Model\TypeOfJob\TypeOfJob;
-use JobAd\Domain\Model\Location\City;
+use JobAd\Infrastructure\Persistence\Doctrine\Entity\Tag\DoctrineTag;
+//use JobAd\Domain\Model\Category\Category;
+use JobAd\Infrastructure\Persistence\Doctrine\Entity\Category\DoctrineCategory;
+//use JobAd\Domain\Model\TypeOfJob\TypeOfJob;
+use JobAd\Infrastructure\Persistence\Doctrine\Entity\TypeOfJob\DoctrineTypeOfJob;
+//use JobAd\Domain\Model\Location\City;
+use JobAd\Infrastructure\Persistence\Doctrine\Entity\Location\DoctrineCity;
 use Doctrine\Common\Collections\ArrayCollection;
 //use JobAd\Domain\Model\Category\Category;
 
@@ -133,7 +136,7 @@ class JobAdvertisementType extends AbstractType
             
             return new ArrayCollection($em->createQueryBuilder('t')
                             ->select('t')
-                            ->from(Tag::class, 't')
+                            ->from(DoctrineTag::class, 't')
                             ->where('t.id IN (:tags)')
                             ->setParameter('tags', array_values($tagsArray))
                             ->getQuery()
@@ -163,7 +166,7 @@ class JobAdvertisementType extends AbstractType
             
             return new ArrayCollection($em->createQueryBuilder('c')
                             ->select('c')
-                            ->from(Category::class, 'c')
+                            ->from(DoctrineCategory::class, 'c')
                             ->where('c.id IN (:categores)')
                             ->setParameter('categores', array_values($categoryArray))
                             ->getQuery()
@@ -186,7 +189,7 @@ class JobAdvertisementType extends AbstractType
         $builder->get('city')->addModelTransformer(new CallbackTransformer(function($cityArray) use ($em) {
             return $em->createQueryBuilder('c')
                             ->select('c')
-                            ->from(City::class, 'c')
+                            ->from(DoctrineCity::class, 'c')
                             ->where('c.postCode = :postCode')
                             ->setParameter('postCode', $cityArray['postCode'])
                             ->getQuery()
@@ -210,7 +213,7 @@ class JobAdvertisementType extends AbstractType
             
             return new ArrayCollection($em->createQueryBuilder('t')
                             ->select('t')
-                            ->from(TypeOfJob::class, 't')
+                            ->from(DoctrineTypeOfJob::class, 't')
                             ->where('t.id IN (:typeOfJobs)')
                             ->setParameter('typeOfJobs', array_values($typeOfJobsArray))
                             ->getQuery()

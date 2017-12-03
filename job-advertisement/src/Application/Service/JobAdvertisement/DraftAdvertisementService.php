@@ -5,16 +5,18 @@ namespace JobAd\Application\Service\JobAdvertisement;
 //use JobAd\Application\Event\EventDispatcher;
 use JobAd\Application\Service\ApplicationService;
 use Psr\Log\LoggerInterface;
+use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementFactory;
 use JobAd\Domain\Model\Category\Exceptions\CategoresNotFoundException;
 use JobAd\Domain\Model\Location\Exception\CityNotFoundException;
 use JobAd\Domain\Model\JobAdvertisement\Exceptions\OnlyOneCityPerJobAd;
 use JobAd\Domain\Model\Category\Exceptions\TypeOfJobNotFoundException;
 use JobAd\Domain\Model\JobAdvertisement\RepositoryFactory;
 use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement as DomainJobAd;
+use JobAd\Infrastructure\Persistence\Doctrine\Entity\JobAdvertisement\DoctreineJobAdvertisement;
 use JobAd\Domain\Model\JobAdvertisement\Id;
+
 //use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementRepository;
 //use JobAd\Domain\Model\JobAdvertisement\Assembler;
-
 //use JobAd\Domain\Model\Tag\Tag;
 //use JobAd\Domain\Model\JobAdvertisement\JobAddIsDrafted;
 //use JobAd\Domain\Model\JobAdvertisement\Id as JobAdId;
@@ -33,25 +35,33 @@ use JobAd\Domain\Model\JobAdvertisement\Id;
  */
 class DraftAdvertisementService extends JobAd implements ApplicationService
 {
-    
+
     private $appService;
+    private $jobAdFactory;
     private $logger;
+
     /**
      *  
      * 
      * @param RepositoryFactory $repoFactory
      */
-    public function __construct(ApplicationService $appService, RepositoryFactory $repoFactory, LoggerInterface $logger)
+    public function __construct(ApplicationService $appService, RepositoryFactory $repoFactory, JobAdvertisementFactory $jobAdFactory, LoggerInterface $logger)
     {
         $this->appService = $appService;
+        $this->jobAdFactory = $jobAdFactory;
         $this->logger = $logger;
         parent::__construct($repoFactory);
     }
 
     public function execute($request = null)
     {
-        
-        if ($request->id) {
+
+        if (null === $request->id) {
+
+            //$jobAd = DomainJobAd::draft($request->pozitonTitle, $request->description, $request->howToApply);
+            $jobAd = $this->jobAdFactory->draft($request->pozitonTitle, $request->description, $request->howToApply);
+        } else {
+
             $jobAd = $this->ofId(Id::fromNative($request->id));
             /**
              * @todo
@@ -59,12 +69,10 @@ class DraftAdvertisementService extends JobAd implements ApplicationService
              */
             $this->lock($jobAd, (int) $jobAd->version());
             $jobAd->manageJobAdDescriptions($request->pozitonTitle, $request->description, $request->howToApply);
-        } else {
-            $jobAd = DomainJobAd::draft($request->pozitonTitle, $request->description, $request->howToApply);
         }
 
         $jobAd->addAdDuration($request->end);
-        
+
 //        $cities = $this->cityesByPostCodes($request->city['postCode']);
 //        
 //        if (0 == count($cities)) {
@@ -75,14 +83,11 @@ class DraftAdvertisementService extends JobAd implements ApplicationService
 //        }
 //        
 //        $jobAd->addCity((string)$cities[0]->postCode(),(string)$cities[0]);
-        
-        
 //        $categoryes = $this->categoryByArrayOfCategoryIds($request->categoryes);
 //        if (0 == count($categoryes)) {
 //            throw new CategoresNotFoundException("Niste izabrali kategoriju.");
 //        }
 //        $jobAd->manageCategores($categoryes);
-        
 //        $jobAd->manageTags($this->tagByArrayIds($request->tags));
 //        
 //        $typeOfJobs = $this->typeOfJobByArrayIds($request->typeOfJobs);
@@ -91,14 +96,14 @@ class DraftAdvertisementService extends JobAd implements ApplicationService
 //        }
 //        
 //        $jobAd->manageTypeOfJobs($typeOfJobs);
-        
+
         $this->repoFactory->jobAdRepo()->add($jobAd);
 
         $request->id = (string) $jobAd->id();
         $request->version = (int) $jobAd->version();
         $this->logger->debug('Job Ad was drafted ', ['jobAd' => $this->extract($jobAd)]);
         return $this->appService->execute($request)
-                ->set('id', $jobAd->id());
+                        ->set('id', $jobAd->id());
     }
 
 }

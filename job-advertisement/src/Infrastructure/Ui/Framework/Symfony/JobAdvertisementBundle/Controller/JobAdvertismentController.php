@@ -53,6 +53,8 @@ use JobAd\Domain\DomainEventPublisher;
 use JobAd\Application\Service\JobAdvertisement\JobAdManageTags;
 //use JobAd\Infrastructure\Persistence\Doctrine\TagDoctrineRepository;
 
+use JobAd\Infrastructure\Persistence\Doctrine\Entity\JobAdvertisement\DoctreineJobAdvertisement;
+use JobAd\Infrastructure\Persistence\Doctrine\Entity\JobAdvertisement\DoctrineJobAdvertisementFactory;
 use JobAd\Infrastructure\Persistence\Doctrine\JobAdDoctrineRepositoryFactory;
 
 use JobAd\Application\Notification\NotificationService;
@@ -105,6 +107,7 @@ class JobAdvertismentController extends Controller
         }
 
         $em = $this->get('doctrine.orm.default_entity_manager');
+//        dump($em->getClassMetadata(DoctreineJobAdvertisement::class));
         $form = $this->get('it_poslovi.symfony.form.factory')->create(JobAdvertisementType::class, $jobAd ?? null, [
             'attr' => [
                 'class' => 'form-horizontal',
@@ -149,7 +152,7 @@ class JobAdvertismentController extends Controller
                 
                 
                 $draft = new BaseResponse();
-                $draft = new DraftAdvertisementService($draft, $repoRactory, $logger);
+                $draft = new DraftAdvertisementService($draft, $repoRactory, new DoctrineJobAdvertisementFactory(), $logger);
                 $draft = new AddCityToJobAd($draft, $repoRactory, $logger);
                 $draft = new JobAdManageCategores($draft, $repoRactory, $logger);
 //                $draft = new JobAdManageTags($draft, $repoRactory, $logger);

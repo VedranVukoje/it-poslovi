@@ -4,7 +4,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
     <entity
-        name="JobAd\Domain\Model\JobAdvertisement\JobAdvertisement"
+        name="JobAd\Infrastructure\Persistence\Doctrine\Entity\JobAdvertisement\DoctreineJobAdvertisement"
         table="job_advertisement">
         
         
@@ -50,7 +50,7 @@
             <join-column name="id" referenced-column-name="id" />
         </one-to-many>-->
         
-        <many-to-many field="categoryes" inversed-by="jobAd" target-entity="JobAd\Domain\Model\Category\Category">
+        <many-to-many field="surrogateCategoryes" inversed-by="jobAd" target-entity="JobAd\Domain\Model\Category\Category">
 <!--            <cascade>
                 <cascade-persist/>
                 <cascade-remove/>

@@ -16,7 +16,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 //use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use JobAd\Domain\Model\Category\Category;
+//use JobAd\Domain\Model\Category\Category;
+use JobAd\Infrastructure\Persistence\Doctrine\Entity\Category\DoctrineCategory;
 
 /**
  * Description of AdCategoryChoiceType
@@ -34,7 +35,7 @@ class CategoryChoiceType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'class' => Category::class,
+            'class' => DoctrineCategory::class,
             'choice_label' => 'name',
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('t')

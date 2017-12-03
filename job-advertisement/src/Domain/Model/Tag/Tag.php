@@ -16,19 +16,19 @@ namespace JobAd\Domain\Model\Tag;
 class Tag
 {
 
-    private $id;
-    private $name;
+    protected $id;
+    protected $name;
     /**
      *
      * @todo ValueObject Slug sada nema !!!.
      * @var Slug 
      */
-    private $slug;
+    protected $slug;
     /**
      * @todo.
      * @var type 
      */
-    private $tagIcon;
+    protected $tagIcon;
 
     public function __construct(Id $id, Name $name)
     {

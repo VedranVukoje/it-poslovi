@@ -17,6 +17,7 @@ use Doctrine\DBAL\LockMode;
 //use Doctrine\Common\Collections\ArrayCollection;
 use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementRepository;
 use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement;
+use JobAd\Infrastructure\Persistence\Doctrine\Entity\JobAdvertisement\DoctreineJobAdvertisement;
 use JobAd\Domain\Model\JobAdvertisement\Id;
 
 /**
@@ -38,7 +39,7 @@ class DoctrineJobAdvertisementRepository implements JobAdvertisementRepository
     {
 //        $id = (string)$id;
 //        dump($id);
-        return $this->em->find(JobAdvertisement::class, (string) $id);
+        return $this->em->find(DoctreineJobAdvertisement::class, (string) $id);
     }
     
     public function lock(JobAdvertisement $jobAd, int $version)

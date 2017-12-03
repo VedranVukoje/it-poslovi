@@ -12,7 +12,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use JobAd\Domain\Model\Tag\Tag;
+use JobAd\Infrastructure\Persistence\Doctrine\Entity\Tag\DoctrineTag;
 /**
  * Description of TagType
  *
@@ -29,7 +29,7 @@ class TagType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'class' => Tag::class,
+            'class' => DoctrineTag::class,
             'choice_label' => 'name',
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('t')

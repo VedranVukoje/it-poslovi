@@ -32,7 +32,7 @@ class Category
      *
      * @var JobAdvertisement 
      */
-    protected $jobAdvertisement;
+    protected $jobAd;
     
     
     public function __construct(Id $id)
@@ -90,7 +90,7 @@ class Category
         return $category;
     }
     
-    public function setJobAdvertisement(JobAdvertisement $jobAdvertisement)
+    public function addJobAd(JobAdvertisement $jobAdvertisement)
     {
         $this->jobAdvertisement[] = $jobAdvertisement;
     }

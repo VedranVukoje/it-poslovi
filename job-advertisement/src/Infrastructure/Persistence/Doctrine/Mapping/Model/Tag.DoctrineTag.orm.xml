@@ -4,17 +4,25 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
     <entity
-        name="JobAd\Domain\Model\Category\Category"
-        table="category">
+        name="JobAd\Infrastructure\Persistence\Doctrine\Entity\Tag\DoctrineTag"
+        table="tag">
     
-        <id name="id" column="id" type="category_id"/>
+        <id name="id" column="id" type="tag_id"/>
         <field
             name="name" 
             column="name" 
-            type="category_name" 
+            type="tag_name" 
         />
         
-        <many-to-many target-entity="JobAd\Domain\Model\JobAdvertisement\JobAdvertisement" mapped-by="categoryes" field="jobAd"  />
+        <field
+            name="slug" 
+            column="slug" 
+            type="string"
+        /><!--unique="true"--> 
+        
+<!--        <many-to-many target-entity="JobAd\Domain\Model\JobAdvertisement\JobAdvertisement" inversedBy="categoryes" field="jobAdvertisement">
+            
+        </many-to-many>-->
         
         
 <!--        <lifecycle-callbacks>

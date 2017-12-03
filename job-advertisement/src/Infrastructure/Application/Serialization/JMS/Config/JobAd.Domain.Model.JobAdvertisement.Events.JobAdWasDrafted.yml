@@ -9,7 +9,7 @@ JobAd\Domain\Model\JobAdvertisement\Events\JobAdWasDrafted:
         description:
             type: string
         howToApply:
-            type: stirng
+            type: string
         occurredOn:
             expose: true
             type: CustomDateTimeImmutable

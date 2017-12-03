@@ -31,5 +31,8 @@ class CategoryHydrator extends Category implements CategoryHydratorInterface
         return $category;
     }
     
-    
+    public function __construct()
+    {
+        
+    }
 }

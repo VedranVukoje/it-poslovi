@@ -7,16 +7,17 @@
  */
 namespace JobAd\Infrastructure\Persistence\Doctrine\Entity\Category;
 
-use JobAd\Domain\Model\Category\Category as Domain;
-
+use JobAd\Domain\Model\Category\Category;
+use JobAd\Domain\Model\Category\Id;
 /**
- * Description of Category
- *
+ * Description of DoctrineCategory
+ * Category.DoctrineCategory.orm
+ * JobAd\Infrastructure\Persistence\Doctrine\Entity\Category\DoctrineCategory
  * @author vedran
  */
-class Category extends Domain
+class DoctrineCategory extends Category
 {
-    public function __construct($id)
+    public function __construct(Id $id)
     {
         parent::__construct($id);
     }

@@ -17,6 +17,7 @@ use JobAd\Domain\Model\JobAdvertisement\Events\JobAdCategoresWsaManaged;
 use JobAd\Domain\Model\JobAdvertisement\Events\JobAdTagsWasManaged;
 use JobAd\Domain\Model\JobAdvertisement\Events\JobAdTypeOfJobsWasManaged;
 use JobAd\Domain\Model\JobAdvertisement\Events\StatusWasChangedToDrafted;
+use JobAd\Domain\Model\JobAdvertisement\Events\CategoryWasAddToJobAd;
 use JobAd\Domain\Model\TypeOfJob\TypeOfJob;
 use JobAd\Domain\Model\Category\Adapter\CategoryCollection;
 use JobAd\Domain\Model\TypeOfJob\Adapter\TypeOfJobCollection;
@@ -24,6 +25,8 @@ use JobAd\Domain\Model\Tag\Adapter\TagCollection;
 use JobAd\Domain\Model\Location\City;
 use JobAd\Domain\Model\Location\PostCode;
 use JobAd\Domain\Model\Category\Category;
+use JobAd\Domain\Model\Category\Id as CategoryId;
+use JobAd\Domain\Model\Category\CategoryHydrator;
 use JobAd\Domain\Model\Tag\Tag;
 use JobAd\Domain\Model\JobAdvertisement\Exceptions\TimeInThePastException;
 
@@ -39,8 +42,9 @@ class JobAdvertisement extends AggregateRoot
      * Minimalno vreme u satima koje oglas ceka na odobrenje.
      */
     const ADMIN_APPROVAL_TIME = '+24 hours';
-    
+
     private $isNew = false;
+
     /**
      *
      * @important obavezno kastovati ValueObject JobAd\Domain\Model\JobAdvertisement\Id u string. 
@@ -62,12 +66,13 @@ class JobAdvertisement extends AggregateRoot
      * @var string!
      */
     protected $id;
-    
+
     /**
      * @todo proveri zasto je u dokumentaciji samo $version ?
      * Optimistic Locking
      */
     protected $version = 1;
+
     /**
      *
      * @var PozitonTitle 
@@ -146,7 +151,7 @@ class JobAdvertisement extends AggregateRoot
     protected $user = 1;
 
     /**
-     * 
+     *
      * @param \JobAd\JobAdvertisment\DomainModel\Id $id
      */
     public function __construct(Id $id)
@@ -161,12 +166,12 @@ class JobAdvertisement extends AggregateRoot
     {
         return Id::fromNative($this->id);
     }
-    
+
     public function version()
     {
         return $this->version;
     }
-    
+
     public function isNew(): bool
     {
         return $this->isNew;
@@ -224,12 +229,12 @@ class JobAdvertisement extends AggregateRoot
     {
         return $this->end;
     }
-    
+
     public function createdAt()
     {
         return $this->createdAt;
     }
-    
+
     public function updatedAt()
     {
         return $this->updatedAt;
@@ -238,26 +243,26 @@ class JobAdvertisement extends AggregateRoot
     public static function reconstitute(EventStream $history)
     {
         $jobAd = new static($history->id());
-        
-        foreach($history->stream() as $event){
+
+        foreach ($history->stream() as $event) {
             $jobAd->applyTaht($event);
         }
-        
+
         return $jobAd;
     }
-    
+
     public static function reconstituteFromDomainEvent(DomainEvent $event)
     {
         $jobAd = new static($event->id());
         $jobAd->applyTaht($event);
         return $jobAd;
     }
-    
+
     public function doApplayByDomainEvent(DomainEvent $event)
     {
         $this->applyTaht($event);
     }
-    
+
 //    public static function hydrate(array $data): self
 //    {
 //        $jobAdd = new static($data['id']);
@@ -279,7 +284,7 @@ class JobAdvertisement extends AggregateRoot
         $draft->recordApplayAndPublihThat(
                 new JobAdWasDrafted($draft->id, $pozitonTitle, $description, $howToApplay
         ));
-        
+
         $draft->updateTimestam();
 
         return $draft;
@@ -287,7 +292,7 @@ class JobAdvertisement extends AggregateRoot
 
     public function manageJobAdDescriptions(string $pozitonTitle, string $description, string $howToApplay)
     {
-        $this->recordApplayAndPublihThat(new JobAdDescriptionsWasManaged($this->id, $pozitonTitle, $description,$howToApplay));
+        $this->recordApplayAndPublihThat(new JobAdDescriptionsWasManaged($this->id, $pozitonTitle, $description, $howToApplay));
         $this->updateTimestam();
     }
 
@@ -297,7 +302,7 @@ class JobAdvertisement extends AggregateRoot
         $this->recordApplayAndPublihThat($event);
         $this->updateTimestam();
     }
-    
+
     public function manageTypeOfJobs(TypeOfJobCollection $new)
     {
         $add = new TypeOfJobCollection();
@@ -314,11 +319,10 @@ class JobAdvertisement extends AggregateRoot
                 $remove[] = $typeOfJob;
             }
         }
-        
+
         $this->recordApplayAndPublihThat(new JobAdTypeOfJobsWasManaged($this->id(), $new, $add, $remove));
         $this->updateTimestam();
     }
-
 
 //    public function addTypeOfJob(string $id, string $name, string $createdAt = '', string $updatedAt = '')
 //    {
@@ -327,33 +331,55 @@ class JobAdvertisement extends AggregateRoot
 //        $this->recordApplayAndPublihThat($event);
 //    }
 
-    public function addCategory(Category $category)
+    public function addCategory(string $id, string $name)
     {
 
-        $event = new CategoryWasAddedToJobAdvertisement($this->id(), $category);
-        $this->recordApplayAndPublihThat($event);
+        $this->recordApplayAndPublihThat(
+                new CategoryWasAddToJobAd($this->id, (string) $category->id(), (string) $category->name())
+        );
+
+
+//        $event = new CategoryWasAddedToJobAdvertisement($this->id(), $category);
+//        $this->recordApplayAndPublihThat($event);
         $this->updateTimestam();
     }
-
+    
+    public function removeCategory(string $id)
+    {
+        $this->recordApplayAndPublihThat(
+                        new CategoryWasRemoveFromJobAd($this->id, (string) $category->id(), (string) $category->name())
+                );
+        $this->updateTimestam();
+    }
+    
+    /**
+     * Ovo ce isto da leti . mozda abstract function manageCategores(CategoryCollection $new);
+     * 
+     * @param CategoryCollection $new
+     */
     public function manageCategores(CategoryCollection $new)
     {
-        
+
         $add = new CategoryCollection();
         $remove = new CategoryCollection();
 
         foreach ($new as $category) {
             if (!$this->categoryes->contains($category)) {
-                $add[] = $category;
+                $this->recordApplayAndPublihThat(
+                        new CategoryWasAddToJobAd($this->id, (string) $category->id(), (string) $category->name())
+                );
             }
         }
 
         foreach ($this->categoryes as $category) {
             if (!$new->contains($category)) {
-                $remove[] = $category;
+                $this->recordApplayAndPublihThat(
+                        new CategoryWasRemoveFromJobAd($this->id, (string) $category->id(), (string) $category->name())
+                );
             }
         }
-        
-        $this->recordApplayAndPublihThat(new JobAdCategoresWsaManaged($this->id(), $new, $add, $remove));
+
+//        $this->recordApplayAndPublihThat(new JobAdCategoresWsaManaged($this->id(), $new, $add, $remove));
         $this->updateTimestam();
     }
 
@@ -407,12 +433,11 @@ class JobAdvertisement extends AggregateRoot
         $this->recordApplayAndPublihThat(new JobAdTagsWasManaged($this->id(), $new, $add, $remove));
         $this->updateTimestam();
     }
-    
+
     public function changeStatusToDraft()
     {
         $this->recordApplayAndPublihThat(new StatusWasChangedToDrafted($this->id, (string) Status::draft()));
     }
-
 
     public function updateTimestam()
     {
@@ -422,7 +447,7 @@ class JobAdvertisement extends AggregateRoot
             $this->createdAt = new \DateTimeImmutable();
         }
     }
-    
+
 //    public function extract(): array
 //    {
 //        
@@ -457,7 +482,7 @@ class JobAdvertisement extends AggregateRoot
 //            'updatedAt' => $this->updatedAt->format('d.m.Y H:i:s')
 //        ];
 //    }
-    
+
     public function status()
     {
         return $this->status;
@@ -499,18 +524,22 @@ class JobAdvertisement extends AggregateRoot
         $this->categoryes[] = $category;
 //        $this->updateTimestam();
     }
-
+    
+    /**
+     * @todo ovo se isto nece koristiti.
+     * @param JobAdCategoresWsaManaged $event
+     */
     protected function applyJobAdCategoresWsaManaged(JobAdCategoresWsaManaged $event)
     {
-        
+
         $this->id = (string) $event->id();
-        
+
         if (0 < count($event->remove())) {
             foreach ($event->remove() as $category) {
                 $this->categoryes->removeElement($category);
             }
         }
-        if (0 < count($event->add())){
+        if (0 < count($event->add())) {
             foreach ($event->add() as $category) {
                 $this->categoryes[] = $category;
             }
@@ -523,18 +552,18 @@ class JobAdvertisement extends AggregateRoot
         $this->typeOfJobs[] = $event->typeOfJob();
 //        $this->updateTimestam();
     }
-    
+
     protected function applyJobAdTypeOfJobsWasManaged(JobAdTypeOfJobsWasManaged $event)
     {
         $this->id = (string) $event->id();
-        
-        if(0 < count($event->remove())){
-            foreach($event->remove() as $typeOfJob){
+
+        if (0 < count($event->remove())) {
+            foreach ($event->remove() as $typeOfJob) {
                 $this->typeOfJobs->removeElement($typeOfJob);
             }
         }
-        if(0 < count($event->add())){
-            foreach($event->add() as $typeOfJob){
+        if (0 < count($event->add())) {
+            foreach ($event->add() as $typeOfJob) {
                 $this->typeOfJobs[] = $typeOfJob;
             }
         }
@@ -564,20 +593,42 @@ class JobAdvertisement extends AggregateRoot
     protected function applyJobAdTagsWasManaged(JobAdTagsWasManaged $event)
     {
         $this->id = (string) $event->id();
-        
-        if(0 < count($event->remove())){
-            foreach ($event->remove() as $tag){
+
+        if (0 < count($event->remove())) {
+            foreach ($event->remove() as $tag) {
                 $this->tags->removeElement($tag);
             }
         }
-        if(0 < count($event->add())){
-            foreach($event->add() as $tag){
+        if (0 < count($event->add())) {
+            foreach ($event->add() as $tag) {
                 $this->tags[] = $tag;
             }
         }
 //        $this->updateTimestam();
     }
+
+    protected function applyCategoryWasAddToJobAd(CategoryWasAddToJobAd $event)
+    {
+        
+        /**
+         * @todo throw exception....
+         */
+        if(!CategoryId::generate()->isValid((string) $event->id())) return false;
+        
+        $this->categoryes->set((string)$event->id(), Category::fromNative($event->id(), $event->name()));
+    }
     
+    protected function applyCategoryWasRemoveFromJobAd(CategoryWasRemoveFromJobAd $event)
+    {
+        
+        /**
+         * @todo throw exception....
+         */
+        if(!CategoryId::generate()->isValid($event->id())) return false;
+        
+        unset($this->categoryes[$event->id()]);
+    }
+
     protected function applyStatusWasChangedToDrafted(StatusWasChangedToDrafted $event)
     {
         $this->setStatus(Status::fromNative($event->status()));
@@ -587,8 +638,6 @@ class JobAdvertisement extends AggregateRoot
     {
         $this->status = $status;
     }
-    
-    
 
     /**
      * 

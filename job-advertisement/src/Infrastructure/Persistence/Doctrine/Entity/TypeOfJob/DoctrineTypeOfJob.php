@@ -5,17 +5,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 namespace JobAd\Infrastructure\Persistence\Doctrine\Entity\TypeOfJob;
 
-use JobAd\Domain\Model\TypeOfJob\TypeOfJob as Domain;
+use JobAd\Domain\Model\TypeOfJob\TypeOfJob;
 use JobAd\Domain\Model\TypeOfJob\Id;
 /**
- * Description of TypeOfJob
+ * Description of DoctrineTypeOfJob
  *
+ * JobAd\Infrastructure\Persistence\Doctrine\Entity\TypeOfJob\DoctrineTypeOfJob
+ * TypeOfJob.DoctrineTypeOfJob.orm
  * @author vedran
  */
-class TypeOfJob extends Domain
+class DoctrineTypeOfJob extends TypeOfJob
 {
     public function __construct(Id $id)
     {

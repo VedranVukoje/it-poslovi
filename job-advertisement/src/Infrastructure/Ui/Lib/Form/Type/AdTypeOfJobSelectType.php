@@ -15,7 +15,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 //use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use JobAd\Domain\Model\TypeOfJob\TypeOfJob;
+//use JobAd\Domain\Model\TypeOfJob\TypeOfJob;
+use JobAd\Infrastructure\Persistence\Doctrine\Entity\TypeOfJob\DoctrineTypeOfJob;
 //use JobAd\Application\Service\TypeOfJob\TypeOfJobDTOResponse;
 
 /**
@@ -35,7 +36,7 @@ class AdTypeOfJobSelectType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'class' => TypeOfJob::class,
+            'class' => DoctrineTypeOfJob::class,
             'choice_label' => 'name',
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('t')
