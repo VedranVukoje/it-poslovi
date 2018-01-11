@@ -24,7 +24,7 @@ class DurationWasAddedToAd implements DomainEvent
     private $duration;
     private $occurredOn;
 
-    public function __construct(string $id, DateTimeImmutable $duration)
+    public function __construct(string $id, string $duration)
     {
         $this->id = $id;
         $this->duration = $duration;

@@ -11,6 +11,7 @@ namespace JobAd\Infrastructure\Persistence\Doctrine\Specification;
 use JobAd\Domain\Model\Location\City;
 use JobAd\Domain\Model\Location\CityRepository;
 use JobAd\Domain\Model\Location\CitySpecification;
+use JobAd\Infrastructure\Persistence\Doctrine\Entity\Location\DoctrineCity;
 /**
  * Description of CityByPostCodes
  *
@@ -28,7 +29,7 @@ class CityByPostCodes implements CitySpecification
 
     public function specifies(CityRepository $repo)
     {
-        $dql = "SELECT c FROM ".City::class." c WHERE c.postCode = :postCode ";
+        $dql = "SELECT c FROM ".DoctrineCity::class." c WHERE c.postCode = :postCode ";
         
         return $repo->readDataByDQL($dql, ['postCode' => (int) $this->postCode]);
     }

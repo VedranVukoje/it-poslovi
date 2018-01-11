@@ -50,7 +50,12 @@
             <join-column name="id" referenced-column-name="id" />
         </one-to-many>-->
         
-        <many-to-many field="surrogateCategoryes" inversed-by="jobAd" target-entity="JobAd\Domain\Model\Category\Category">
+        <!--fetch="EAGER"-->
+        <many-to-many 
+            field="surrogateCategoryes" 
+            inversed-by="jobAd"
+             
+            target-entity="JobAd\Infrastructure\Persistence\Doctrine\Entity\Category\DoctrineCategory">
 <!--            <cascade>
                 <cascade-persist/>
                 <cascade-remove/>
@@ -70,7 +75,7 @@
             <join-column name="id" referenced-column-name="id" />
         </one-to-many>-->
         
-        <many-to-many field="typeOfJobs" target-entity="JobAd\Domain\Model\TypeOfJob\TypeOfJob">
+        <many-to-many field="surrogatetypeOfJobs" target-entity="JobAd\Infrastructure\Persistence\Doctrine\Entity\TypeOfJob\DoctrineTypeOfJob">
 <!--            <cascade>
                 <cascade-persist/>
                 <cascade-remove/>
@@ -86,7 +91,7 @@
         </many-to-many>
         
         
-        <many-to-many field="tags" target-entity="JobAd\Domain\Model\Tag\Tag">
+        <many-to-many field="surrogateTags" target-entity="JobAd\Infrastructure\Persistence\Doctrine\Entity\Tag\DoctrineTag">
 <!--            <cascade>
                 <cascade-persist/>
                 <cascade-remove/>
@@ -108,6 +113,7 @@
         <lifecycle-callbacks>
             <lifecycle-callback type="prePersist" method="updateTimestam"/>
             <lifecycle-callback type="preUpdate" method="updateTimestam"/>
+            <lifecycle-callback type="postLoad" method="aggregate"/>
         </lifecycle-callbacks>
     
     </entity>

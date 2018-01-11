@@ -13,6 +13,7 @@ use JobAd\Domain\Model\Tag\Tag;
 use JobAd\Domain\Model\Tag\Id;
 use JobAd\Domain\Model\Tag\TagRepository;
 use JobAd\Domain\Model\Tag\Adapter\TagCollection;
+use JobAd\Infrastructure\Persistence\Doctrine\Entity\Tag\DoctrineTag;
 
 /**
  * Description of TagDoctrineRepository
@@ -36,7 +37,7 @@ class TagDoctrineRepository implements TagRepository
 
     public function ofId(Id $id): Tag
     {
-        return $this->em->find(Tag::class, (string)$id);
+        return $this->em->find(DoctrineTag::class, (string)$id);
     }
 
     public function add(Tag $tag)

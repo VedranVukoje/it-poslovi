@@ -11,6 +11,7 @@ namespace JobAd\Infrastructure\Persistence\Doctrine\Specification;
 use JobAd\Domain\Model\Category\Category;
 use JobAd\Domain\Model\Category\CategorySpecification;
 use JobAd\Domain\Model\Category\CategoryRepository;
+use JobAd\Infrastructure\Persistence\Doctrine\Entity\Category\DoctrineCategory;
 
 /**
  * Description of CategoryByArrayOfCategoryIds
@@ -30,7 +31,7 @@ class CategoryByArrayOfCategoryIds implements CategorySpecification
     public function specifies(CategoryRepository $repo)
     {
         
-        $dql = "SELECT c FROM ".Category::class." c WHERE c.id IN (".$this->ids.") ";
+        $dql = "SELECT c FROM ".DoctrineCategory::class." c WHERE c.id IN (".$this->ids.") ";
         
         return $repo->queryByDql($dql, []);
     }

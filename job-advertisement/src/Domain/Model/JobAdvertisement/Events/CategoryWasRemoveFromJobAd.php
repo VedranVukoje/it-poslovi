@@ -21,14 +21,12 @@ class CategoryWasRemoveFromJobAd implements DomainEvent
 
     private $id;
     private $categoryId;
-    private $name;
     private $occurredOn;
 
-    public function __construct(string $id, string $categoryId, string $name)
+    public function __construct(string $id, string $categoryId)
     {
         $this->id = $id;
         $this->categoryId = $categoryId;
-        $this->name = $name;
         $this->occurredOn = new DateTimeImmutable();
     }
 
@@ -40,11 +38,6 @@ class CategoryWasRemoveFromJobAd implements DomainEvent
     public function categoryId()
     {
         return $this->categoryId;
-    }
-
-    public function name()
-    {
-        return $this->name;
     }
 
     public function occurredOn()

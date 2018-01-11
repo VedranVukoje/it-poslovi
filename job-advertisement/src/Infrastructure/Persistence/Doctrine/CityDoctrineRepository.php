@@ -15,6 +15,7 @@ use JobAd\Domain\Model\Location\CityRepository;
 //use JobAd\Domain\Model\Location\
 use JobAd\Domain\Model\Location\City;
 use JobAd\Domain\Model\Location\PostCode;
+use JobAd\Infrastructure\Persistence\Doctrine\Entity\Location\DoctrineCity;
 /**
  * Description of CityRepository
  * JobAd\Infrastructure\Persistence\Doctrine\CityDoctrineRepository
@@ -31,7 +32,7 @@ class CityDoctrineRepository implements CityRepository
     
     public function byPostCode(PostCode $postcode): City
     {
-        return $this->em->find(City::class, (string)$postcode);
+        return $this->em->find(DoctrineCity::class, (string)$postcode);
     }
     
     public function query($specification): Collection

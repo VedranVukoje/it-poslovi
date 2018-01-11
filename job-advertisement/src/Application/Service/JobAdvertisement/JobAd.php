@@ -60,7 +60,6 @@ abstract class JobAd
         return $this->repoFactory
                         ->cityRepo()
                         ->query(new CityByPostCodes($postCode));
-        ;
     }
 
     protected function tagByArrayIds(array $tags)

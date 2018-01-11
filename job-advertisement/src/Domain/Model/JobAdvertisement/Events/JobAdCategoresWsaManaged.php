@@ -14,8 +14,12 @@ use JobAd\Domain\Model\JobAdvertisement\Id;
 use JobAd\Domain\Model\Category\Adapter\CategoryCollection;
 
 /**
- * Description of JobAddCategoresWsaManaged
- *
+ * JobAddCategoresWsaManaged
+ * 
+ * @todo ovaj domain event obrisi.
+ * obrisi ga iz DI container - a.
+ * obirsi ga iz Es listener - a.
+ * 
  * @author vedran
  */
 class JobAdCategoresWsaManaged implements DomainEvent

@@ -20,8 +20,8 @@ use JobAd\Application\Service\JobAdvertisement\DraftAdvertisementService;
 use JobAd\Application\Service\JobAdvertisement\AddCityToJobAd;
 //use JobAd\Application\Service\JobAdvertisement\AddCategoryToJobAd;
 //use JobAd\Application\Service\JobAdvertisement\AddTypeOfJobToJobAd;
-use JobAd\Application\Service\JobAdvertisement\JobAdManageTypeOfJobs;
-use JobAd\Application\Service\JobAdvertisement\JobAdManageCategores;
+//use JobAd\Application\Service\JobAdvertisement\JobAdManageTypeOfJobs;
+//use JobAd\Application\Service\JobAdvertisement\JobAdManageCategores;
 //use JobAd\Application\Service\JobAdvertisement\JobAdvertisementFormResponse;
 //use JobAd\Infrastructure\Persistence\InMemory\InMemoryJobAdvertisementRepo;
 //use JobAd\Infrastructure\Persistence\Doctrine\TypeOfJobDoctrineRepository;
@@ -50,10 +50,10 @@ use JobAd\Domain\DomainEventPublisher;
 //use JobAd\Infrastructure\Application\Serialization\JMS\JMSFactory;
 //use JobAd\Infrastructure\Application\Serialization\JMS\JMSSerializer;
 //use JobAd\Application\Service\JobAdvertisement\AddTagToJobAd;
-use JobAd\Application\Service\JobAdvertisement\JobAdManageTags;
+//use JobAd\Application\Service\JobAdvertisement\JobAdManageTags;
 //use JobAd\Infrastructure\Persistence\Doctrine\TagDoctrineRepository;
 
-use JobAd\Infrastructure\Persistence\Doctrine\Entity\JobAdvertisement\DoctreineJobAdvertisement;
+//use JobAd\Infrastructure\Persistence\Doctrine\Entity\JobAdvertisement\DoctreineJobAdvertisement;
 use JobAd\Infrastructure\Persistence\Doctrine\Entity\JobAdvertisement\DoctrineJobAdvertisementFactory;
 use JobAd\Infrastructure\Persistence\Doctrine\JobAdDoctrineRepositoryFactory;
 
@@ -105,7 +105,7 @@ class JobAdvertismentController extends Controller
             $jobAd = $this->get('it_poslovi.view_job_advertisement')->execute($jobByIdRequest);
             dump($jobAd);
         }
-
+        
         $em = $this->get('doctrine.orm.default_entity_manager');
 //        dump($em->getClassMetadata(DoctreineJobAdvertisement::class));
         $form = $this->get('it_poslovi.symfony.form.factory')->create(JobAdvertisementType::class, $jobAd ?? null, [
@@ -115,6 +115,7 @@ class JobAdvertismentController extends Controller
             ],
             'em' => $em
         ]);
+        
         try {
             
             $serializer = new JMSSerializer(JMSFactory::instance());
@@ -131,7 +132,7 @@ class JobAdvertismentController extends Controller
                     $jobAdProducer
                     );
             
-//            $notification->publishNotifications('job-ad');
+            $notification->publishNotifications('job-ad');
 //            dump($form->getData());
 
             $form->handleRequest($request);
@@ -153,10 +154,6 @@ class JobAdvertismentController extends Controller
                 
                 $draft = new BaseResponse();
                 $draft = new DraftAdvertisementService($draft, $repoRactory, new DoctrineJobAdvertisementFactory(), $logger);
-                $draft = new AddCityToJobAd($draft, $repoRactory, $logger);
-                $draft = new JobAdManageCategores($draft, $repoRactory, $logger);
-//                $draft = new JobAdManageTags($draft, $repoRactory, $logger);
-//                $draft = new JobAdManageTypeOfJobs($draft, $repoRactory, $logger);
                 $draft = new Transaction($draft, new DoctrineSession($this->get('doctrine.orm.default_entity_manager')));
                 $response = $draft->execute($form->getData());
                 

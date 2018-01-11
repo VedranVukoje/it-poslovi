@@ -1,3 +1,16 @@
+
+pecl update oci8
+
+client koga ti trazi za instalaciju:
+instantclient,/usr/lib/oracle/11.2/client64/lib
+
+
+fatal error: oci8_dtrace_gen.h: No such file or directory
+resenje:
+$ export PHP_DTRACE=yes
+$ pecl install|update oci8
+
+
 curl -XDELETE 'localhost:9200/it-poslovi?pretty&pretty'
 curl -XGET 'localhost:9200/_cat/indices?v&pretty'
 

@@ -1,10 +1,12 @@
-JobAd\Domain\Model\JobAdvertisement\Events\DurationWasAddedToAd:
+JobAd\Domain\Model\JobAdvertisement\Events\TagWasAddedToJobAd:
     exclusion_policy: all
     
     properties:
         id:
             type: string
-        duration:
+        tagId:
+            type: string
+        name:
             type: string
         occurredOn:
             expose: true

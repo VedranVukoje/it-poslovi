@@ -16,6 +16,7 @@ use JobAd\Domain\Model\Category\CategorySpecification;
 use JobAd\Domain\Model\Category\Adapter\CategoryCollection;
 use JobAd\Domain\Model\Category\Category;
 use JobAd\Domain\Model\Category\Id;
+use JobAd\Infrastructure\Persistence\Doctrine\Entity\Category\DoctrineCategory;
 
 /**
  * Description of CategoryDoectrineRepository
@@ -64,7 +65,7 @@ class CategoryDoectrineRepository implements CategoryRepository
     {
         $query = $this->em->createQueryBuilder('c')
                 ->select('c')
-                ->from(Category::class, 'c')
+                ->from(DoctrineCategory::class, 'c')
                 ->andWhere('c.id IN (:ids)')
                 ->setParameter('ids', $ids);
 

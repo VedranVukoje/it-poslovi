@@ -9,43 +9,36 @@
 namespace JobAd\Domain\Model\JobAdvertisement\Events;
 
 use JobAd\Domain\DomainEvent;
-use JobAd\Domain\Model\JobAdvertisement\Id;
 use DateTimeImmutable;
-
-use JobAd\Domain\Model\TypeOfJob\TypeOfJob;
-
 /**
- * Description of TypeOfJobWasAddToAdvertisement
+ * Description of TypeOfJobWasRemoveedToJobAd
  *
  * @author vedran
  */
-class TypeOfJobWasAddedToJobAdvertisement implements DomainEvent
+class TypeOfJobWasRemovedFromJobAd implements DomainEvent
 {
-
+    
     private $id;
-    private $typeOfJob;
-    private $date;
-
-    public function __construct(Id $id, TypeOfJob $typeOfJob)
+    private $typeOfJobId;
+    
+    public function __construct(string $id,  string $typeOfJobId)
     {
         $this->id = $id;
-        $this->typeOfJob = $typeOfJob;
-        $this->date = new DateTimeImmutable();
+        $this->typeOfJobId = $typeOfJobId;
     }
-
+    
     public function id()
     {
         return $this->id;
     }
-
-    public function typeOfJob()
+    
+    public function typeOfJobId()
     {
-        return $this->typeOfJob;
+        return $this->typeOfJobId;
     }
-
+    
     public function occurredOn()
     {
-        return $this->date;
+        return $this->occurredOn();
     }
-
 }

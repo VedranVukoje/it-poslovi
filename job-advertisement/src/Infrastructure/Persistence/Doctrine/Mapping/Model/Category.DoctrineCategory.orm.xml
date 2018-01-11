@@ -14,7 +14,7 @@
             type="category_name" 
         />
         
-        <many-to-many target-entity="JobAd\Infrastructure\Persistence\Doctrine\Entity\JobAdvertisement\DoctreineJobAdvertisement" mapped-by="categoryes" field="jobAd"  />
+        <many-to-many target-entity="JobAd\Infrastructure\Persistence\Doctrine\Entity\JobAdvertisement\DoctreineJobAdvertisement" mapped-by="surrogateCategoryes" field="jobAd"  />
         
         
 <!--        <lifecycle-callbacks>

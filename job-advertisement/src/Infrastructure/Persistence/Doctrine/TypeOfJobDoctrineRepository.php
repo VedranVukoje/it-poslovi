@@ -10,6 +10,7 @@ use JobAd\Domain\Model\TypeOfJob\TypeOfJobSpecification;
 use JobAd\Domain\Model\TypeOfJob\TypeOfJob;
 use JobAd\Domain\Model\TypeOfJob\Id;
 use JobAd\Domain\Model\TypeOfJob\Adapter\TypeOfJobCollection;
+use JobAd\Infrastructure\Persistence\Doctrine\Entity\TypeOfJob\DoctrineTypeOfJob;
 
 /**
  * Description of TypeOfJobDoctrineRepository
@@ -39,7 +40,7 @@ class TypeOfJobDoctrineRepository implements TypeOfJobRepository
 
     public function byId(Id $id)
     {
-        return $this->em->find(TypeOfJob::class, $id);
+        return $this->em->find(DoctrineTypeOfJob::class, $id);
     }
 
     public function query($specification): Collection

@@ -11,6 +11,7 @@ namespace JobAd\Infrastructure\Persistence\Doctrine\Specification;
 use JobAd\Domain\Model\Tag\Tag;
 use JobAd\Domain\Model\Tag\TagSpecification;
 use JobAd\Domain\Model\Tag\TagRepository;
+use JobAd\Infrastructure\Persistence\Doctrine\Entity\Tag\DoctrineTag;
 /**
  * Description of TagByArrayIds
  *
@@ -32,7 +33,7 @@ class TagByArrayIds implements TagSpecification
         
 //        dump($this->ids);
         
-        $dql = "SELECT t FROM ".Tag::class." t WHERE t.id IN (".$this->ids.") ";
+        $dql = "SELECT t FROM ".DoctrineTag::class." t WHERE t.id IN (".$this->ids.") ";
         
         return $repo->readDataByDQL($dql, [
 //            'ids' => $this->ids

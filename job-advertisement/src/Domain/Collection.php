@@ -8,11 +8,12 @@
 
 namespace JobAd\Domain;
 
+use Doctrine\Common\Collections\Collection as DoctrineCommonCollection;
 /**
  *
  * @author vedran
  */
-interface Collection
+interface Collection extends DoctrineCommonCollection
 {
     //put your code here
 }

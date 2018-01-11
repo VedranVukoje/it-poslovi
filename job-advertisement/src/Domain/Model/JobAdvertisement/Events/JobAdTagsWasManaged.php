@@ -14,8 +14,12 @@ use JobAd\Domain\Model\JobAdvertisement\Id;
 use JobAd\Domain\Model\Tag\Adapter\TagCollection;
 
 /**
- * Description of JobAdTagsWasManaged
- *
+ * JobAdTagsWasManaged
+ *  
+ * @todo ovaj domain event obrisi.
+ * obrisi ga iz DI container - a.
+ * obirsi ga iz Es listener - a.
+ * 
  * @author vedran
  */
 class JobAdTagsWasManaged implements DomainEvent

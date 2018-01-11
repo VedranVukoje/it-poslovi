@@ -11,8 +11,8 @@ use JobAd\Domain\Model\Location\Exception\CityNotFoundException;
 use JobAd\Domain\Model\JobAdvertisement\Exceptions\OnlyOneCityPerJobAd;
 use JobAd\Domain\Model\Category\Exceptions\TypeOfJobNotFoundException;
 use JobAd\Domain\Model\JobAdvertisement\RepositoryFactory;
-use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement as DomainJobAd;
-use JobAd\Infrastructure\Persistence\Doctrine\Entity\JobAdvertisement\DoctreineJobAdvertisement;
+//use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement as DomainJobAd;
+//use JobAd\Infrastructure\Persistence\Doctrine\Entity\JobAdvertisement\DoctreineJobAdvertisement;
 use JobAd\Domain\Model\JobAdvertisement\Id;
 
 //use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementRepository;
@@ -63,6 +63,8 @@ class DraftAdvertisementService extends JobAd implements ApplicationService
         } else {
 
             $jobAd = $this->ofId(Id::fromNative($request->id));
+            
+            dump($jobAd);
             /**
              * @todo
              * ovo ubaciti u try catch exception.. npr za Doctrine ovde ce baciti Optimistic Lock Exception....
@@ -73,29 +75,35 @@ class DraftAdvertisementService extends JobAd implements ApplicationService
 
         $jobAd->addAdDuration($request->end);
 
-//        $cities = $this->cityesByPostCodes($request->city['postCode']);
-//        
-//        if (0 == count($cities)) {
-//            throw new CityNotFoundException(sprintf('Post Code "%s" ne postoji.', $request->city['postCode']));
-//        }
-//        if (1 !== count($cities)) {
-//            throw new OnlyOneCityPerJobAd("Samo jedna lokacija po oglasu.");
-//        }
-//        
-//        $jobAd->addCity((string)$cities[0]->postCode(),(string)$cities[0]);
-//        $categoryes = $this->categoryByArrayOfCategoryIds($request->categoryes);
-//        if (0 == count($categoryes)) {
-//            throw new CategoresNotFoundException("Niste izabrali kategoriju.");
-//        }
-//        $jobAd->manageCategores($categoryes);
-//        $jobAd->manageTags($this->tagByArrayIds($request->tags));
-//        
-//        $typeOfJobs = $this->typeOfJobByArrayIds($request->typeOfJobs);
-//        if(0 == count($typeOfJobs)){
-//            throw new TypeOfJobNotFoundException("Morate izabrati makar jedan tip posla");
-//        }
-//        
-//        $jobAd->manageTypeOfJobs($typeOfJobs);
+        $cities = $this->cityesByPostCodes($request->city['postCode']);
+        
+        if (0 == count($cities)) {
+            throw new CityNotFoundException(sprintf('Post Code "%s" ne postoji.', $request->city['postCode']));
+        }
+        if (1 !== count($cities)) {
+            throw new OnlyOneCityPerJobAd("Samo jedna lokacija po oglasu.");
+        }
+        $jobAd->addCity((string)$cities[0]->postCode(),(string)$cities[0]);
+        
+        $categoryes = $this->categoryByArrayOfCategoryIds($request->categoryes);
+        if (0 == count($categoryes)) {
+            throw new CategoresNotFoundException("Niste izabrali kategoriju.");
+        }
+        /**
+         * @todo ovo treba da leti odave .
+         */
+        $jobAd->manageCategores($categoryes);
+        /**
+         * @todo ovo treba da leti odave .
+         */
+        $jobAd->manageTags($this->tagByArrayIds($request->tags));
+        
+        $typeOfJobs = $this->typeOfJobByArrayIds($request->typeOfJobs);
+        if(0 == count($typeOfJobs)){
+            throw new TypeOfJobNotFoundException("Morate izabrati makar jedan tip posla");
+        }
+        
+        $jobAd->manageTypeOfJobs($typeOfJobs);
 
         $this->repoFactory->jobAdRepo()->add($jobAd);
 

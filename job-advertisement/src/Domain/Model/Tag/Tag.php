@@ -18,12 +18,14 @@ class Tag
 
     protected $id;
     protected $name;
+
     /**
      *
      * @todo ValueObject Slug sada nema !!!.
      * @var Slug 
      */
     protected $slug;
+
     /**
      * @todo.
      * @var type 
@@ -41,7 +43,12 @@ class Tag
     {
         return new static(Id::generate(), new Name($name));
     }
-    
+
+    public static function fromIdAndName(string $id, string $name)
+    {
+        return new static(Id::fromNative($id), new Name($name));
+    }
+
     public static function hydrate(array $data): self
     {
         return new static(Id::fromNative($data['id']), new Name($data['name']));
@@ -61,7 +68,7 @@ class Tag
     {
         return $this->slug;
     }
-    
+
     private function setSlug(Name $slug)
     {
         /**
@@ -70,10 +77,10 @@ class Tag
          * Instead of a lengthy replace, try this one:
          * 
          * nema npr latinicna slova ....
-         */ 
+         */
         $this->slug = preg_replace('/[^A-Za-z0-9-]+/', '-', (string) $slug);
     }
-    
+
     public function extract(): array
     {
         return [

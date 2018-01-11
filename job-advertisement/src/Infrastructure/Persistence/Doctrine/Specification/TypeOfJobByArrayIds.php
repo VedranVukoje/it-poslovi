@@ -10,6 +10,7 @@ namespace JobAd\Infrastructure\Persistence\Doctrine\Specification;
 use JobAd\Domain\Model\TypeOfJob\TypeOfJobSpecification;
 use JobAd\Domain\Model\TypeOfJob\TypeOfJobRepository;
 use JobAd\Domain\Model\TypeOfJob\TypeOfJob;
+use JobAd\Infrastructure\Persistence\Doctrine\Entity\TypeOfJob\DoctrineTypeOfJob;
 /**
  * Description of DoctrineTypeOfJobByArrayIds
  *
@@ -27,7 +28,7 @@ class TypeOfJobByArrayIds implements TypeOfJobSpecification
 
     public function specifies(TypeOfJobRepository $repo)
     {
-        $dql = "SELECT t FROM ".TypeOfJob::class." t WHERE t.id IN (".$this->ids.") ";
+        $dql = "SELECT t FROM ".DoctrineTypeOfJob::class." t WHERE t.id IN (".$this->ids.") ";
         
         return $repo->readDataByDQL($dql, []);
     }

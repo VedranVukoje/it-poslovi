@@ -16,6 +16,9 @@ use JobAd\Domain\Model\TypeOfJob\Adapter\TypeOfJobCollection;
 /**
  * Description of JobAdTypeOfJobsWasManaged
  *
+ * @todo ovaj domain event obrisi.
+ * obrisi ga iz DI container - a.
+ * obirsi ga iz Es listener - a.
  * @author vedran
  */
 class JobAdTypeOfJobsWasManaged implements DomainEvent
