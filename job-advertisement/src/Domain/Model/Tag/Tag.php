@@ -49,10 +49,10 @@ class Tag
         return new static(Id::fromNative($id), new Name($name));
     }
 
-    public static function hydrate(array $data): self
-    {
-        return new static(Id::fromNative($data['id']), new Name($data['name']));
-    }
+//    public static function hydrate(array $data): self
+//    {
+//        return new static(Id::fromNative($data['id']), new Name($data['name']));
+//    }
 
     public function id()
     {
@@ -81,13 +81,13 @@ class Tag
         $this->slug = preg_replace('/[^A-Za-z0-9-]+/', '-', (string) $slug);
     }
 
-    public function extract(): array
-    {
-        return [
-            'id' => (string) $this->id,
-            'name' => (string) $this->name,
-            'slug' => $this->slug
-        ];
-    }
+//    public function extract(): array
+//    {
+//        return [
+//            'id' => (string) $this->id,
+//            'name' => (string) $this->name,
+//            'slug' => $this->slug
+//        ];
+//    }
 
 }

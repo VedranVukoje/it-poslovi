@@ -43,7 +43,7 @@ class EsJobAdConsumer implements ConsumerInterface
         ]);
 
 
-        $this->process->notify($event);
+        $this->process->dispatch($event);
     }
 
 }

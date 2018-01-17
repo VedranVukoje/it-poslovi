@@ -28,6 +28,10 @@ use JobAd\Domain\Model\JobAdvertisement\Id;
 //use JobAd\Domain\Model\Location\PostCode;
 //use JobAd\Domain\Model\Category\CategoryRepository;
 //use JobAd\TypeOfJob\DomainModel\Id as TypeOfJobId;
+
+//use JobAd\Domain\Model\JobAdvertisement\Id;
+//use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement;
+//use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementHydrator;
 /**
  * Description of WriteJobAdvertisementService
  * JobAd\Application\Service\JobAdvertisement\DraftAdvertisementService
@@ -38,7 +42,7 @@ class DraftAdvertisementService extends JobAd implements ApplicationService
 
     private $appService;
     private $jobAdFactory;
-    private $logger;
+    
 
     /**
      *  
@@ -50,12 +54,12 @@ class DraftAdvertisementService extends JobAd implements ApplicationService
         $this->appService = $appService;
         $this->jobAdFactory = $jobAdFactory;
         $this->logger = $logger;
-        parent::__construct($repoFactory);
+        parent::__construct($repoFactory,$logger);
     }
 
     public function execute($request = null)
     {
-
+        
         if (null === $request->id) {
 
             //$jobAd = DomainJobAd::draft($request->pozitonTitle, $request->description, $request->howToApply);
@@ -104,9 +108,9 @@ class DraftAdvertisementService extends JobAd implements ApplicationService
         }
         
         $jobAd->manageTypeOfJobs($typeOfJobs);
-
+        
         $this->repoFactory->jobAdRepo()->add($jobAd);
-
+        
         $request->id = (string) $jobAd->id();
         $request->version = (int) $jobAd->version();
         $this->logger->debug('Job Ad was drafted ', ['jobAd' => $this->extract($jobAd)]);

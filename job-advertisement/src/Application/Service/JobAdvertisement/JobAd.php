@@ -8,6 +8,7 @@
 
 namespace JobAd\Application\Service\JobAdvertisement;
 
+use Psr\Log\LoggerInterface;
 //use JobAd\Application\Service\ApplicationService;
 use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement;
 use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementHydrator;
@@ -30,10 +31,12 @@ abstract class JobAd
 {
 
     protected $repoFactory;
+    protected $logger;
 
-    public function __construct(RepositoryFactory $repoFactory)
+    public function __construct(RepositoryFactory $repoFactory, LoggerInterface $logger)
     {
         $this->repoFactory = $repoFactory;
+        $this->logger = $logger;
     }
 
     protected function ofId(Id $id)
@@ -80,7 +83,7 @@ abstract class JobAd
     
     protected function extract(JobAdvertisement $jobAd): array
     {
-        return (new JobAdvertisementHydrator)->extract($jobAd);
+        return (new JobAdvertisementHydrator($this->logger))->extract($jobAd);
     }
 
 }

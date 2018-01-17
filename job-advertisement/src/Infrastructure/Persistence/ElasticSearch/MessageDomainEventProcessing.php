@@ -37,7 +37,7 @@ class MessageDomainEventProcessing
         ++$this->id;
     }
 
-    public function notify(DomainEvent $event)
+    public function dispatch(DomainEvent $event)
     {
         foreach ($this->subscribers as $subscriber){
             if($subscriber->isSubscribedTo($event)){

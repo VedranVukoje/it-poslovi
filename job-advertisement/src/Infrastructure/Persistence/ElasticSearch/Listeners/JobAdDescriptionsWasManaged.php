@@ -12,6 +12,7 @@ use JobAd\Domain\EventSubscriber;
 use JobAd\Domain\DomainEvent;
 //use JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository;
 //use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement;
+use JobAd\Domain\Model\JobAdvertisement\Id;
 use JobAd\Domain\Model\JobAdvertisement\JobAdvertisementRepository;
 /**
  * Description of JobAdDescriptionsWasManaged
@@ -35,7 +36,7 @@ class JobAdDescriptionsWasManaged implements EventSubscriber
     
     public function handle(DomainEvent $event)
     {
-        $jobAd = $this->es->ofId($event->id());
+        $jobAd = $this->es->ofId(Id::fromNative($event->id()));
         $jobAd->doApplayByDomainEvent($event);
         
         $this->es->add($jobAd);

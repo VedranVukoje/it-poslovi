@@ -251,6 +251,8 @@ class JobAdvertisement extends AggregateRoot
     public function doApplayByDomainEvent(DomainEvent $event)
     {
         $this->applyTaht($event);
+        
+        return $this;
     }
 
 

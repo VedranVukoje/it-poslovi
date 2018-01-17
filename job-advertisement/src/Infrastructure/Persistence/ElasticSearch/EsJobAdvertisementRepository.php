@@ -38,12 +38,14 @@ class EsJobAdvertisementRepository implements JobAdvertisementRepository
 //        'version_type' => 'external'
     ];
     private $log;
+    private $hydrator;
 
     public function __construct(ElasticSearchClient $es, LoggerInterface $log)
     {
         $this->es = $es->build();
         $this->log = $log;
         $this->jobAdvertisment = new JobAdvertisementCollection();
+        $this->hydrator = new JobAdvertisementHydrator($log);
     }
 
     public function nextIdentity()
@@ -57,14 +59,13 @@ class EsJobAdvertisementRepository implements JobAdvertisementRepository
          * @todo NotFoundException.....
          */
         $es = $this->es->get(array_merge($this->document, ['id' => (string) $id]));
-
-        return (new JobAdvertisementHydrator)
-                        ->hydrate($es['_source'], new JobAdvertisement($id));
+        
+        return $this->hydrate($id, $es['_source']);
     }
 
     public function add(JobAdvertisement $jobAdvertisement)
     {
-        $body = (new JobAdvertisementHydrator)->extract($jobAdvertisement);
+        $body = $this->hydrator->extract($jobAdvertisement);
 
         $this->log->debug('EsJobAdvertisementRepository::add pre', [
             'jobAd' => $body
@@ -101,6 +102,11 @@ class EsJobAdvertisementRepository implements JobAdvertisementRepository
     public function query($specification)
     {
         
+    }
+    
+    private function hydrate(Id $id, array $_source): JobAdvertisement
+    {
+        return $this->hydrator->hydrate($_source, new JobAdvertisement($id));
     }
 
 }

@@ -69,6 +69,9 @@ use JobAd\Infrastructure\Application\Serialization\JMS\JMSSerializer;
 //use JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository;
 
 //use JobAd\Infrastructure\Persistence\ElasticSearch\MessageDomainEventProcessing;
+
+
+
 /**
  * Description of JobAdvertismentController
  *
@@ -93,7 +96,7 @@ class JobAdvertismentController extends Controller
     public function draftJobAddAction(LoggerInterface $logger,  Request $request, $id = null, int $version = 0)
     {
         
-//        dump($id);
+//        
 
         if ($id) {
             /**
@@ -103,7 +106,7 @@ class JobAdvertismentController extends Controller
             $jobByIdRequest->id = $id;
 //            $jobByIdRequest->version = $version;
             $jobAd = $this->get('it_poslovi.view_job_advertisement')->execute($jobByIdRequest);
-            dump($jobAd);
+            $logger->debug('READ JobAd: ', ['JobAd' => $jobAd]);
         }
         
         $em = $this->get('doctrine.orm.default_entity_manager');

@@ -29,8 +29,15 @@
             <argument id="logger" type="service" />
         </service>
         
-        
         <service 
+            id="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\ESJobAdvertisementSubscriber" 
+            class="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\ESJobAdvertisementSubscriber" >
+            <argument type="service" id="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository"></argument>
+            <argument id="logger" type="service" />
+            <tag name="app.message.domain.event.processing"/>
+        </service>
+        
+<!--        <service 
             id="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\CategoryWasAddedToJobAdvertisement"
             class="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\CategoryWasAddedToJobAdvertisement">
             <argument type="service" id="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository"></argument>
@@ -78,7 +85,7 @@
             class="JobAd\Infrastructure\Persistence\ElasticSearch\Listeners\JobAdTagsWasManaged">
             <argument type="service" id="JobAd\Infrastructure\Persistence\ElasticSearch\EsJobAdvertisementRepository"></argument>
             <tag name="app.message.domain.event.processing"/>
-        </service>
+        </service>-->
         
         
     </services>

@@ -26,7 +26,7 @@ class CityWasAddedToJobAdvertisement implements DomainEvent
     private $postCode;
     private $occurredOn;
 
-    public function __construct(string $id, string $postCode, string $city)
+    public function __construct(string $id, int $postCode, string $city)
     {
         $this->id = $id;
         $this->city = $city;

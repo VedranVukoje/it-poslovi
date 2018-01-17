@@ -6,6 +6,8 @@ JobAd\Domain\Model\JobAdvertisement\Events\CityWasAddedToJobAdvertisement:
             type: string
         city:
             type: string
+        postCode:
+            type: int
         occurredOn:
             expose: true
             type: CustomDateTimeImmutable

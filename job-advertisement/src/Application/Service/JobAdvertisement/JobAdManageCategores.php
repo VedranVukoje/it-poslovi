@@ -26,14 +26,13 @@ class JobAdManageCategores extends JobAd implements ApplicationService
 {
 
     private $appService;
-    private $logger;
 
     public function __construct(ApplicationService $appService, RepositoryFactory $repoFactory, LoggerInterface $logger)
     {
         $this->appService = $appService;
         $this->logger = $logger;
 
-        parent::__construct($repoFactory);
+        parent::__construct($repoFactory,$logger);
         }
 
     public function execute($request = null)
