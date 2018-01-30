@@ -14,6 +14,7 @@ use JobAd\Domain\Model\JobAdvertisement\Id;
 use JobAd\Domain\Model\Category\Adapter\CategoryCollection;
 use JobAd\Domain\Model\Tag\Adapter\TagCollection;
 use JobAd\Domain\Model\TypeOfJob\Adapter\TypeOfJobCollection;
+use JobAd\Domain\Model\Category\Category;
 
 //use Doctrine\Common\Collections\ArrayCollection;
 
@@ -41,20 +42,24 @@ class DoctreineJobAdvertisement extends JobAdvertisement
 
     public function manageCategores(CategoryCollection $new): void
     {
-
-        foreach ($new as $category) {
-            if (!$this->surrogateCategoryes->contains($category)) {
-                $this->addCategory((string) $category->id(), (string) $category->name());
-                $this->surrogateCategoryes->add($category);
-            }
-        }
-
+        
         foreach ($this->surrogateCategoryes as $category) {
             if (!$new->contains($category)) {
                 $this->removeCategory((string) $category->id());
                 $this->surrogateCategoryes->removeElement($category);
             }
         }
+        
+        
+        foreach ($new as $category) {
+            if (!$this->surrogateCategoryes->contains($category)) {
+                $this->addCategory((string) $category->id(), (string) $category->name());
+//                $this->surrogateCategoryes->add($category);
+                $this->surrogateCategoryes[(string) $category->id()] = $category;
+            }
+        }
+
+        
     }
 
     public function manageTags(TagCollection $new): void
@@ -116,7 +121,8 @@ class DoctreineJobAdvertisement extends JobAdvertisement
     public function aggregate()
     {
         $this->categoryes = new CategoryCollection(array_map(function($category) {
-                    return $category;
+//                    return $category;
+            return Category::fromNative((string)$category->id(), (string)$category->name());
                 }, $this->surrogateCategoryes->toArray()));
                 
         $this->typeOfJobs = new TypeOfJobCollection(array_map(function($typeOfJob) {

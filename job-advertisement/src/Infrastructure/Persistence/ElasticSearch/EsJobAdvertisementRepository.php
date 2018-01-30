@@ -67,34 +67,51 @@ class EsJobAdvertisementRepository implements JobAdvertisementRepository
     {
         $body = $this->hydrator->extract($jobAdvertisement);
 
-        $this->log->debug('EsJobAdvertisementRepository::add pre', [
-            'jobAd' => $body
-        ]);
-
+//        $this->log->debug('EsJobAdvertisementRepository::add pre', [
+//            'jobAd' => $body
+//        ]);
+        // b2e7c8bf-7998-4c15-9130-b4c73cb572af
+        // b2e7c8bf-7998-4c15-9130-b4c73cb572af
         switch ($jobAdvertisement->isNew()) {
             case true:
                 $document = array_merge($this->document, [
                     'body' => $body,
                     'id' => (string) $jobAdvertisement->id()
                 ]);
-
+                
+                $this->es->index($document);
+                
                 $this->log->debug('EsJobAdvertisementRepository::add insert', [
-                    'document' => $document
+//                    'document' => $document,
+                    'categoryes' => $body['categoryes'],
+                    'id' => $body['id']
+                    
                 ]);
 
-                $this->es->index($document);
+                
                 break;
             case false:
+                
+                $categoryes = $body['categoryes'];
+ 
+//                $body = array_merge($body,[
+//                    'script' => 'ctx._source.categoryes.remove(categoryes)',
+//                    'params' => ['categoryes' => $body['categoryes']] 
+//                ]);
                 $document = array_merge($this->document, [
                     'body' => ['doc' => $body],
                     'id' => (string) $jobAdvertisement->id()
                 ]);
                 
+                $this->es->update($document);
+                
                 $this->log->debug('EsJobAdvertisementRepository::add update', [
-                    'document' => $document
+                    'count_category' => [count($categoryes)],
+                    'category' => $categoryes,
+                    'id' => $body['id']
                 ]);
                 
-                $this->es->update($document);
+                
                 break;
         }
     }

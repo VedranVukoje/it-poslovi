@@ -44,13 +44,14 @@ class NotificationService
         $trackId = $publishedMessageTracker->mostRecentPublishedMessageId($exchangeName);
 
         $notifications = $this->listUnpublishedNotifications((int) $trackId);
-
+        dump($notifications);
         try {
             
             $publishedMassage = 0;
             
             if (0 < count($notifications)) {
                 foreach ($notifications as $storedEvent) {
+                    
                     $lastPublishedNotification = $this->publish($storedEvent);
                     $publishedMassage++;
                 }

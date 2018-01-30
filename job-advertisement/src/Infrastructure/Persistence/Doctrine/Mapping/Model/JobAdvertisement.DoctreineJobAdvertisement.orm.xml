@@ -114,6 +114,7 @@
             <lifecycle-callback type="prePersist" method="updateTimestam"/>
             <lifecycle-callback type="preUpdate" method="updateTimestam"/>
             <lifecycle-callback type="postLoad" method="aggregate"/>
+            <!--<lifecycle-callback type="prePersist" method="aggregate"/>-->
         </lifecycle-callbacks>
     
     </entity>

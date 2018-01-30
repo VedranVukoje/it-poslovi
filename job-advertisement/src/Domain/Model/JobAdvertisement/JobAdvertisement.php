@@ -7,16 +7,16 @@ use JobAd\Domain\AggregateRoot;
 use JobAd\Domain\EventStream;
 use JobAd\Domain\DomainEvent;
 use JobAd\Domain\Model\JobAdvertisement\Events\JobAdWasDrafted;
-use JobAd\Domain\Model\JobAdvertisement\Events\CategoryWasAddedToJobAdvertisement;
+//use JobAd\Domain\Model\JobAdvertisement\Events\CategoryWasAddedToJobAdvertisement;
 use JobAd\Domain\Model\JobAdvertisement\Events\TypeOfJobWasAddedToJobAd;
 use JobAd\Domain\Model\JobAdvertisement\Events\TypeOfJobWasRemovedFromJobAd;
 use JobAd\Domain\Model\JobAdvertisement\Events\CityWasAddedToJobAdvertisement;
 use JobAd\Domain\Model\JobAdvertisement\Events\DurationWasAddedToAd;
 use JobAd\Domain\Model\JobAdvertisement\Events\TagWasAddedToJobAd;
 use JobAd\Domain\Model\JobAdvertisement\Events\JobAdDescriptionsWasManaged;
-use JobAd\Domain\Model\JobAdvertisement\Events\JobAdCategoresWsaManaged;
-use JobAd\Domain\Model\JobAdvertisement\Events\JobAdTagsWasManaged;
-use JobAd\Domain\Model\JobAdvertisement\Events\JobAdTypeOfJobsWasManaged;
+//use JobAd\Domain\Model\JobAdvertisement\Events\JobAdCategoresWsaManaged;
+//use JobAd\Domain\Model\JobAdvertisement\Events\JobAdTagsWasManaged;
+//use JobAd\Domain\Model\JobAdvertisement\Events\JobAdTypeOfJobsWasManaged;
 use JobAd\Domain\Model\JobAdvertisement\Events\StatusWasChangedToDrafted;
 use JobAd\Domain\Model\JobAdvertisement\Events\CategoryWasAddToJobAd;
 use JobAd\Domain\Model\JobAdvertisement\Events\CategoryWasRemoveFromJobAd;
@@ -28,8 +28,8 @@ use JobAd\Domain\Model\Tag\Adapter\TagCollection;
 use JobAd\Domain\Model\Location\City;
 use JobAd\Domain\Model\Location\PostCode;
 use JobAd\Domain\Model\Category\Category;
-use JobAd\Domain\Model\Category\Id as CategoryId;
-use JobAd\Domain\Model\Category\CategoryHydrator;
+//use JobAd\Domain\Model\Category\Id as CategoryId;
+//use JobAd\Domain\Model\Category\CategoryHydrator;
 use JobAd\Domain\Model\Tag\Tag;
 use JobAd\Domain\Model\JobAdvertisement\Exceptions\TimeInThePastException;
 
@@ -270,9 +270,7 @@ class JobAdvertisement extends AggregateRoot
         $draft->recordApplayAndPublihThat(
                 new JobAdWasDrafted($draft->id, $pozitonTitle, $description, $howToApplay
         ));
-
         
-
         return $draft;
     }
 
@@ -351,8 +349,8 @@ class JobAdvertisement extends AggregateRoot
 
         $this->id = $event->id();
         $this->pozitonTitle = new PozitonTitle($event->pozitonTitle());
-        $this->howToApply = new Description($event->howToApply());
-        $this->description = new HowToApply($event->description());
+        $this->description = new Description($event->description());
+        $this->howToApply = new HowToApply($event->howToApply());
         $this->updateTimestam();
     }
 
@@ -367,17 +365,6 @@ class JobAdvertisement extends AggregateRoot
         $this->isNew = true;
     }
 
-    protected function applyCategoryWasAddedToJobAdvertisement(CategoryWasAddedToJobAdvertisement $event)
-    {
-        /**
-         * @todo ovako ne treba... samo $this->categoryes[] = $event->category()
-         */
-        $category = $event->category();
-        $category->setJobAdvertisement($this);
-        $this->categoryes[] = $category;
-//        $this->updateTimestam();
-    }
-    
     protected function applyTypeOfJobWasAddedToJobAd(TypeOfJobWasAddedToJobAd $event)
     {
         $this->id = $event->id();
@@ -424,24 +411,25 @@ class JobAdvertisement extends AggregateRoot
     protected function applyCategoryWasAddToJobAd(CategoryWasAddToJobAd $event)
     {
         
-        /**
-         * @todo throw exception....
-         */
-//        if(!CategoryId::generate()->isValid((string) $event->id())) return false;
-        $this->id = $event->id();
-        $this->categoryes->set((string)$event->categoryId(), Category::fromNative($event->categoryId(), $event->name()));
+
+        $this->categoryes[] = Category::fromNative($event->categoryId(), $event->name());
+//        $this->categoryes[$event->categoryId()] = Category::fromNative($event->categoryId(), $event->name());
+//        $this->categoryes->set((string)$event->categoryId(), Category::fromNative($event->categoryId(), $event->name()));
         $this->updateTimestam();
     }
     
     protected function applyCategoryWasRemoveFromJobAd(CategoryWasRemoveFromJobAd $event)
     {
         
-        /**
-         * @todo throw exception....
-         */
-//        if(!CategoryId::generate()->isValid($event->id())) return false;
-        $this->id = $event->id();
-        unset($this->categoryes[$event->categoryId()]);
+        foreach ($this->categoryes as $key => $category){
+            if((string)$category->id() == $event->categoryId()){
+//                $this->categoryes->removeElement($category);
+                unset($this->categoryes[$key]);
+            }
+        }
+        reset($this->categoryes);
+//        unset($this->categoryes[$event->categoryId()]);
+//        $this->categoryes->removeElement($this->categoryes[$event->categoryId()]);
         $this->updateTimestam();
     }
 

@@ -55,7 +55,7 @@ abstract class JobAd
                         ->categoryRepo()
                         ->query(new CategoryByArrayOfCategoryIds(array_map(function($category) {
                                     return $category['id'];
-                                }, $categoryes ?? [])));
+                                }, $categoryes)));
     }
 
     protected function cityesByPostCodes($postCode): CityCollection

@@ -15,7 +15,7 @@ use JobAd\Domain\JobAdvertisementException;
 //use Symfony\Component\Form\Forms;
 use Symfony\Component\HttpFoundation\Request;
 //use Symfony\Component\HttpFoundation\JsonResponse;
-//use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormError;
 use JobAd\Application\Service\JobAdvertisement\DraftAdvertisementService;
 use JobAd\Application\Service\JobAdvertisement\AddCityToJobAd;
 //use JobAd\Application\Service\JobAdvertisement\AddCategoryToJobAd;
@@ -84,8 +84,8 @@ class JobAdvertismentController extends Controller
     {
         
     }
-
-
+    
+    
     /**
      * 
      * @Route("/Postavi-Oglas/{id}/{version}", name="draft_job_ad")
@@ -106,7 +106,7 @@ class JobAdvertismentController extends Controller
             $jobByIdRequest->id = $id;
 //            $jobByIdRequest->version = $version;
             $jobAd = $this->get('it_poslovi.view_job_advertisement')->execute($jobByIdRequest);
-            $logger->debug('READ JobAd: ', ['JobAd' => $jobAd]);
+//            $logger->debug('READ JobAd: '.__FILE__, [ 'JobAd' => $jobAd]);
         }
         
         $em = $this->get('doctrine.orm.default_entity_manager');
@@ -169,7 +169,8 @@ class JobAdvertismentController extends Controller
                 ]);
             }
         } catch (JobAdvertisementException $ex) {
-            dump($ex);
+//            dump($ex);
+            $form->addError(new FormError($ex->getMessage()));
         } catch (Exception $ex) {
             dump($ex);
         }

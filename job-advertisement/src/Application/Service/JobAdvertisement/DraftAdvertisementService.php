@@ -89,10 +89,11 @@ class DraftAdvertisementService extends JobAd implements ApplicationService
         }
         $jobAd->addCity((string)$cities[0]->postCode(),(string)$cities[0]);
         
-        $categoryes = $this->categoryByArrayOfCategoryIds($request->categoryes);
-        if (0 == count($categoryes)) {
+        if (0 == count($request->categoryes)) {
             throw new CategoresNotFoundException("Niste izabrali kategoriju.");
         }
+        $categoryes = $this->categoryByArrayOfCategoryIds($request->categoryes);
+        
         /**
          * @todo ovo treba da leti odave .
          */

@@ -48,10 +48,15 @@ class ESJobAdvertisementSubscriber implements EventSubscriber
         TagWasRemovedFromJobAd::class
     ];
     private $repo;
+    
+    private $logger;
+    
+    private $method;
 
     public function __construct(JobAdvertisementRepository $repo, LoggerInterface $logger)
     {
         $this->repo = $repo;
+        $this->logger = $logger;
     }
 
     public function isSubscribedTo(DomainEvent $event)
@@ -67,6 +72,7 @@ class ESJobAdvertisementSubscriber implements EventSubscriber
         if (!method_exists($this, $method)) {
             throw new BadMethodCallException(sprintf('Dogadjaj "%s" nije registrovan.', $method));
         }
+        $this->method = $method;
         $this->$method($event);
     }
 
@@ -97,7 +103,20 @@ class ESJobAdvertisementSubscriber implements EventSubscriber
 
     private function categoryWasRemoveFromJobAd(CategoryWasRemoveFromJobAd $event)
     {
-        $this->add($this->ofId($event));
+        $jobAd = $this->ofId($event);
+        
+        $this->logger->debug('Id kategorije za brisanje: ', [
+            'id' => (string) $event->categoryId()
+        ]);
+        
+        
+        $cat = $jobAd->categoryes()->map(function($ctegory){
+            return (string) $ctegory->id();
+        });
+        
+        $this->logger->debug('Posle brisanja kategorije: ', iterator_to_array($cat));
+        
+        $this->add($jobAd);
     }
 
     private function cityWasAddedToJobAdvertisement(CityWasAddedToJobAdvertisement $event)
@@ -127,7 +146,16 @@ class ESJobAdvertisementSubscriber implements EventSubscriber
 
     private function ofId(DomainEvent $event)
     {
-        return $this->repo->ofId(Id::fromNative($event->id()))->doApplayByDomainEvent($event);
+        $jobAd = $this->repo->ofId(Id::fromNative($event->id()));
+        
+        
+        $cat = $jobAd->categoryes()->map(function($ctegory){
+            return (string) $ctegory->id();
+        });
+        
+        $this->logger->debug('Kategorije po dogadjaju '.$this->method.' ', iterator_to_array($cat));
+        
+        return $jobAd->doApplayByDomainEvent($event);
     }
 
     private function jobAd(DomainEvent $event)

@@ -8,13 +8,13 @@
 
 namespace JobAd\Domain\Model\Category\Exceptions;
 
-use JobAd\Domain\ItPosloviException;
+use JobAd\Domain\JobAdvertisementException;
 /**
  * Description of TypeOfJobNotFoundException
  *
  * @author vedran
  */
-class TypeOfJobNotFoundException extends ItPosloviException
+class TypeOfJobNotFoundException extends JobAdvertisementException
 {
     //put your code here
 }

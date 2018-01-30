@@ -82,7 +82,7 @@ class Category
 //        return $category;
 //    }
 
-    public static function fromNative($id, $name)
+    public static function fromNative(string $id, string $name)
     {
         $category = new static(Id::fromNative($id));
         $category->name = new Name($name);

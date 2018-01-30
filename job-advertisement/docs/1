@@ -1,4 +1,4 @@
-
+================================================================================
 pecl update oci8
 
 client koga ti trazi za instalaciju:
@@ -10,11 +10,31 @@ resenje:
 $ export PHP_DTRACE=yes
 $ pecl install|update oci8
 
+================================================================================
+
+curl -XPOST 'localhost:9200/it-poslovi/job-advertisement/476d2f9e-bfe3-46c6-b5b4-f33502c0a223/_update' -d '{
+"script":"ctx._source.categoryes.remove(params.categoryes)",
+"params":{
+       "categoryes":{ "1cbfc482-9f01-44a6-82a2-c66a2f1cb142": { "name": "Dizajn", "id": "1cbfc482-9f01-44a6-82a2-c66a2f1cb142"}}
+    }
+}'
+
+
+
+
+curl -XGET 'localhost:9200/it-poslovi/job-advertisement/476d2f9e-bfe3-46c6-b5b4-f33502c0a223?pretty&pretty'
+
+
+http://localhost:9200/it-poslovi/job-advertisement/476d2f9e-bfe3-46c6-b5b4-f33502c0a223
 
 curl -XDELETE 'localhost:9200/it-poslovi?pretty&pretty'
 curl -XGET 'localhost:9200/_cat/indices?v&pretty'
 
+kreiraj index :
+php bin/console it-poslovi:elasticserach-mapping
+/home/vedran/Projects/dev/projects/it-poslovi/job-advertisement/src/Infrastructure/Ui/Framework/Symfony/JobAdvertisementBundle/Command/ElasticSerachMappingCommand.php
 
+================================================================================
 
 22 listopad 2017
 

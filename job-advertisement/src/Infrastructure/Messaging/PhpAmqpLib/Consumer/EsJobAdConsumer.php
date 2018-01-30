@@ -12,6 +12,7 @@ use Psr\Log\LoggerInterface;
 use JobAd\Application\Contract\Serializer;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
+use JobAd\Domain\Model\JobAdvertisement\Events\CategoryWasRemoveFromJobAd;
 use JobAd\Infrastructure\Persistence\ElasticSearch\MessageDomainEventProcessing;
 
 /**
@@ -37,6 +38,13 @@ class EsJobAdConsumer implements ConsumerInterface
     {
 
         $event = $this->serialize->deserialize($msg->body, $msg->get('type'), 'json');
+        
+        if($event instanceof CategoryWasRemoveFromJobAd){
+            $this->log->debug('Kategorija je obrisana: ',[
+                'categoryId' => $event->categoryId()
+            ]);
+        }
+        
         $this->log->debug('EsJobAdConsumer::execute ', [
             'type' => $msg->get('type'),
             'eventId' => (string) $event->id()

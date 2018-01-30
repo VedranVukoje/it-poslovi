@@ -7,13 +7,13 @@
  */
 namespace JobAd\Domain\Model\Category\Exceptions;
 
-use JobAd\Domain\ItPosloviException;
+use JobAd\Domain\JobAdvertisementException;
 /**
  * Description of CategoryNotFoundException
  * JobAd\Domain\Model\Category\Exceptions\CategoresNotFoundException
  * @author vedran
  */
-class CategoresNotFoundException extends ItPosloviException
+class CategoresNotFoundException extends JobAdvertisementException
 {
     //put your code here
 }
