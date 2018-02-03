@@ -68,7 +68,6 @@ class DraftAdvertisementService extends JobAd implements ApplicationService
 
             $jobAd = $this->ofId(Id::fromNative($request->id));
             
-            dump($jobAd);
             /**
              * @todo
              * ovo ubaciti u try catch exception.. npr za Doctrine ovde ce baciti Optimistic Lock Exception....

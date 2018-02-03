@@ -20,11 +20,13 @@ class TypeOfJobWasRemovedFromJobAd implements DomainEvent
     
     private $id;
     private $typeOfJobId;
+    private $occurredOn;
     
     public function __construct(string $id,  string $typeOfJobId)
     {
         $this->id = $id;
         $this->typeOfJobId = $typeOfJobId;
+        $this->occurredOn = new DateTimeImmutable(); 
     }
     
     public function id()
@@ -39,6 +41,6 @@ class TypeOfJobWasRemovedFromJobAd implements DomainEvent
     
     public function occurredOn()
     {
-        return $this->occurredOn();
+        return $this->occurredOn;
     }
 }

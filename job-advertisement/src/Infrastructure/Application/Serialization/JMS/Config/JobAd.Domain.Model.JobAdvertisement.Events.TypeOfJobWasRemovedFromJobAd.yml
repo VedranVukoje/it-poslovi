@@ -1,0 +1,11 @@
+JobAd\Domain\Model\JobAdvertisement\Events\TypeOfJobWasRemovedFromJobAd:
+    exclusion_policy: all
+    
+    properties:
+        id:
+            type: string
+        typeOfJobId:
+            type: string
+        occurredOn:
+            expose: true
+            type: CustomDateTimeImmutable

@@ -8,6 +8,7 @@
 
 namespace JobAd\Application\Notification;
 
+use Psr\Log\LoggerInterface;
 //use JobAd\Domain\Model\JobAdvertisement\JobAdvertisement as JobAd;
 use JobAd\Application\Contract\Messaging;
 use JobAd\Domain\Event\StoredEvent;
@@ -27,14 +28,24 @@ class NotificationService
     private $publishedMessageTracker;
     private $serializer;
     private $messaging;
-
+    private $log;
+    
+    /**
+     * @todo Prebaci dependency u factory .   
+     * @param EventStore $eventStore
+     * @param PublishedMessageTracker $publishedMessageTracker
+     * @param Serializer $serializer
+     * @param Messaging $messaging
+     * @param LoggerInterface $log
+     */
     public function __construct(
-    EventStore $eventStore, PublishedMessageTracker $publishedMessageTracker, Serializer $serializer, Messaging $messaging)
+    EventStore $eventStore, PublishedMessageTracker $publishedMessageTracker, Serializer $serializer, Messaging $messaging, LoggerInterface $log)
     {
         $this->eventStore = $eventStore;
         $this->publishedMessageTracker = $publishedMessageTracker;
         $this->serializer = $serializer;
         $this->messaging = $messaging;
+        $this->log = $log;
     }
 
     public function publishNotifications(string $exchangeName)
@@ -44,7 +55,7 @@ class NotificationService
         $trackId = $publishedMessageTracker->mostRecentPublishedMessageId($exchangeName);
 
         $notifications = $this->listUnpublishedNotifications((int) $trackId);
-        dump($notifications);
+        
         try {
             
             $publishedMassage = 0;
@@ -80,14 +91,14 @@ class NotificationService
         
         $stored = $this->serializer->deserialize($storedEvent->eventBody(), $storedEvent->typeName(), 'json');
         
-        dump($stored);
-        
         $this->messaging->publish($storedEvent->eventBody(), "", [
             'type' => $storedEvent->typeName(),
             'id' => $storedEvent->eventId(),
             'occurredOn' => $storedEvent->occurredOn()
         ]);
-
+        
+        $this->log->debug(sprintf('Producer je poslao tip "%s" u queue .', $storedEvent->typeName()), []);
+        
         return $storedEvent;
     }
 

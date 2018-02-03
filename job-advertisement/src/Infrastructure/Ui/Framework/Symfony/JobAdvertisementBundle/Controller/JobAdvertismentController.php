@@ -132,7 +132,8 @@ class JobAdvertismentController extends Controller
                     $storedEventRepo,
                     new DoctrinePublishedMessageTracker($em),
                     $serializer,
-                    $jobAdProducer
+                    $jobAdProducer,
+                    $logger
                     );
             
             $notification->publishNotifications('job-ad');

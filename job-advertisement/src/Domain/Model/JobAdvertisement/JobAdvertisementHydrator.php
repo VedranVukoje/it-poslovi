@@ -47,12 +47,6 @@ class JobAdvertisementHydrator extends JobAdvertisement implements JobAdvertisem
         $categoryes = iterator_to_array($jobAd->categoryes->map(function($category) {
                     return ['id' => (string) $category->id(), 'name' => (string) $category->name()];
                 }));
-        // reset key of array . 
-        $categoryes = array_values($categoryes);
-        
-        $this->log->debug('Resetovani kljucevi niza.', $categoryes);
-        
-//        $this->log->debug('Hidriranje kategorija.', $categoryes);
 
         $typeOfJobs = iterator_to_array($jobAd->typeOfJobs->map(function($typeOfJob) {
                     return ['id' => (string) $typeOfJob->id(), 'name' => (string) $typeOfJob->name()];

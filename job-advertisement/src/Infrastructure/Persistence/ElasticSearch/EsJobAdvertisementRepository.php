@@ -67,11 +67,7 @@ class EsJobAdvertisementRepository implements JobAdvertisementRepository
     {
         $body = $this->hydrator->extract($jobAdvertisement);
 
-//        $this->log->debug('EsJobAdvertisementRepository::add pre', [
-//            'jobAd' => $body
-//        ]);
-        // b2e7c8bf-7998-4c15-9130-b4c73cb572af
-        // b2e7c8bf-7998-4c15-9130-b4c73cb572af
+
         switch ($jobAdvertisement->isNew()) {
             case true:
                 $document = array_merge($this->document, [
@@ -82,22 +78,24 @@ class EsJobAdvertisementRepository implements JobAdvertisementRepository
                 $this->es->index($document);
                 
                 $this->log->debug('EsJobAdvertisementRepository::add insert', [
-//                    'document' => $document,
-                    'categoryes' => $body['categoryes'],
-                    'id' => $body['id']
-                    
+                    'id' => $body['id'],
+                    'body' => $body
                 ]);
-
-                
                 break;
             case false:
                 
-                $categoryes = $body['categoryes'];
- 
-//                $body = array_merge($body,[
-//                    'script' => 'ctx._source.categoryes.remove(categoryes)',
-//                    'params' => ['categoryes' => $body['categoryes']] 
-//                ]);
+//                $debug = sprintf('categoryes: %s, typeofjobs: %s, tags: %s', count($body['categoryes']), count($body['typeofjobs']), count($body['tags']));
+//                $this->log->debug($debug, []);
+                
+                $this->log->debug('tipovi posla count '. var_export($body['typeOfJobs'], true));
+                
+                $this->reSetKeys($body['categoryes']);
+                $this->reSetKeys($body['typeOfJobs']);
+                $this->reSetKeys($body['tags']);
+                
+                
+                
+                
                 $document = array_merge($this->document, [
                     'body' => ['doc' => $body],
                     'id' => (string) $jobAdvertisement->id()
@@ -106,9 +104,8 @@ class EsJobAdvertisementRepository implements JobAdvertisementRepository
                 $this->es->update($document);
                 
                 $this->log->debug('EsJobAdvertisementRepository::add update', [
-                    'count_category' => [count($categoryes)],
-                    'category' => $categoryes,
-                    'id' => $body['id']
+                    'id' => $body['id'],
+                    'body' => $body
                 ]);
                 
                 
@@ -124,6 +121,11 @@ class EsJobAdvertisementRepository implements JobAdvertisementRepository
     private function hydrate(Id $id, array $_source): JobAdvertisement
     {
         return $this->hydrator->hydrate($_source, new JobAdvertisement($id));
+    }
+    
+    private function reSetKeys(array &$array)
+    {
+        $array = array_values($array);
     }
 
 }

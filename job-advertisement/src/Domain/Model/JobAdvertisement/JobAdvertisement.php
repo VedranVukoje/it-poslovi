@@ -367,15 +367,18 @@ class JobAdvertisement extends AggregateRoot
 
     protected function applyTypeOfJobWasAddedToJobAd(TypeOfJobWasAddedToJobAd $event)
     {
-        $this->id = $event->id();
-        $this->typeOfJobs->set($event->id(), TypeOfJob::fromIdAndName($event->typeOfJobId(), $event->typeOfJobName()));
+        $this->typeOfJobs[] = TypeOfJob::fromIdAndName($event->typeOfJobId(), $event->typeOfJobName());
         $this->updateTimestam();
     }
     
     protected function applyTypeOfJobWasRemovedFromJobAd(TypeOfJobWasRemovedFromJobAd $event)
     {
-        $this->id = $event->id();
-        unset($this->typeOfJobs[$event->id()]);
+        foreach ($this->typeOfJobs as $key => $typeOfJob){
+            if((string) $typeOfJob->id() == $event->typeOfJobId()){
+                unset($this->typeOfJobs[$key]);
+            }
+        }
+        
         $this->updateTimestam();
     }
 
@@ -396,25 +399,24 @@ class JobAdvertisement extends AggregateRoot
 
     protected function applyTagWasAddedToJobAd(TagWasAddedToJobAd $event)
     {
-        $this->id = $event->id();
-        $this->tags->set($event->tagId(), Tag::fromIdAndName($event->tagId(),$event->name()));
+        $this->tags[] = Tag::fromIdAndName($event->tagId(),$event->name());
         $this->updateTimestam();
     }
     
     protected function applyTagWasRemovedFromJobAd(TagWasRemovedFromJobAd $event)
     {
-        $this->id = $event->id();
-        unset($this->tags[$event->id()]);
+        
+        foreach ($this->tags as $key => $tag){
+            if( (string) $tag->id() == $event->tagId()){
+                unset($this->tags[$key]);
+            }
+        }
         $this->updateTimestam();
     }
 
     protected function applyCategoryWasAddToJobAd(CategoryWasAddToJobAd $event)
     {
-        
-
         $this->categoryes[] = Category::fromNative($event->categoryId(), $event->name());
-//        $this->categoryes[$event->categoryId()] = Category::fromNative($event->categoryId(), $event->name());
-//        $this->categoryes->set((string)$event->categoryId(), Category::fromNative($event->categoryId(), $event->name()));
         $this->updateTimestam();
     }
     
@@ -423,13 +425,10 @@ class JobAdvertisement extends AggregateRoot
         
         foreach ($this->categoryes as $key => $category){
             if((string)$category->id() == $event->categoryId()){
-//                $this->categoryes->removeElement($category);
                 unset($this->categoryes[$key]);
             }
         }
-        reset($this->categoryes);
-//        unset($this->categoryes[$event->categoryId()]);
-//        $this->categoryes->removeElement($this->categoryes[$event->categoryId()]);
+
         $this->updateTimestam();
     }
 
